@@ -16,11 +16,14 @@
   --block-sage: #dce4da;
   --block-peach: #f7dccb;
   --tint-blue: #d9e2ee;
+  --signal-red: #d46a5a;
 
   /* Type */
   --font-display: "Bricolage Grotesque", "Arial Narrow", sans-serif;
   --font-body: "Atkinson Hyperlegible", system-ui, sans-serif;
   --font-note: "Kalam", cursive;
+  /* Receipt only: system monospace, nothing to load. */
+  --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 
   /* Shape */
   --border: 2.5px solid var(--graphite);

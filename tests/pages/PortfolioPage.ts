@@ -1,4 +1,5 @@
 import type { Page } from "@playwright/test";
+import { CiReceipt } from "./CiReceipt";
 import { ExperienceLog } from "./ExperienceLog";
 import { HowIWork } from "./HowIWork";
 import { Projects } from "./Projects";
@@ -10,12 +11,14 @@ export class PortfolioPage {
   readonly projects: Projects;
   readonly log: ExperienceLog;
   readonly howIWork: HowIWork;
+  readonly ci: CiReceipt;
 
   constructor(readonly page: Page) {
     this.header = new SiteHeader(page);
     this.projects = new Projects(page);
     this.log = new ExperienceLog(page);
     this.howIWork = new HowIWork(page);
+    this.ci = new CiReceipt(page);
   }
 
   async goto(): Promise<void> {

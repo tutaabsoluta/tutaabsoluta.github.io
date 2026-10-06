@@ -12,6 +12,7 @@ test.use({ reducedMotion: "reduce" });
 
 test("the page looks as approved", async ({ page, portfolio }) => {
   await expect(portfolio.log.section).toBeVisible();
+  await expect(portfolio.ci.pill).toBeVisible(); // filled in after a fetch
   await expect(page).toHaveScreenshot("home.png", { fullPage: true });
 });
 

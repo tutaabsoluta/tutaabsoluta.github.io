@@ -1,5 +1,6 @@
 ---
 import { content, linkByKind, ui, type LinkKind } from "../data/content";
+import CiStatus from "./CiStatus.astro";
 import HandArrow from "./HandArrow.astro";
 import PrintedShape from "./PrintedShape.astro";
 import SectionTag from "./SectionTag.astro";
@@ -90,6 +91,7 @@ const titleWords = contact.title.split(" ");
     <span>
       {person.name} · {person.location}
     </span>
+    <CiStatus />
     <a href="#intro">{ui.footer.backToTop}</a>
   </footer>
 </section>

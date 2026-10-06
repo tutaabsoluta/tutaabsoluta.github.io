@@ -228,4 +228,36 @@ export const ui = {
   },
   how: { title: "How I work", stage: "Stage", seenIn: "Seen in" },
   footer: { backToTop: "Back to top ↑" },
+  /** The footer test-status pill and its receipt (the easter egg). */
+  ci: {
+    note: "psst… this site tests itself",
+    passed: (n: number) => `${n} tests passed`,
+    running: "tests running right now",
+    failed: "latest run failed",
+    statusPrefix: "Test status:",
+    open: "Open the test receipt.",
+    kicker: "Working Parts · test receipt",
+    run: (n: number) => `Run #${n}`,
+    replaying: "replaying the run that shipped this page",
+    pipeline: "Pipeline",
+    steps: ["type check", "lint", "build"],
+    /** Receipt sections, in print order. */
+    groups: {
+      "smoke.spec.ts": "Smoke",
+      "cross-links.spec.ts": "Seen in → log line",
+      "toggles.spec.ts": "Toggles",
+      "navigation.spec.ts": "Navigation",
+      "motion.spec.ts": "Motion",
+      "visual.spec.ts": "Looks",
+      "accessibility.spec.ts": "Accessibility",
+      "easter-egg.spec.ts": "This receipt",
+    } as Record<string, string>,
+    totals: (passed: number, failed: number) =>
+      `${passed} passed · ${failed} failed`,
+    across: "every check runs at desktop and phone size",
+    stampPassed: "Passed",
+    stampFailed: "Failed",
+    viewRun: "see it on GitHub →",
+    close: "Close receipt",
+  },
 } as const;

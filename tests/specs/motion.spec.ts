@@ -3,7 +3,7 @@ import { expect, test } from "../fixtures";
 test.describe("With reduced motion", () => {
   test.use({ reducedMotion: "reduce" });
 
-  test("nothing waits on a reveal: every element is visible at once", async ({
+  test("with reduced motion, every element is visible at once", async ({
     page,
     portfolio,
   }) => {
@@ -17,7 +17,7 @@ test.describe("With reduced motion", () => {
     expect(hidden).toBe(0);
   });
 
-  test("transitions and animations are switched off", async ({
+  test("with reduced motion, transitions and animations are off", async ({
     page,
     portfolio,
   }) => {
@@ -40,7 +40,7 @@ test.describe("With reduced motion", () => {
 test.describe("With motion", () => {
   test.use({ reducedMotion: "no-preference" });
 
-  test("every reveal finishes visible after scrolling the page", async ({
+  test("with motion, every reveal finishes after scrolling", async ({
     page,
     portfolio,
   }) => {

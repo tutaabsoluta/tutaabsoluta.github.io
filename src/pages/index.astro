@@ -58,11 +58,13 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
     </main>
 
     <script>
+      import { initCiStatus } from "../scripts/ci-status";
       import { initInteractions } from "../scripts/interactions";
       import { initReveal } from "../scripts/reveal";
 
       initInteractions();
       initReveal();
+      void initCiStatus();
     </script>
   </body>
 </html>
