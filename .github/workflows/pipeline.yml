@@ -1,4 +1,9 @@
 # Test → build → deploy. Nothing reaches GitHub Pages unless every test passes.
+#
+# Visual snapshots: on pull requests a visual change fails the run (review
+# it). On pushes to main it is treated as intended: the Linux baselines are
+# rewritten, committed back, and the deploy goes ahead. The diff images are
+# kept in the "playwright-report" artifact.
 name: Test & deploy
 
 on:
@@ -19,6 +24,10 @@ jobs:
     name: Check, test & build
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    permissions:
+      contents: write # to commit updated visual baselines on main
+    env:
+      ON_MAIN: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -44,6 +53,23 @@ jobs:
 
       - name: Playwright tests
         run: npx playwright test
+        env:
+          UPDATE_VISUALS: ${{ env.ON_MAIN == 'true' && '1' || '' }}
+
+      # Commits by the workflow token don't trigger new runs, so no loop.
+      - name: Commit updated visual baselines
+        if: env.ON_MAIN == 'true'
+        run: |
+          git add tests/__screenshots__
+          if git diff --cached --quiet; then
+            echo "Visual baselines unchanged."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+            git commit -m "test: update visual baselines"
+            git pull --rebase
+            git push
+          fi
 
       # Publishes this run's results with the site (dist/ci-report.json).
       - name: Save test results into the site
@@ -60,7 +86,7 @@ jobs:
           retention-days: 14
 
       - name: Upload site
-        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        if: env.ON_MAIN == 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           path: dist
