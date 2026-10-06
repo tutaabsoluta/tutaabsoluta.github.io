@@ -1,0 +1,361 @@
+---
+/**
+ * The easter egg: a footer pill with the live status of the pipeline that
+ * deploys this site, opening a receipt that replays the real run that
+ * shipped the page. Filled in by `scripts/ci-status.ts`; stays hidden when
+ * there is no report (local dev, or the fetch fails).
+ */
+import { ui } from "../data/content";
+---
+
+<div class="ci" data-ci hidden>
+  <span class="ci__note" aria-hidden="true">
+    {ui.ci.note}
+  </span>
+  <button
+    type="button"
+    class="ci__pill"
+    aria-haspopup="dialog"
+    data-ci-pill
+    data-state="passed"
+  >
+    <span class="ci__dot" aria-hidden="true"></span>
+    <span data-ci-label></span>
+  </button>
+</div>
+
+<dialog class="receipt" aria-labelledby="receipt-title" data-ci-receipt>
+  <div class="receipt__paper" data-ci-paper>
+    <button
+      type="button"
+      class="receipt__close"
+      aria-label={ui.ci.close}
+      data-ci-close
+    >
+      ×
+    </button>
+    <p class="receipt__kicker">{ui.ci.kicker}</p>
+    <h2 id="receipt-title" class="receipt__title" data-ci-title></h2>
+    <p class="receipt__meta" data-ci-meta></p>
+    <p class="receipt__replay">{ui.ci.replaying}</p>
+    <ol class="receipt__lines" data-ci-lines></ol>
+    <p class="receipt__totals" data-ci-totals></p>
+    <p class="receipt__across" data-ci-across>
+      {ui.ci.across}
+    </p>
+    <p class="receipt__oops" data-ci-oops hidden>
+      <span data-ci-oops-text></span>
+      <a target="_blank" rel="noopener" data-ci-oops-link>
+        {ui.ci.oopsLink}
+      </a>
+    </p>
+    <div class="receipt__end" data-ci-end>
+      <span class="receipt__stamp" data-ci-stamp></span>
+      <a class="receipt__link" target="_blank" rel="noopener" data-ci-link>
+        {ui.ci.viewRun}
+      </a>
+    </div>
+  </div>
+</dialog>
+
+<style>
+  /* Footer: whisper + pill */
+  .ci {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 10px;
+    animation: ci-pop 0.3s var(--ease-settle);
+  }
+
+  @keyframes ci-pop {
+    from {
+      opacity: 0;
+      scale: 0.85;
+    }
+  }
+
+  .ci__note {
+    font: 700 18px/1 var(--font-note);
+    color: var(--text-muted);
+    white-space: nowrap;
+    rotate: -3deg;
+  }
+
+  .ci__pill {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 34px;
+    padding: 0 12px;
+    background: var(--paper);
+    border: 2px solid var(--graphite);
+    border-radius: var(--radius-pill);
+    box-shadow: 3px 3px 0 var(--dot);
+    font: 700 13px/1 var(--font-body);
+    color: var(--graphite);
+    white-space: nowrap;
+    cursor: pointer;
+    rotate: -1.5deg;
+    transition:
+      rotate 0.2s var(--ease-settle),
+      translate 0.12s var(--ease-settle),
+      box-shadow 0.12s var(--ease-settle);
+    --dot: var(--dusty-green);
+  }
+
+  /* 44px hit area without a bigger pill. */
+  .ci__pill::before {
+    content: "";
+    position: absolute;
+    inset: -5px 0;
+  }
+
+  .ci__pill[data-state="running"] {
+    --dot: var(--soft-peach);
+  }
+
+  .ci__pill[data-state="failed"] {
+    --dot: var(--signal-red);
+  }
+
+  @media (hover: hover) {
+    .ci__pill:hover {
+      rotate: 0deg;
+      translate: 0 -2px;
+    }
+  }
+
+  .ci__pill:active {
+    translate: 3px 3px;
+    box-shadow: 0 0 0 var(--dot);
+  }
+
+  .ci__dot {
+    width: 10px;
+    height: 10px;
+    border: 1.5px solid var(--graphite);
+    border-radius: 50%;
+    background: var(--dot);
+  }
+
+  /* Receipt */
+  .receipt {
+    width: min(400px, calc(100vw - 32px));
+    max-height: min(86vh, 780px);
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--graphite);
+    overflow: visible;
+    /* Follows the torn paper edges, unlike box-shadow. */
+    filter: drop-shadow(6px 6px 0 var(--lavender));
+  }
+
+  .receipt::backdrop {
+    background: rgb(42 42 46 / 0.45);
+  }
+
+  .receipt__paper {
+    --zz: 8px;
+    position: relative;
+    max-height: inherit;
+    overflow-y: auto;
+    padding: 30px 24px 38px;
+    background: var(--paper);
+    font: 13px/1.45 var(--font-mono);
+    /* Torn edges, top and bottom. */
+    mask:
+      conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg)
+        top / calc(2 * var(--zz)) var(--zz) repeat-x,
+      conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg)
+        bottom / calc(2 * var(--zz)) var(--zz) repeat-x,
+      linear-gradient(#000 0 0) center / 100% calc(100% - 2 * var(--zz))
+        no-repeat;
+    animation: receipt-feed 0.45s var(--ease-settle);
+  }
+
+  @keyframes receipt-feed {
+    from {
+      opacity: 0;
+      translate: 0 -28px;
+    }
+  }
+
+  .receipt__close {
+    position: absolute;
+    top: 14px;
+    right: 10px;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    background: none;
+    font: 700 24px/1 var(--font-body);
+    cursor: pointer;
+  }
+
+  .receipt__kicker {
+    text-align: center;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-subtle);
+  }
+
+  .receipt__title {
+    margin-top: 6px;
+    text-align: center;
+    font: 800 38px/1 var(--font-display);
+    font-stretch: 80%;
+  }
+
+  .receipt__meta {
+    margin-top: 6px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .receipt__replay {
+    margin: 12px auto 4px;
+    width: fit-content;
+    font: 700 17px/1.1 var(--font-note);
+    color: var(--ink-blue);
+    rotate: -2deg;
+  }
+
+  .receipt__lines {
+    list-style: none;
+    margin: 8px 0 0;
+    padding: 0;
+  }
+
+  /* Lines are created by script, so they need :global. */
+  .receipt__lines :global(.receipt__group) {
+    margin-top: 14px;
+    padding-bottom: 4px;
+    border-bottom: 1.5px dashed var(--graphite);
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .receipt__lines :global(.receipt__line) {
+    display: grid;
+    grid-template-columns: 1.4em minmax(0, 1fr) auto;
+    gap: 8px;
+    padding: 4px 0;
+  }
+
+  .receipt__lines :global(.receipt__time) {
+    color: var(--text-subtle);
+  }
+
+  .receipt__totals {
+    margin-top: 16px;
+    padding-top: 10px;
+    border-top: 3px double var(--graphite);
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .receipt__across {
+    margin-top: 4px;
+    text-align: center;
+    font-size: 11px;
+    color: var(--text-subtle);
+  }
+
+  .receipt__end {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    margin-top: 22px;
+  }
+
+  .receipt__stamp {
+    position: relative;
+    isolation: isolate;
+    padding: 8px 16px;
+    border: 3px solid var(--graphite);
+    border-radius: 10px;
+    font: 800 28px/1 var(--font-display);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    rotate: -8deg;
+  }
+
+  /* The offset "printed" fill, as on every other shape on the site. */
+  .receipt__stamp::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: var(--dusty-green);
+    translate: 5px 5px;
+  }
+
+  .receipt__stamp[data-state="failed"]::before {
+    background: var(--signal-red);
+  }
+
+  /* Latest run failed: an honest, slightly sheepish note before the stamp. */
+  .receipt__oops {
+    margin-top: 16px;
+    padding: 10px 12px;
+    border: 2px dashed var(--signal-red);
+    border-radius: 10px;
+    font: 700 16px/1.3 var(--font-note);
+    rotate: -1deg;
+  }
+
+  .receipt__oops a {
+    display: inline-block;
+    margin-top: 4px;
+    font: 700 13px/1 var(--font-body);
+  }
+
+  .receipt__link {
+    font: 700 14px/1 var(--font-body);
+  }
+
+  /* Printing: each part appears in order (--i is set by the script). */
+  .receipt__lines :global(li),
+  .receipt__totals,
+  .receipt__across,
+  .receipt__oops,
+  .receipt__end {
+    animation: receipt-print 0.2s var(--ease-settle) backwards;
+    animation-delay: calc(350ms + var(--i, 0) * 85ms);
+  }
+
+  @keyframes receipt-print {
+    from {
+      opacity: 0;
+      translate: 0 -4px;
+    }
+  }
+
+  .receipt__stamp {
+    animation: receipt-stamp 0.36s cubic-bezier(0.3, 1.5, 0.5, 1) backwards;
+    animation-delay: calc(550ms + var(--i, 0) * 85ms);
+  }
+
+  @keyframes receipt-stamp {
+    from {
+      opacity: 0;
+      scale: 1.9;
+      rotate: -2deg;
+    }
+  }
+
+  /* A click on the paper skips to the end. */
+  .receipt[data-skipped] *,
+  .receipt[data-skipped] :global(li) {
+    animation: none;
+  }
+</style>

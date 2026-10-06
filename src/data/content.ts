@@ -257,6 +257,10 @@ export const ui = {
     across: "every check runs at desktop and phone size",
     stampPassed: "Passed",
     stampFailed: "Failed",
+    /** Shown on the receipt when the latest run failed (it never deploys). */
+    oops: (failed: number, shipped: number) =>
+      `well… run #${failed} didn't go so well. Don't worry, the tests caught it before you could: you're looking at run #${shipped}, the last one that passed.`,
+    oopsLink: "see the damage →",
     viewRun: "see it on GitHub →",
     close: "Close receipt",
   },
