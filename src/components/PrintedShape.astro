@@ -62,10 +62,10 @@ const vars = [
     border-radius: var(--radius);
   }
 
-  /* Cards set --printed-shift on hover to slide the fill further out of
-     register. */
+  /* Cards set --printed-align: 1 on hover to slide the fill back under the
+     outline, so the "print" lines up. */
   .printed__fill {
-    --at: calc(var(--printed-offset, 5px) + var(--printed-shift, 0px));
+    --at: calc(var(--printed-offset, 5px) * (1 - var(--printed-align, 0)));
     translate: var(--at) var(--at);
     background: var(--fill);
     transition: translate 0.25s var(--ease-settle);

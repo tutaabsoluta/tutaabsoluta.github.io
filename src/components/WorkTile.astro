@@ -1,119 +1,126 @@
 ---
-import { shapeRadius, tintVar, ui, type WorkTile } from "../data/content";
+/**
+ * One line of the experience log: glyph, highlighted title, short detail, and
+ * a +/− toggle that unfolds the original CV wording underneath.
+ */
+import {
+  shapeRadius,
+  toneVar,
+  ui,
+  type TintTone,
+  type Tone,
+  type WorkTile,
+} from "../data/content";
 import PrintedShape from "./PrintedShape.astro";
 
 interface Props {
   tile: WorkTile;
-  index: number;
 }
 
-const { tile: t, index } = Astro.props;
-const rotations = [
-  "-0.6deg",
-  "0.6deg",
-  "0.4deg",
-  "-0.4deg",
-  "0.5deg",
-  "-0.5deg",
-  "0.4deg",
-  "-0.4deg",
-];
-const rot = rotations[index % rotations.length] ?? "0deg";
-const detailId = `work-${t.id}-detail`;
+const { tile: t } = Astro.props;
+
+/** The log sits on paper, so each pale tint uses its stronger tone. */
+const markTone: Record<TintTone, Tone> = {
+  greenTint: "green",
+  peachTint: "peach",
+  blueTint: "blue",
+  lavenderTint: "lavender",
+};
 const originalId = `work-${t.id}-original`;
 ---
 
 <li
   id={`work-${t.id}`}
-  class="tile"
-  data-fx="settle"
-  data-delay={(index % 4) * 70}
-  style={`--tint:${tintVar[t.tone]};--rot:${rot}`}
+  class="entry"
+  style={`--tone:${toneVar[markTone[t.tone]]}`}
 >
-  <div class="tile__top">
-    <PrintedShape
-      size={44}
-      offset={4}
-      fill="var(--paper)"
-      radius={shapeRadius[t.shape]}
-      glyph={t.glyph}
-      glyphSize={20}
-    />
-    <button
-      type="button"
-      class="tile__toggle"
-      aria-expanded="false"
-      aria-controls={`${detailId} ${originalId}`}
-      aria-label={`${ui.experience.showFull} ${t.title}`}
-      data-flip
-      data-label-show={`${ui.experience.showFull} ${t.title}`}
-      data-label-hide={`${ui.experience.hideFull} ${t.title}`}
-    >
-      <span class="tile__sign" aria-hidden="true"></span>
-    </button>
-  </div>
-  <h3 class="tile__title">{t.title}</h3>
-  <p id={detailId} class="tile__detail">
-    {t.detail}
-  </p>
-  <p id={originalId} class="tile__original" hidden>
+  <PrintedShape
+    class="entry__glyph"
+    size={44}
+    offset={4}
+    fill="var(--tone)"
+    radius={shapeRadius[t.shape]}
+    glyph={t.glyph}
+    glyphSize={20}
+  />
+  <h3 class="entry__title">
+    <span class="entry__mark">{t.title}</span>
+  </h3>
+  <p class="entry__detail">{t.detail}</p>
+  <a class="entry__back" href="#how" hidden data-back>
+    <span aria-hidden="true">← </span>{ui.experience.backToHow}
+  </a>
+  <button
+    type="button"
+    class="entry__toggle"
+    aria-expanded="false"
+    aria-controls={originalId}
+    aria-label={`${ui.experience.showFull} ${t.title}`}
+    data-flip
+    data-label-show={`${ui.experience.showFull} ${t.title}`}
+    data-label-hide={`${ui.experience.hideFull} ${t.title}`}
+  >
+    <span class="entry__sign" aria-hidden="true"></span>
+  </button>
+  <p id={originalId} class="entry__original" hidden>
     {t.original}
   </p>
 </li>
 
 <style>
-  .tile {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    min-height: 200px;
-    padding: 18px;
-    background: var(--tint);
-    border: var(--border);
-    border-radius: var(--radius-card-sm);
-    rotate: var(--rot);
-    transition:
-      rotate 0.2s var(--ease-settle),
-      translate 0.2s var(--ease-settle),
-      box-shadow 0.3s;
+  /* Narrow (default): glyph, title over detail, toggle */
+  .entry {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr) 44px;
+    grid-template-areas:
+      "glyph title toggle"
+      "glyph detail toggle"
+      ". back back"
+      ". original original";
+    align-items: start;
+    gap: 0 14px;
+    padding: 16px clamp(14px, 2.4vw, 24px);
+    border-bottom: 2px dashed var(--graphite);
+    transition: box-shadow 0.3s;
   }
 
-  @media (hover: hover) {
-    .tile:hover {
-      rotate: 0deg;
-      translate: 0 -3px;
-      --printed-shift: 2px;
-    }
+  .entry:last-child {
+    border-bottom: 0;
   }
 
-  .tile[data-flash] {
-    box-shadow: 0 0 0 4px var(--ink-blue);
-    animation: tile-wiggle 0.5s var(--ease-settle);
+  .entry :global(.entry__glyph) {
+    grid-area: glyph;
   }
 
-  /* One nudge when a "Seen in" chip lands here. */
-  @keyframes tile-wiggle {
-    25% {
-      rotate: -2deg;
-    }
-    55% {
-      rotate: 1.5deg;
-    }
-    80% {
-      rotate: -0.5deg;
-    }
+  .entry__title {
+    grid-area: title;
+    align-self: center;
+    font: 800 21px/1.15 var(--font-display);
+    font-stretch: 88%;
   }
 
-  .tile__top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
+  /* Highlighter stroke under the title, in the entry's tone. */
+  .entry__mark {
+    padding: 0 3px;
+    background: linear-gradient(var(--tone), var(--tone)) left bottom / 100%
+      40% no-repeat;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    transition: background-size 0.25s var(--ease-settle);
   }
 
-  .tile__toggle {
+  .entry__detail {
+    grid-area: detail;
+    margin-top: 6px;
+    font: 15px/1.4 var(--font-body);
+    color: var(--text-muted);
+  }
+
+  .entry__toggle {
+    grid-area: toggle;
+    align-self: center;
     width: 44px;
     height: 44px;
-    margin: -6px -6px 0 0;
     padding: 0;
     border: 0;
     background: none;
@@ -123,7 +130,7 @@ const originalId = `work-${t.id}-original`;
     justify-content: center;
   }
 
-  .tile__sign {
+  .entry__sign {
     position: relative;
     width: 30px;
     height: 30px;
@@ -135,8 +142,8 @@ const originalId = `work-${t.id}-original`;
   }
 
   /* Two bars draw the sign; the vertical one rotates flat to become "−". */
-  .tile__sign::before,
-  .tile__sign::after {
+  .entry__sign::before,
+  .entry__sign::after {
     content: "";
     position: absolute;
     inset: 0;
@@ -147,51 +154,102 @@ const originalId = `work-${t.id}-original`;
     background: currentColor;
   }
 
-  .tile__sign::after {
+  .entry__sign::after {
     rotate: 90deg;
     transition: rotate 0.28s var(--ease-settle);
   }
 
-  .tile__toggle:active .tile__sign {
+  .entry__toggle:active .entry__sign {
     scale: 0.9;
   }
 
-  .tile__toggle[aria-expanded="true"] .tile__sign {
-    background: var(--paper);
+  .entry__toggle[aria-expanded="true"] .entry__sign {
+    background: var(--tone);
   }
 
-  .tile__toggle[aria-expanded="true"] .tile__sign::after {
+  .entry__toggle[aria-expanded="true"] .entry__sign::after {
     rotate: 180deg;
   }
 
-  /* Replays each time `hidden` is lifted, so the swapped-in text eases up. */
-  .tile__detail,
-  .tile__original {
-    animation: tile-text-in 0.32s var(--ease-settle);
+  /* Shown after a "Seen in" jump; returns to the stage that linked here. */
+  .entry__back {
+    grid-area: back;
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-top: 2px;
+    font: 700 20px/1 var(--font-note);
+    color: var(--ink-blue);
+    text-decoration: none;
+    rotate: -1.5deg;
+    animation: entry-text-in 0.32s var(--ease-settle) 0.2s backwards;
   }
 
-  @keyframes tile-text-in {
+  .entry__back:hover {
+    color: var(--ink-blue);
+    text-decoration: underline;
+  }
+
+  .entry__original {
+    grid-area: original;
+    max-width: 68ch;
+    margin-top: 10px;
+    padding-left: 12px;
+    border-left: 3px solid var(--tone);
+    font: 15px/1.55 var(--font-body);
+    color: var(--text-body);
+    /* Replays each time `hidden` is lifted. */
+    animation: entry-text-in 0.32s var(--ease-settle);
+  }
+
+  @keyframes entry-text-in {
     from {
       opacity: 0;
       translate: 0 6px;
     }
   }
 
-  .tile__title {
-    font: 800 22px/1.05 var(--font-display);
-    font-stretch: 88%;
+  @media (hover: hover) {
+    .entry:hover .entry__mark {
+      background-size: 100% 100%;
+    }
+
+    .entry:hover {
+      --printed-align: 1;
+    }
   }
 
-  .tile__detail {
-    margin-top: auto;
-    font: 15px/1.4 var(--font-body);
+  /* A "Seen in" chip landed here: ring the line and redraw the highlight. */
+  .entry[data-flash] {
+    box-shadow: inset 0 0 0 3px var(--ink-blue);
   }
 
-  .tile__original {
-    font: 15px/1.5 var(--font-body);
-    background: var(--paper);
-    border: 2px solid var(--graphite);
-    border-radius: 10px;
-    padding: 10px 12px;
+  .entry[data-flash] .entry__mark {
+    animation: mark-sweep 0.6s var(--ease-settle);
+  }
+
+  @keyframes mark-sweep {
+    from {
+      background-size: 0% 40%;
+    }
+  }
+
+  /* Wide: a ledger line — glyph, title, detail, toggle in one row */
+  @media (min-width: 820px) {
+    .entry {
+      grid-template-columns: 44px minmax(0, 1.15fr) minmax(0, 1fr) 44px;
+      grid-template-areas:
+        "glyph title detail toggle"
+        ". back back ."
+        ". original original .";
+      align-items: center;
+      gap: 0 24px;
+    }
+
+    .entry__detail {
+      align-self: center;
+      margin-top: 0;
+    }
   }
 </style>

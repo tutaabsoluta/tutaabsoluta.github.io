@@ -1,7 +1,7 @@
 {
   "person": {
     "name": "Sergio Duran",
-    "role": "Software Developer",
+    "role": "Software Developer, Test Automation",
     "company": "Critical Mass",
     "location": "Costa Rica",
     "summary": "Test automation for web products: Playwright UI and API tests, built into CI/CD workflows."
@@ -23,7 +23,7 @@
     {
       "n": "03",
       "title": "What I've worked on",
-      "fact": "Software Developer at Critical Mass, about one year.",
+      "fact": "Software Developer, Test Automation at Critical Mass, about one year.",
       "href": "#experience",
       "tone": "blue"
     },
@@ -71,8 +71,8 @@
   ],
   "experience": {
     "company": "Critical Mass",
-    "role": "Software Developer",
-    "dates": "Oct 25 – Present",
+    "role": "Software Developer, Test Automation",
+    "dates": "Oct 2025 – Present",
     "duration": "1 year",
     "tiles": [
       {
@@ -229,7 +229,7 @@
   },
   "contact": {
     "title": "Let's talk.",
-    "line": "Sergio Duran · Software Developer · Costa Rica",
+    "line": "Sergio Duran · Software Developer, Test Automation · Costa Rica",
     "note": "email is fastest",
     "order": ["Email", "LinkedIn", "GitHub"]
   }

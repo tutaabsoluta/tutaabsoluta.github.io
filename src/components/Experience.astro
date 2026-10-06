@@ -28,10 +28,8 @@ const { experience } = content;
     </div>
   </div>
 
-  <ul class="tiles">
-    {experience.tiles.map((tile, index) => (
-      <WorkTile tile={tile} index={index} />
-    ))}
+  <ul class="log" data-fx="settle">
+    {experience.tiles.map((tile) => <WorkTile tile={tile} />)}
   </ul>
 
   <p class="tools" data-fx="fade">
@@ -83,13 +81,16 @@ const { experience } = content;
     font: 17px/1.35 var(--font-body);
   }
 
-  .tiles {
+  /* One sheet of ruled lines, unlike the card grids around it. */
+  .log {
     list-style: none;
     margin: 0;
     padding: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
-    gap: 18px;
+    background: var(--paper);
+    border: var(--border);
+    border-radius: var(--radius-card);
+    box-shadow: 8px 8px 0 var(--muted-blue);
+    overflow: hidden;
   }
 
   .tools {

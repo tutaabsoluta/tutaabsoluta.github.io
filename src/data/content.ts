@@ -198,7 +198,7 @@ export const ui = {
   skipLink: "Skip to content",
   nav: [
     { href: "#build", label: "What I build" },
-    { href: "#experience", label: "Experience" },
+    { href: "#experience", label: "What I've worked on" },
     { href: "#how", label: "How I work" },
   ],
   navContact: { href: "#contact", label: "Contact" },
@@ -224,6 +224,7 @@ export const ui = {
     showFull: "Show full description:",
     hideFull: "Hide full description:",
     toolsUsed: "Tools used",
+    backToHow: "back to How I work",
   },
   how: { title: "How I work", stage: "Stage", seenIn: "Seen in" },
   footer: { backToTop: "Back to top ↑" },

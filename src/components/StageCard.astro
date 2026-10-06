@@ -30,6 +30,7 @@ const tone = toneVar[s.tone];
 ---
 
 <li
+  id={`stage-${s.n}`}
   class="stage"
   data-fx="settle"
   data-delay={delay}
@@ -134,9 +135,8 @@ const tone = toneVar[s.tone];
       background: var(--tone);
     }
 
-    /* The fill slides back under the outline: the "print" lines up. */
     .stage:hover {
-      --printed-offset: 0px;
+      --printed-align: 1;
     }
   }
 

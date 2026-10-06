@@ -1,6 +1,6 @@
 /**
  * Small native-API interactions: mobile menu, project details disclosure,
- * work-tile flip, and the "Seen in" chip highlight.
+ * experience-log toggles, and the "Seen in" chip highlight with its return link.
  */
 
 const FLASH_MS = 1600;
@@ -66,8 +66,8 @@ function initTileFlips(): void {
   document
     .querySelectorAll<HTMLButtonElement>("[data-flip]")
     .forEach((button) => {
-      const [detail, original] = controlled(button);
-      if (!detail || !original) return;
+      const [original] = controlled(button);
+      if (!original) return;
       button.addEventListener("click", () => {
         const open = button.getAttribute("aria-expanded") !== "true";
         button.setAttribute("aria-expanded", String(open));
@@ -76,7 +76,6 @@ function initTileFlips(): void {
           (open ? button.dataset["labelHide"] : button.dataset["labelShow"]) ??
             "",
         );
-        detail.hidden = open;
         original.hidden = !open;
       });
     });
@@ -104,6 +103,17 @@ function initChipFlash(): void {
   let timer: number | undefined;
   let cancelWait: (() => void) | undefined;
   let flashed: HTMLElement | null = null;
+  // The one visible "back to How I work" link, if any.
+  let back: HTMLAnchorElement | null = null;
+
+  const hideBack = (): void => {
+    if (back) back.hidden = true;
+    back = null;
+  };
+
+  document
+    .querySelectorAll<HTMLAnchorElement>("[data-back]")
+    .forEach((link) => link.addEventListener("click", hideBack));
 
   document
     .querySelectorAll<HTMLAnchorElement>("[data-flash-target]")
@@ -117,10 +127,17 @@ function initChipFlash(): void {
         cancelWait?.();
         flashed?.removeAttribute("data-flash");
         flashed = null;
+        hideBack();
+        const stage = chip.closest<HTMLElement>("[id^='stage-']");
         // Wait for the smooth scroll to land so the highlight is seen in full.
         cancelWait = afterScrollSettles(() => {
           flashed = target;
           target.setAttribute("data-flash", "");
+          back = target.querySelector<HTMLAnchorElement>("[data-back]");
+          if (back && stage) {
+            back.href = `#${stage.id}`;
+            back.hidden = false;
+          }
           timer = window.setTimeout(() => {
             target.removeAttribute("data-flash");
             flashed = null;
