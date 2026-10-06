@@ -1,0 +1,236 @@
+{
+  "person": {
+    "name": "Sergio Duran",
+    "role": "Software Developer",
+    "company": "Critical Mass",
+    "location": "Costa Rica",
+    "summary": "Test automation for web products: Playwright UI and API tests, built into CI/CD workflows."
+  },
+  "links": [
+    { "kind": "GitHub", "label": "[GITHUB_URL]", "href": "[GITHUB_URL]" },
+    { "kind": "LinkedIn", "label": "[LINKEDIN_URL]", "href": "[LINKEDIN_URL]" },
+    { "kind": "Email", "label": "[EMAIL]", "href": "mailto:[EMAIL]" }
+  ],
+  "heroCards": [
+    {
+      "n": "02",
+      "title": "What I build",
+      "fact": "Two test automation projects, in progress.",
+      "href": "#build",
+      "tone": "lavender",
+      "sticker": "In progress"
+    },
+    {
+      "n": "03",
+      "title": "What I've worked on",
+      "fact": "Software Developer at Critical Mass, about one year.",
+      "href": "#experience",
+      "tone": "blue"
+    },
+    {
+      "n": "04",
+      "title": "How I work",
+      "fact": "Six stages, from a requirement to reliable delivery.",
+      "href": "#how",
+      "tone": "green"
+    }
+  ],
+  "projects": [
+    {
+      "n": "01",
+      "title": "[AUTOMATION PROJECT 01]",
+      "status": "In progress",
+      "tone": "lavender",
+      "description": "[PROJECT DESCRIPTION]",
+      "stack": ["Playwright", "TypeScript", "GitHub Actions", "CI/CD"],
+      "repository": "[PROJECT REPOSITORY]",
+      "details": [
+        { "k": "The problem", "v": "[PROJECT DESCRIPTION]" },
+        { "k": "The approach", "v": "[AUTOMATION APPROACH]" },
+        { "k": "How it's built", "v": "[ARCHITECTURE]" },
+        { "k": "How it runs", "v": "[CI/CD DETAILS]" },
+        { "k": "So far", "v": "[PROJECT RESULT]" }
+      ]
+    },
+    {
+      "n": "02",
+      "title": "[AUTOMATION PROJECT 02]",
+      "status": "In progress",
+      "tone": "blue",
+      "description": "[PROJECT DESCRIPTION]",
+      "stack": ["Playwright", "TypeScript", "GitHub Actions", "CI/CD"],
+      "repository": "[PROJECT REPOSITORY]",
+      "details": [
+        { "k": "The problem", "v": "[PROJECT DESCRIPTION]" },
+        { "k": "The approach", "v": "[AUTOMATION APPROACH]" },
+        { "k": "How it's built", "v": "[ARCHITECTURE]" },
+        { "k": "How it runs", "v": "[CI/CD DETAILS]" },
+        { "k": "So far", "v": "[PROJECT RESULT]" }
+      ]
+    }
+  ],
+  "experience": {
+    "company": "Critical Mass",
+    "role": "Software Developer",
+    "dates": "[START DATE] – Present",
+    "duration": "about 1 year",
+    "tiles": [
+      {
+        "id": "framework",
+        "title": "Built a test framework from scratch",
+        "detail": "Playwright · scalable, more reliable and maintainable tests",
+        "original": "Designed and implemented a scalable Playwright-based automation framework from scratch, significantly improving test reliability and maintainability.",
+        "tone": "greenTint",
+        "glyph": "✓",
+        "shape": "rounded"
+      },
+      {
+        "id": "migration",
+        "title": "Led the test suite's move to a new tool",
+        "detail": "Cypress → Playwright",
+        "original": "Led the migration of the automation suite from Cypress to Playwright, modernizing the testing strategy and improving execution performance.",
+        "tone": "peachTint",
+        "glyph": "↻",
+        "shape": "circle"
+      },
+      {
+        "id": "data",
+        "title": "Helped change how the app gets its data",
+        "detail": "REST → GraphQL migration: gaps, schemas, contracts",
+        "original": "Contributed to a large-scale REST API to GraphQL migration by identifying and documenting migration gaps, analyzing schemas and API contracts, resolving integration and functionality issues, and supporting builds, deployments, configuration changes, and end-to-end validation.",
+        "tone": "blueTint",
+        "glyph": "⌕",
+        "shape": "circle"
+      },
+      {
+        "id": "frontend",
+        "title": "Contributed to frontend features",
+        "detail": "Vue.js and GraphQL",
+        "original": "Contributed to frontend feature development using Vue.js and GraphQL, resolving integration issues across multiple layers of the application.",
+        "tone": "lavenderTint",
+        "glyph": "▢",
+        "shape": "rounded"
+      },
+      {
+        "id": "env",
+        "title": "Fixed environments that blocked testing",
+        "detail": "Akamai allowlist, with DevOps",
+        "original": "Diagnosed and resolved infrastructure and test environment issues, including Akamai whitelist configuration, collaborating with DevOps to implement and validate fixes and ensure stable test execution across environments.",
+        "tone": "peachTint",
+        "glyph": "⚙",
+        "shape": "circle"
+      },
+      {
+        "id": "pipeline",
+        "title": "Put the tests into the release pipeline",
+        "detail": "GitHub Actions · CI/CD",
+        "original": "Integrated automated test suites into GitHub Actions CI/CD pipelines, configuring and refining workflows to improve test execution, feedback cycles, and release reliability.",
+        "tone": "greenTint",
+        "glyph": "→",
+        "shape": "square"
+      },
+      {
+        "id": "team",
+        "title": "Worked across the team",
+        "detail": "DevOps, QA, engineers, PMs, Technical Leads",
+        "original": "Evaluated technical trade-offs and aligned implementation strategies with the Technical Lead to drive team-wide decisions. Collaborated closely with Software Engineers, QA, Product Managers, and Technical Leads to improve software quality and accelerate feature delivery.",
+        "tone": "blueTint",
+        "glyph": "⇄",
+        "shape": "circle"
+      },
+      {
+        "id": "docs",
+        "title": "Wrote down what was learned",
+        "detail": "Confluence · Notion",
+        "original": "Documented technical discoveries, migration findings, implementation details, and best practices in Confluence and Notion, helping preserve knowledge and improve team collaboration.",
+        "tone": "lavenderTint",
+        "glyph": "≡",
+        "shape": "square"
+      }
+    ],
+    "toolsIndex": [
+      "Playwright",
+      "Cypress",
+      "TypeScript",
+      "JavaScript",
+      "Vue.js",
+      "REST",
+      "GraphQL",
+      "GitHub Actions",
+      "Akamai",
+      "Confluence",
+      "Notion"
+    ]
+  },
+  "howIWork": {
+    "intro": "From understanding a requirement to delivering reliable software.",
+    "stages": [
+      {
+        "n": "01",
+        "name": "Understand",
+        "what": "Requirements, expected behavior, edge cases.",
+        "seen": [{ "tile": "team", "label": "Work with PMs and Tech Leads" }],
+        "glyph": "?",
+        "tone": "lavender",
+        "shape": "rounded"
+      },
+      {
+        "n": "02",
+        "name": "Investigate",
+        "what": "APIs, schemas, existing behavior, environments.",
+        "seen": [
+          { "tile": "data", "label": "REST → GraphQL" },
+          { "tile": "env", "label": "Akamai fix" }
+        ],
+        "glyph": "⌕",
+        "tone": "blue",
+        "shape": "circle"
+      },
+      {
+        "n": "03",
+        "name": "Validate",
+        "what": "Manual checks, data comparison, integration behavior.",
+        "seen": [{ "tile": "data", "label": "End-to-end validation" }],
+        "glyph": "=",
+        "tone": "beige",
+        "shape": "leaf"
+      },
+      {
+        "n": "04",
+        "name": "Test",
+        "what": "Functional and regression testing.",
+        "seen": [{ "tile": "framework", "label": "Playwright framework" }],
+        "glyph": "✓",
+        "tone": "green",
+        "shape": "rounded"
+      },
+      {
+        "n": "05",
+        "name": "Automate",
+        "what": "Playwright UI and API tests, reusable test flows.",
+        "seen": [
+          { "tile": "framework", "label": "Playwright framework" },
+          { "tile": "migration", "label": "Cypress → Playwright" }
+        ],
+        "glyph": "↻",
+        "tone": "peach",
+        "shape": "circle"
+      },
+      {
+        "n": "06",
+        "name": "Deliver",
+        "what": "CI/CD, GitHub Actions, reliable feedback.",
+        "seen": [{ "tile": "pipeline", "label": "GitHub Actions pipelines" }],
+        "glyph": "→",
+        "tone": "lavender",
+        "shape": "square"
+      }
+    ]
+  },
+  "contact": {
+    "title": "Let's talk.",
+    "line": "Sergio Duran · Software Developer · Costa Rica",
+    "note": "email is fastest",
+    "order": ["Email", "LinkedIn", "GitHub"]
+  }
+}

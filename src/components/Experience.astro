@@ -1,0 +1,108 @@
+---
+import { content, ui } from "../data/content";
+import SectionTag from "./SectionTag.astro";
+import Sticker from "./Sticker.astro";
+import WorkTile from "./WorkTile.astro";
+
+const { experience } = content;
+---
+
+<section id="experience" class="experience" aria-labelledby="h-exp">
+  <div class="experience__head">
+    <div class="section-head__title">
+      <SectionTag label={ui.tags.experience} bg="var(--muted-blue)" />
+      <h2 id="h-exp" class="display-h2 experience__title" data-fx="settle">
+        {ui.experience.title}
+      </h2>
+    </div>
+    <div class="employer" data-fx="settle" data-delay="120">
+      <Sticker
+        label={ui.experience.now}
+        bg="var(--dusty-green)"
+        place="right:-12px;top:-16px;rotate:6deg;padding:6px 12px"
+      />
+      <span class="employer__name">{experience.company}</span>
+      <span class="employer__meta">
+        {experience.role} · {experience.dates} · {experience.duration}
+      </span>
+    </div>
+  </div>
+
+  <ul class="tiles">
+    {experience.tiles.map((tile, index) => (
+      <WorkTile tile={tile} index={index} />
+    ))}
+  </ul>
+
+  <p class="tools" data-fx="fade">
+    <b>{ui.experience.toolsUsed}</b>
+    <span>{experience.toolsIndex.join(" · ")}</span>
+  </p>
+</section>
+
+<style>
+  .experience {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: var(--section-space) var(--block-pad-x);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(28px, 4vw, 40px);
+  }
+
+  .experience__head {
+    display: flex;
+    gap: 24px 40px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+  }
+
+  .experience__title {
+    max-width: 9ch;
+  }
+
+  .employer {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 6px;
+    padding: 20px 24px;
+    background: var(--paper);
+    border: var(--border);
+    border-radius: var(--radius-card-sm);
+    box-shadow: 7px 7px 0 var(--muted-blue);
+    rotate: -1deg;
+  }
+
+  .employer__name {
+    font: 800 clamp(26px, 2.6vw, 32px) / 1 var(--font-display);
+  }
+
+  .employer__meta {
+    font: 17px/1.35 var(--font-body);
+  }
+
+  .tiles {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
+    gap: 18px;
+  }
+
+  .tools {
+    display: flex;
+    gap: 8px 12px;
+    align-items: baseline;
+    flex-wrap: wrap;
+    border-top: 2px dashed var(--graphite);
+    padding-top: 16px;
+    font: 16px/1.5 var(--font-body);
+  }
+
+  .tools b {
+    font: 800 16px/1 var(--font-display);
+  }
+</style>

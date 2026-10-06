@@ -1,0 +1,61 @@
+---
+import { ui } from "../data/content";
+
+const items = [...ui.nav, ui.navContact];
+---
+
+<nav id="mobile-menu" class="mobile-menu" aria-label="Main" hidden>
+  <ul>
+    {items.map((item) => (
+      <li>
+        <a href={item.href} data-menu-link>
+          <span>{item.label}</span>
+          <span aria-hidden="true">→</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>
+
+<style>
+  .mobile-menu {
+    position: relative;
+    z-index: 20;
+    margin: 0 20px 8px;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    background: var(--paper);
+    border: var(--border);
+    border-radius: var(--radius-card-sm);
+    box-shadow: 5px 5px 0 var(--lavender);
+  }
+
+  a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 48px;
+    padding: 0 14px;
+    border-radius: 10px;
+    font: 800 20px/1 var(--font-display);
+    color: var(--graphite);
+    text-decoration: none;
+  }
+
+  a:hover {
+    background: var(--cream);
+  }
+
+  @media (min-width: 760px) {
+    .mobile-menu {
+      display: none;
+    }
+  }
+</style>

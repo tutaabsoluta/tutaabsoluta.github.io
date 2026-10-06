@@ -1,0 +1,58 @@
+---
+import "../styles/global.css";
+import Contact from "../components/Contact.astro";
+import Experience from "../components/Experience.astro";
+import HowIWork from "../components/HowIWork.astro";
+import Intro from "../components/Intro.astro";
+import Projects from "../components/Projects.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import { content, ui } from "../data/content";
+
+const { person } = content;
+const title = `${person.name} · ${person.role}`;
+const description = `${person.name}, ${person.role} at ${person.company} in ${person.location}. ${person.summary}`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#F5EFE4" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Kalam:wght@700&display=swap"
+    />
+    <script is:inline>
+      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        document.documentElement.classList.add("fx");
+      }
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">
+      {ui.skipLink}
+    </a>
+    <SiteHeader />
+    <main id="main" tabindex="-1">
+      <Intro />
+      <Projects />
+      <Experience />
+      <HowIWork />
+      <Contact />
+    </main>
+
+    <script>
+      import { initInteractions } from "../scripts/interactions";
+      import { initReveal } from "../scripts/reveal";
+
+      initInteractions();
+      initReveal();
+    </script>
+  </body>
+</html>

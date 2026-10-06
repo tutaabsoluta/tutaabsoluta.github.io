@@ -1,0 +1,271 @@
+---
+import { shapeRadius, toneVar, ui, type Stage } from "../data/content";
+import HandArrow from "./HandArrow.astro";
+import PrintedShape from "./PrintedShape.astro";
+
+interface Props {
+  stage: Stage;
+  index: number;
+}
+
+const { stage: s, index } = Astro.props;
+
+/** S-path placement on the 3-column grid: 01–03 left to right, 04–06 right to left. */
+const positions: [number, number][] = [
+  [1, 1],
+  [2, 1],
+  [3, 1],
+  [3, 2],
+  [2, 2],
+  [1, 2],
+];
+const rotations = ["-1deg", "0.8deg", "-0.6deg", "1deg", "-0.8deg", "0.6deg"];
+const [col, row] = positions[index] ?? [1, index + 1];
+const rot = rotations[index] ?? "0deg";
+const delay = index * 110;
+const arrowDelay = delay + 260;
+const arrow =
+  index < 2 ? "right" : index === 2 ? "down" : index < 5 ? "left" : null;
+const tone = toneVar[s.tone];
+---
+
+<li
+  class="stage"
+  data-fx="settle"
+  data-delay={delay}
+  data-narrow="(max-width: 999.98px)"
+  data-delay-narrow="0"
+  style={`--col:${col};--row:${row};--rot:${rot};--tone:${tone}`}
+>
+  <PrintedShape
+    class="stage__glyph"
+    fill={tone}
+    radius={shapeRadius[s.shape]}
+    glyph={s.glyph}
+  />
+  <span class="stage__n">
+    <span class="visually-hidden">{ui.how.stage} </span>
+    {s.n}
+  </span>
+  <h3 class="stage__name">{s.name}</h3>
+  <p class="stage__what">{s.what}</p>
+  <div class="stage__seen">
+    <span class="stage__seen-label">{ui.how.seenIn}</span>
+    {s.seen.map((x) => (
+      <a
+        class="chip"
+        href={`#work-${x.tile}`}
+        data-flash-target={`work-${x.tile}`}
+      >
+        {x.label}
+      </a>
+    ))}
+  </div>
+
+  {arrow === "right" && (
+    <HandArrow
+      class="stage__arrow stage__arrow--right"
+      width={62}
+      height={34}
+      curve="M4 18 C 18 8, 36 26, 54 14"
+      head="M46 9 L55 13 L49 21"
+      delay={arrowDelay}
+    />
+  )}
+  {arrow === "left" && (
+    <HandArrow
+      class="stage__arrow stage__arrow--left"
+      width={62}
+      height={34}
+      curve="M58 18 C 44 8, 26 26, 8 14"
+      head="M16 9 L7 13 L13 21"
+      delay={arrowDelay}
+    />
+  )}
+  {arrow === "down" && (
+    <HandArrow
+      class="stage__arrow stage__arrow--down"
+      width={40}
+      height={60}
+      curve="M20 4 C 32 18, 8 32, 20 52"
+      head="M12 46 L20 54 L27 45"
+      delay={arrowDelay}
+    />
+  )}
+</li>
+
+<style>
+  /* Narrow (default): vertical list item */
+  .stage {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      "glyph name n"
+      "what what what"
+      "seen seen seen";
+    align-items: center;
+    gap: 10px 12px;
+    margin-bottom: 14px;
+    padding: 16px;
+    background: var(--paper);
+    border: var(--border);
+    border-radius: var(--radius-card-sm);
+    box-shadow: 5px 5px 0 var(--tone);
+    --printed-size: 44px;
+    --printed-offset: 4px;
+    --printed-glyph: 20px;
+  }
+
+  .stage :global(.stage__glyph) {
+    grid-area: glyph;
+  }
+
+  .stage__n {
+    grid-area: n;
+    font: 800 13px/1 var(--font-display);
+    border: 2px solid var(--graphite);
+    border-radius: var(--radius-pill);
+    padding: 5px 8px;
+  }
+
+  .stage__name {
+    grid-area: name;
+    font: 800 24px/1 var(--font-display);
+    font-stretch: 85%;
+    text-transform: uppercase;
+  }
+
+  .stage__what {
+    grid-area: what;
+    font: 16px/1.45 var(--font-body);
+  }
+
+  .stage__seen {
+    grid-area: seen;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+    font: 14px/1.3 var(--font-body);
+  }
+
+  .stage__seen-label {
+    color: var(--text-muted);
+  }
+
+  .chip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    padding: 0 8px;
+    background: var(--tone);
+    border: 2px solid var(--graphite);
+    border-radius: 8px;
+    font-weight: 700;
+    color: var(--graphite);
+    text-decoration: none;
+  }
+
+  /* Extend the hit area to 44px without changing the drawn chip. */
+  .chip::before {
+    content: "";
+    position: absolute;
+    inset: -4px 0;
+  }
+
+  .chip:hover {
+    background: var(--paper);
+    color: var(--graphite);
+  }
+
+  .stage :global(.stage__arrow) {
+    display: none;
+  }
+
+  /* Wide: S-path grid */
+  @media (min-width: 1000px) {
+    .stage {
+      grid-column: var(--col);
+      grid-row: var(--row);
+      position: relative;
+      grid-template-columns: auto 1fr;
+      grid-template-rows: auto auto auto 1fr;
+      grid-template-areas:
+        "glyph n"
+        "name name"
+        "what what"
+        "seen seen";
+      align-items: start;
+      gap: 14px;
+      margin: 0;
+      padding: 22px;
+      border-radius: var(--radius-card);
+      box-shadow: 7px 7px 0 var(--tone);
+      rotate: var(--rot);
+      transition:
+        rotate 0.2s,
+        translate 0.2s;
+      --printed-size: 60px;
+      --printed-offset: 5px;
+      --printed-glyph: 28px;
+    }
+
+    .stage:hover {
+      rotate: 0deg;
+      translate: 0 -3px;
+    }
+
+    .stage__n {
+      justify-self: end;
+      font-size: 15px;
+      border-width: 2.5px;
+      padding: 6px 10px;
+    }
+
+    .stage__name {
+      font-size: clamp(28px, 2.6vw, 34px);
+      line-height: 0.95;
+      font-stretch: 82%;
+      letter-spacing: 0.01em;
+    }
+
+    .stage__what {
+      font-size: 17px;
+    }
+
+    .stage__seen {
+      align-self: end;
+      border-top: 2px dashed var(--graphite);
+      padding-top: 12px;
+    }
+
+    .chip {
+      min-height: 32px;
+    }
+
+    .chip::before {
+      inset: -6px 0;
+    }
+
+    .stage :global(.stage__arrow) {
+      display: block;
+      position: absolute;
+    }
+
+    .stage :global(.stage__arrow--right) {
+      right: -68px;
+      top: 46px;
+    }
+
+    .stage :global(.stage__arrow--left) {
+      left: -68px;
+      top: 46px;
+    }
+
+    .stage :global(.stage__arrow--down) {
+      right: 48px;
+      bottom: -62px;
+    }
+  }
+</style>

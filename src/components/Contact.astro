@@ -1,0 +1,215 @@
+---
+import { content, linkByKind, ui, type LinkKind } from "../data/content";
+import PrintedShape from "./PrintedShape.astro";
+import SectionTag from "./SectionTag.astro";
+
+const { contact, person } = content;
+
+const linkStyle: Record<LinkKind, { bg: string; fg: string; tone: string }> = {
+  Email: {
+    bg: "var(--graphite)",
+    fg: "var(--cream)",
+    tone: "var(--muted-blue)",
+  },
+  LinkedIn: {
+    bg: "var(--paper)",
+    fg: "var(--graphite)",
+    tone: "var(--lavender)",
+  },
+  GitHub: {
+    bg: "var(--paper)",
+    fg: "var(--graphite)",
+    tone: "var(--dusty-green)",
+  },
+};
+
+const links = contact.order.map((kind) => linkByKind(kind));
+const titleWords = contact.title.split(" ");
+---
+
+<section id="contact" class="contact" aria-labelledby="h-contact">
+  <div class="block contact__block">
+    <div class="contact__circle" data-fx="pop" aria-hidden="true">
+      <PrintedShape
+        fill="var(--lavender)"
+        radius="50%"
+        offset={8}
+        class="contact__circle-shape"
+      >
+        <span class="contact__circle-line"></span>
+      </PrintedShape>
+    </div>
+
+    <div class="contact__text">
+      <SectionTag label={ui.tags.contact} bg="var(--paper)" />
+      <h2 id="h-contact" class="contact__title" data-fx="settle">
+        {titleWords.map((word, i) => (
+          <>
+            {i > 0 && <br />}
+            {word}
+          </>
+        ))}
+      </h2>
+      <p class="contact__line">{contact.line}</p>
+    </div>
+
+    <div class="contact__links">
+      <span class="kalam-note contact__note" aria-hidden="true">
+        {contact.note}
+      </span>
+      {links.map((l, i) => {
+        const s = linkStyle[l.kind];
+        return (
+          <a
+            class="contact-link"
+            href={l.href}
+            data-fx="settle"
+            data-delay={i * 80}
+            style={`--bg:${s.bg};--fg:${s.fg};--tone:${s.tone}`}
+          >
+            <span>{l.kind}</span>
+            <span class="contact-link__label">{l.label} →</span>
+          </a>
+        );
+      })}
+    </div>
+  </div>
+
+  <footer class="footer">
+    <span>
+      {person.name} · {person.location}
+    </span>
+    <a href="#intro">{ui.footer.backToTop}</a>
+  </footer>
+</section>
+
+<style>
+  .contact {
+    padding: var(--section-space) var(--block-inset) clamp(24px, 4vw, 40px);
+  }
+
+  .contact__block {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 40px;
+    padding: clamp(36px, 6vw, 72px) var(--block-pad-x);
+    background: var(--block-peach);
+  }
+
+  .contact__circle {
+    position: absolute;
+    right: -50px;
+    top: -70px;
+    width: clamp(180px, 22vw, 280px);
+    height: clamp(180px, 22vw, 280px);
+    transition: rotate 0.4s;
+  }
+
+  .contact__circle:hover {
+    rotate: 20deg;
+  }
+
+  .contact__circle :global(.contact__circle-shape) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .contact__circle-line {
+    position: absolute;
+    left: 30%;
+    top: 46%;
+    width: 40%;
+    height: 2.5px;
+    background: var(--graphite);
+  }
+
+  .contact__text {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .contact__title {
+    font: 800 clamp(84px, 14vw, 176px) / 0.8 var(--font-display);
+    font-stretch: 76%;
+    letter-spacing: -0.035em;
+  }
+
+  .contact__line {
+    font: 18px/1.4 var(--font-body);
+  }
+
+  .contact__links {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    flex: 0 1 400px;
+    min-width: min(100%, 300px);
+  }
+
+  .contact__note {
+    align-self: flex-start;
+    font-size: 24px;
+    line-height: 1;
+  }
+
+  .contact-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    min-height: 58px;
+    padding: 0 18px;
+    background: var(--bg);
+    color: var(--fg);
+    border: var(--border);
+    border-radius: var(--radius-button-lg);
+    box-shadow: 6px 6px 0 var(--tone);
+    font: 700 17px/1.2 var(--font-body);
+    text-decoration: none;
+    transition:
+      transform 0.12s,
+      box-shadow 0.12s;
+  }
+
+  .contact-link:hover {
+    color: var(--fg);
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0 var(--tone);
+  }
+
+  .contact-link:active {
+    transform: translate(6px, 6px);
+    box-shadow: 0 0 0 var(--tone);
+  }
+
+  .contact-link__label {
+    overflow-wrap: anywhere;
+    text-align: right;
+  }
+
+  .footer {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 20px clamp(8px, 2vw, 16px) 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    font: 14px/1.4 var(--font-body);
+    color: var(--text-muted);
+  }
+
+  .footer a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+</style>

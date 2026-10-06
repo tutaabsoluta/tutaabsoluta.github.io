@@ -1,0 +1,77 @@
+---
+/**
+ * The signature "printed" object: a pastel fill shape offset by a few pixels,
+ * with a transparent graphite outline of the same shape on top.
+ *
+ * Size, offset and glyph size can come from props or from the parent's CSS
+ * (`--printed-size`, `--printed-offset`, `--printed-glyph`).
+ */
+interface Props {
+  /** Fill colour (CSS value). */
+  fill: string;
+  /** Border radius of both layers. */
+  radius: string;
+  /** Offset of the fill layer in px. */
+  offset?: number;
+  /** Width/height in px. */
+  size?: number;
+  glyph?: string;
+  glyphSize?: number;
+  class?: string;
+}
+
+const {
+  fill,
+  radius,
+  offset,
+  size,
+  glyph,
+  glyphSize,
+  class: className,
+} = Astro.props;
+
+const vars = [
+  `--fill:${fill}`,
+  `--radius:${radius}`,
+  offset !== undefined && `--printed-offset:${offset}px`,
+  size !== undefined && `--printed-size:${size}px`,
+  glyphSize !== undefined && `--printed-glyph:${glyphSize}px`,
+]
+  .filter(Boolean)
+  .join(";");
+---
+
+<div class:list={["printed", className]} aria-hidden="true" style={vars}>
+  <div class="printed__fill"></div>
+  <div class="printed__line">{glyph}</div>
+  <slot />
+</div>
+
+<style>
+  .printed {
+    position: relative;
+    flex: none;
+    width: var(--printed-size, auto);
+    height: var(--printed-size, auto);
+  }
+
+  .printed__fill,
+  .printed__line {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius);
+  }
+
+  .printed__fill {
+    translate: var(--printed-offset, 5px) var(--printed-offset, 5px);
+    background: var(--fill);
+  }
+
+  .printed__line {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: var(--border);
+    font: 800 var(--printed-glyph, 20px) / 1 var(--font-display);
+  }
+</style>

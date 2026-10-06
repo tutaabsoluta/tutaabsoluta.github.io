@@ -1,0 +1,27 @@
+---
+interface Props {
+  label: string;
+  /** Background colour (CSS value). */
+  bg: string;
+}
+
+const { label, bg } = Astro.props;
+---
+
+<span class="section-tag" data-fx="pop" style={`--tag-bg: ${bg}`}>
+  {label}
+</span>
+
+<style>
+  .section-tag {
+    align-self: flex-start;
+    background: var(--tag-bg);
+    border: var(--border);
+    border-radius: var(--radius-pill);
+    padding: 8px 14px;
+    font: 700 14px/1 var(--font-body);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    rotate: -2deg;
+  }
+</style>

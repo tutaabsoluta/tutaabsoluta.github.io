@@ -1,0 +1,133 @@
+---
+import { content, ui } from "../data/content";
+import MobileMenu from "./MobileMenu.astro";
+---
+
+<header class="site-header">
+  <a class="site-header__name" href="#intro">
+    {content.person.name}
+  </a>
+
+  <nav class="site-header__nav" aria-label="Main">
+    <ul>
+      {ui.nav.map((item) => (
+        <li>
+          <a class="nav-link" href={item.href}>
+            {item.label}
+          </a>
+        </li>
+      ))}
+      <li>
+        <a class="nav-contact" href={ui.navContact.href}>
+          {ui.navContact.label}
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <button
+    type="button"
+    class="menu-toggle"
+    aria-expanded="false"
+    aria-controls="mobile-menu"
+    data-menu-toggle
+    data-label-open={ui.menuOpen}
+    data-label-close={ui.menuClose}
+  >
+    {ui.menuOpen}
+  </button>
+</header>
+<MobileMenu />
+
+<style>
+  .site-header {
+    position: relative;
+    z-index: 20;
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 20px var(--gutter);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .site-header__name {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font: 800 20px/1 var(--font-display);
+    font-stretch: 85%;
+    color: var(--graphite);
+    text-decoration: none;
+  }
+
+  .site-header__nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    font: 700 15px/1 var(--font-body);
+  }
+
+  .nav-link,
+  .nav-contact {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--graphite);
+    text-decoration: none;
+    border-radius: var(--radius-pill);
+  }
+
+  .nav-link {
+    padding: 0 14px;
+  }
+
+  .nav-link:hover {
+    background: var(--warm-beige);
+  }
+
+  .nav-contact {
+    padding: 0 16px;
+    border: var(--border);
+    background: var(--soft-peach);
+    box-shadow: 3px 3px 0 var(--graphite);
+    transition:
+      transform 0.12s,
+      box-shadow 0.12s;
+  }
+
+  .nav-contact:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0 var(--graphite);
+  }
+
+  .nav-contact:active {
+    transform: translate(3px, 3px);
+    box-shadow: 0 0 0 var(--graphite);
+  }
+
+  .menu-toggle {
+    display: none;
+    min-height: 44px;
+    padding: 0 16px;
+    border: var(--border);
+    border-radius: var(--radius-pill);
+    background: var(--paper);
+    font: 700 15px/1 var(--font-body);
+    cursor: pointer;
+  }
+
+  @media (max-width: 759.98px) {
+    .site-header__nav {
+      display: none;
+    }
+
+    .menu-toggle {
+      display: block;
+    }
+  }
+</style>

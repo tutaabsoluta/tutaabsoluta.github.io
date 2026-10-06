@@ -1,0 +1,280 @@
+---
+/**
+ * The intro's "table of contents". At >=1120px it is a 600x540 composition of
+ * overlapping cards on a beige blob; below that, a simple stacked list.
+ */
+import { content, toneVar, ui } from "../data/content";
+import HandArrow from "./HandArrow.astro";
+import Sticker from "./Sticker.astro";
+
+/** Composition placement for the wide layout, in card order. */
+const placement = [
+  { x: 40, y: 40, w: 330, rot: "-2deg" },
+  { x: 250, y: 190, w: 330, rot: "1.5deg" },
+  { x: 60, y: 340, w: 320, rot: "-1deg" },
+];
+---
+
+<nav class="hero" aria-label="Sections">
+  <div
+    class="hero__blob"
+    aria-hidden="true"
+    data-fx="fade"
+    data-narrow="(max-width: 1119.98px)"
+    data-fx-narrow="none"
+  ></div>
+
+  <ul class="hero__cards">
+    {content.heroCards.map((c, i) => {
+      const p = placement[i] ?? { x: 0, y: 0, w: 320, rot: "0deg" };
+      return (
+        <li
+          class="hero-card"
+          data-fx="drop"
+          data-narrow="(max-width: 1119.98px)"
+          data-fx-narrow="settle"
+          data-delay={300 + i * 120}
+          style={`--x:${p.x}px;--y:${p.y}px;--w:${p.w}px;--rot:${p.rot};--tone:${toneVar[c.tone]}`}
+        >
+          <a class="hero-card__link" href={c.href}>
+            <span class="hero-card__n">{c.n}</span>
+            <span class="hero-card__title">{c.title}</span>
+            <span class="hero-card__fact">{c.fact}</span>
+            <span class="hero-card__arrow" aria-hidden="true">
+              →
+            </span>
+            {c.sticker && (
+              <Sticker
+                label={c.sticker}
+                place="right:-18px;top:-20px;rotate:8deg"
+              />
+            )}
+          </a>
+        </li>
+      );
+    })}
+  </ul>
+
+  <a
+    class="hero__talk"
+    href="#contact"
+    data-fx="pop"
+    data-narrow="(max-width: 1119.98px)"
+    data-fx-narrow="none"
+    data-delay="620"
+  >
+    {ui.intro.letsTalk[0]}
+    <br />
+    {ui.intro.letsTalk[1]}
+  </a>
+
+  <div
+    class="hero__note"
+    aria-hidden="true"
+    data-fx="fade"
+    data-narrow="(max-width: 1119.98px)"
+    data-fx-narrow="none"
+    data-delay="760"
+  >
+    {ui.intro.note}
+    <HandArrow
+      width={44}
+      height={44}
+      curve="M4 30 C 16 34, 30 26, 36 8"
+      head="M29 13 L36 6 L40 15"
+      delay={760}
+    />
+  </div>
+</nav>
+
+<style>
+  /* Narrow: stacked list */
+  .hero {
+    flex: 1 1 320px;
+    max-width: 560px;
+  }
+
+  .hero__blob,
+  .hero__talk,
+  .hero__note {
+    display: none;
+  }
+
+  .hero__cards {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .hero-card__link {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      "n title arrow"
+      "n fact arrow";
+    align-items: center;
+    gap: 3px 12px;
+    min-height: 56px;
+    padding: 12px 14px;
+    background: var(--paper);
+    border: var(--border);
+    border-radius: var(--radius-button-lg);
+    box-shadow: 5px 5px 0 var(--tone);
+    color: var(--graphite);
+    text-decoration: none;
+  }
+
+  .hero-card__link:hover {
+    color: var(--graphite);
+  }
+
+  .hero-card__n {
+    grid-area: n;
+    font: 800 13px/1 var(--font-display);
+    border: 2px solid var(--graphite);
+    border-radius: var(--radius-pill);
+    padding: 5px 8px;
+    background: var(--tone);
+  }
+
+  .hero-card__title {
+    grid-area: title;
+    font: 800 20px/1 var(--font-display);
+  }
+
+  .hero-card__fact {
+    grid-area: fact;
+    font: 14px/1.3 var(--font-body);
+  }
+
+  .hero-card__arrow {
+    grid-area: arrow;
+    font: 800 18px/1 var(--font-display);
+  }
+
+  .hero-card__link :global(.sticker) {
+    display: none;
+  }
+
+  /* Wide: overlapping composition */
+  @media (min-width: 1120px) {
+    .hero {
+      flex: 0 0 600px;
+      max-width: none;
+      height: 540px;
+      position: relative;
+    }
+
+    .hero__blob {
+      display: block;
+      position: absolute;
+      left: 30px;
+      top: 10px;
+      width: 540px;
+      height: 510px;
+      background: var(--warm-beige);
+      border-radius: 52% 48% 44% 56% / 48% 56% 44% 52%;
+    }
+
+    .hero__cards {
+      display: block;
+    }
+
+    .hero-card {
+      position: absolute;
+      left: var(--x);
+      top: var(--y);
+      width: var(--w);
+    }
+
+    .hero-card__link {
+      grid-template-columns: auto 1fr;
+      grid-template-areas:
+        "n arrow"
+        "title title"
+        "fact fact";
+      gap: 10px;
+      padding: 20px 22px;
+      border-radius: var(--radius-card);
+      box-shadow: 8px 8px 0 var(--tone);
+      rotate: var(--rot);
+      transition:
+        rotate 0.2s,
+        translate 0.2s;
+    }
+
+    .hero-card__link:hover {
+      rotate: 0deg;
+      translate: -3px -3px;
+    }
+
+    .hero-card__n {
+      justify-self: start;
+      font-size: 15px;
+      border-width: 2.5px;
+      padding: 6px 10px;
+    }
+
+    .hero-card__arrow {
+      justify-self: end;
+      font-size: 22px;
+    }
+
+    .hero-card__title {
+      font-size: 36px;
+      line-height: 0.92;
+      font-stretch: 80%;
+      letter-spacing: -0.01em;
+    }
+
+    .hero-card__fact {
+      font-size: 17px;
+      line-height: 1.4;
+    }
+
+    .hero-card__link :global(.sticker) {
+      display: block;
+    }
+
+    .hero__talk {
+      position: absolute;
+      left: 420px;
+      top: 420px;
+      width: 120px;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: var(--soft-peach);
+      border: var(--border);
+      border-radius: 50%;
+      box-shadow: 5px 5px 0 var(--graphite);
+      font: 800 22px/1 var(--font-display);
+      color: var(--graphite);
+      text-decoration: none;
+      rotate: 6deg;
+      transition: rotate 0.2s;
+    }
+
+    .hero__talk:hover {
+      color: var(--graphite);
+      rotate: -4deg;
+    }
+
+    .hero__note {
+      position: absolute;
+      left: -40px;
+      top: 262px;
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      font: 700 24px/1 var(--font-note);
+      rotate: -5deg;
+    }
+  }
+</style>

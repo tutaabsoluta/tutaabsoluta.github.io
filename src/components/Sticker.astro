@@ -1,0 +1,19 @@
+---
+interface Props {
+  label: string;
+  bg?: string;
+  /** Inline position/rotation, e.g. "right:-12px;top:-18px;rotate:6deg". */
+  place: string;
+  hidden?: boolean;
+}
+
+const { label, bg = "var(--soft-peach)", place, hidden = false } = Astro.props;
+---
+
+<span
+  class="sticker"
+  style={`background:${bg};${place}`}
+  aria-hidden={hidden ? "true" : undefined}
+>
+  {label}
+</span>

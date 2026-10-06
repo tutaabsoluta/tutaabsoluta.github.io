@@ -1,0 +1,39 @@
+---
+/** Hand-drawn arrow: a curve that draws itself on reveal, plus a static head. */
+interface Props {
+  width: number;
+  height: number;
+  curve: string;
+  head: string;
+  delay?: number;
+  class?: string;
+  style?: string;
+}
+
+const {
+  width,
+  height,
+  curve,
+  head,
+  delay,
+  class: className,
+  style,
+} = Astro.props;
+---
+
+<svg
+  class={className}
+  style={style}
+  aria-hidden="true"
+  width={width}
+  height={height}
+  viewBox={`0 0 ${width} ${height}`}
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path data-draw pathLength="1" d={curve} data-delay={delay}></path>
+  <path d={head}></path>
+</svg>

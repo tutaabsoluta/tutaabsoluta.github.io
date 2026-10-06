@@ -1,0 +1,138 @@
+---
+import { content, ui, type LinkKind } from "../data/content";
+import HeroContents from "./HeroContents.astro";
+import SectionTag from "./SectionTag.astro";
+
+const { person, links } = content;
+
+const linkStyle: Record<LinkKind, { bg: string; fg: string; tone: string }> = {
+  GitHub: {
+    bg: "var(--graphite)",
+    fg: "var(--cream)",
+    tone: "var(--muted-blue)",
+  },
+  LinkedIn: {
+    bg: "var(--paper)",
+    fg: "var(--graphite)",
+    tone: "var(--lavender)",
+  },
+  Email: {
+    bg: "var(--paper)",
+    fg: "var(--graphite)",
+    tone: "var(--soft-peach)",
+  },
+};
+
+const [first = "", ...rest] = person.name.split(" ");
+---
+
+<section id="intro" class="intro" aria-labelledby="h-intro">
+  <div class="intro__text">
+    <SectionTag label={ui.tags.intro} bg="var(--dusty-green)" />
+    <h1 id="h-intro" class="intro__name" data-fx="settle" data-delay="60">
+      {first}
+      <br />
+      {rest.join(" ")}
+    </h1>
+    <p class="intro__role" data-fx="settle" data-delay="140">
+      {person.role} at {person.company} · {person.location}
+    </p>
+    <p class="intro__summary" data-fx="settle" data-delay="200">
+      {person.summary}
+    </p>
+    <ul class="intro__links" data-fx="settle" data-delay="260">
+      {links.map((l) => {
+        const s = linkStyle[l.kind];
+        return (
+          <li>
+            <a
+              class="press-button"
+              href={l.href}
+              aria-label={`${l.kind}: ${l.label}`}
+              style={`--bg:${s.bg};--fg:${s.fg};--tone:${s.tone}`}
+            >
+              {l.kind}
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  </div>
+
+  <HeroContents />
+</section>
+
+<style>
+  .intro {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: clamp(24px, 5vw, 64px) var(--gutter) var(--section-space);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 48px;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .intro__text {
+    flex: 1 1 440px;
+    min-width: 0;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  .intro__name {
+    font: 800 clamp(84px, 13vw, 164px) / 0.82 var(--font-display);
+    font-stretch: 76%;
+    letter-spacing: -0.035em;
+  }
+
+  .intro__role {
+    font: 700 clamp(19px, 1.8vw, 22px) / 1.3 var(--font-body);
+  }
+
+  .intro__summary {
+    max-width: 34ch;
+    font: clamp(18px, 1.7vw, 21px) / 1.5 var(--font-body);
+    color: var(--text-body);
+  }
+
+  .intro__links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .press-button {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 0 18px;
+    border: var(--border);
+    border-radius: var(--radius-button);
+    background: var(--bg);
+    color: var(--fg);
+    box-shadow: 4px 4px 0 var(--tone);
+    font: 700 16px/1 var(--font-body);
+    text-decoration: none;
+    transition:
+      transform 0.12s,
+      box-shadow 0.12s;
+  }
+
+  .press-button:hover {
+    color: var(--fg);
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--tone);
+  }
+
+  .press-button:active {
+    transform: translate(4px, 4px);
+    box-shadow: 0 0 0 var(--tone);
+  }
+</style>

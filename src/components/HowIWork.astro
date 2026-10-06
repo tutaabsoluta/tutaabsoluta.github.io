@@ -1,0 +1,73 @@
+---
+import { content, ui } from "../data/content";
+import SectionTag from "./SectionTag.astro";
+import StageCard from "./StageCard.astro";
+
+const { howIWork } = content;
+---
+
+<section id="how" class="block-wrap" aria-labelledby="h-how">
+  <div class="block how">
+    <div class="section-head">
+      <div class="section-head__title">
+        <SectionTag label={ui.tags.how} bg="var(--paper)" />
+        <h2 id="h-how" class="display-h2" data-fx="settle">
+          {ui.how.title}
+        </h2>
+      </div>
+      <p class="how__intro" data-fx="settle" data-delay="100">
+        {howIWork.intro}
+      </p>
+    </div>
+
+    <ol class="stages">
+      {howIWork.stages.map((stage, index) => (
+        <StageCard stage={stage} index={index} />
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .how {
+    background: var(--block-sage);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(28px, 4vw, 48px);
+  }
+
+  .how__intro {
+    max-width: 26ch;
+    font: clamp(19px, 1.8vw, 22px) / 1.4 var(--font-body);
+  }
+
+  /* Narrow: vertical list with a dashed spine */
+  .stages {
+    position: relative;
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 38px;
+  }
+
+  .stages::before {
+    content: "";
+    position: absolute;
+    left: 10px;
+    top: 24px;
+    bottom: 24px;
+    border-left: 2.5px dashed var(--graphite);
+  }
+
+  @media (min-width: 1000px) {
+    .stages {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 64px 72px;
+      padding: 0 8px 0 0;
+    }
+
+    .stages::before {
+      display: none;
+    }
+  }
+</style>

@@ -1,0 +1,143 @@
+---
+import { shapeRadius, tintVar, ui, type WorkTile } from "../data/content";
+import PrintedShape from "./PrintedShape.astro";
+
+interface Props {
+  tile: WorkTile;
+  index: number;
+}
+
+const { tile: t, index } = Astro.props;
+const rotations = [
+  "-0.6deg",
+  "0.6deg",
+  "0.4deg",
+  "-0.4deg",
+  "0.5deg",
+  "-0.5deg",
+  "0.4deg",
+  "-0.4deg",
+];
+const rot = rotations[index % rotations.length] ?? "0deg";
+const detailId = `work-${t.id}-detail`;
+const originalId = `work-${t.id}-original`;
+---
+
+<li
+  id={`work-${t.id}`}
+  class="tile"
+  data-fx="settle"
+  data-delay={(index % 4) * 70}
+  style={`--tint:${tintVar[t.tone]};--rot:${rot}`}
+>
+  <div class="tile__top">
+    <PrintedShape
+      size={44}
+      offset={4}
+      fill="var(--paper)"
+      radius={shapeRadius[t.shape]}
+      glyph={t.glyph}
+      glyphSize={20}
+    />
+    <button
+      type="button"
+      class="tile__toggle"
+      aria-expanded="false"
+      aria-controls={`${detailId} ${originalId}`}
+      aria-label={`${ui.experience.showFull} ${t.title}`}
+      data-flip
+      data-label-show={`${ui.experience.showFull} ${t.title}`}
+      data-label-hide={`${ui.experience.hideFull} ${t.title}`}
+    >
+      <span class="tile__sign" aria-hidden="true">
+        +
+      </span>
+    </button>
+  </div>
+  <h3 class="tile__title">{t.title}</h3>
+  <p id={detailId} class="tile__detail">
+    {t.detail}
+  </p>
+  <p id={originalId} class="tile__original" hidden>
+    {t.original}
+  </p>
+</li>
+
+<style>
+  .tile {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 200px;
+    padding: 18px;
+    background: var(--tint);
+    border: var(--border);
+    border-radius: var(--radius-card-sm);
+    rotate: var(--rot);
+    transition:
+      rotate 0.2s,
+      translate 0.2s,
+      box-shadow 0.3s;
+  }
+
+  .tile:hover {
+    rotate: 0deg;
+    translate: 0 -3px;
+  }
+
+  .tile[data-flash] {
+    box-shadow: 0 0 0 4px var(--ink-blue);
+  }
+
+  .tile__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .tile__toggle {
+    width: 44px;
+    height: 44px;
+    margin: -6px -6px 0 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .tile__sign {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--graphite);
+    border-radius: 50%;
+    font: 800 17px/1 var(--font-display);
+  }
+
+  .tile__toggle[aria-expanded="true"] .tile__sign {
+    background: var(--paper);
+  }
+
+  .tile__title {
+    font: 800 22px/1.05 var(--font-display);
+    font-stretch: 88%;
+  }
+
+  .tile__detail {
+    margin-top: auto;
+    font: 15px/1.4 var(--font-body);
+  }
+
+  .tile__original {
+    font: 15px/1.5 var(--font-body);
+    background: var(--paper);
+    border: 2px solid var(--graphite);
+    border-radius: 10px;
+    padding: 10px 12px;
+  }
+</style>

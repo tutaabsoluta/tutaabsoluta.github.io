@@ -1,0 +1,73 @@
+---
+import { content, ui } from "../data/content";
+import ProjectCard from "./ProjectCard.astro";
+import SectionTag from "./SectionTag.astro";
+---
+
+<section id="build" class="block-wrap" aria-labelledby="h-build">
+  <div class="block build">
+    <div class="section-head">
+      <div class="section-head__title">
+        <SectionTag label={ui.tags.build} bg="var(--paper)" />
+        <h2 id="h-build" class="display-h2" data-fx="settle">
+          {ui.build.title}
+        </h2>
+      </div>
+      <span
+        class="kalam-note"
+        aria-hidden="true"
+        data-fx="fade"
+        data-delay="200"
+      >
+        {ui.build.note}
+      </span>
+    </div>
+
+    <div class="build__grid">
+      {content.projects.map((project, index) => (
+        <ProjectCard project={project} index={index} />
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .build {
+    background: var(--block-lavender);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(28px, 4vw, 44px);
+  }
+
+  .build__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr));
+    gap: 32px;
+    align-items: start;
+  }
+
+  .build__grid > :global(:nth-child(odd)) {
+    --rot: -1deg;
+  }
+
+  .build__grid > :global(:nth-child(even)) {
+    --rot: 1deg;
+  }
+
+  /* Two columns are guaranteed from here: the cards overlap by 8px. */
+  @media (min-width: 920px) {
+    .build__grid {
+      gap: 0;
+    }
+
+    .build__grid > :global(:nth-child(1)) {
+      margin-right: -8px;
+      z-index: 1;
+    }
+
+    .build__grid > :global(:nth-child(2)) {
+      margin: 48px 0 0 -8px;
+      z-index: 2;
+    }
+  }
+</style>

@@ -1,0 +1,43 @@
+:root {
+  /* Colour */
+  --cream: #f5efe4;
+  --paper: #fbf8f2;
+  --graphite: #2a2a2e;
+  --muted-blue: #8fa8c8;
+  --dusty-green: #9db59a;
+  --soft-peach: #f2b99a;
+  --lavender: #b9aed6;
+  --warm-beige: #e3d3bc;
+  --ink-blue: #3e5a86;
+  --text-body: #3a3732;
+  --text-muted: #4a4640;
+  --text-subtle: #5a5650;
+  --block-lavender: #e4ddee;
+  --block-sage: #dce4da;
+  --block-peach: #f7dccb;
+  --tint-blue: #d9e2ee;
+
+  /* Type */
+  --font-display: "Bricolage Grotesque", "Arial Narrow", sans-serif;
+  --font-body: "Atkinson Hyperlegible", system-ui, sans-serif;
+  --font-note: "Kalam", cursive;
+
+  /* Shape */
+  --border: 2.5px solid var(--graphite);
+  --radius-card: 18px;
+  --radius-card-sm: 16px;
+  --radius-block: clamp(16px, 2vw, 24px);
+  --radius-button: 12px;
+  --radius-button-lg: 14px;
+  --radius-pill: 999px;
+
+  /* Layout */
+  --max-width: 1280px;
+  --gutter: clamp(20px, 4vw, 48px);
+  --block-inset: clamp(12px, 2vw, 24px);
+  --block-pad-x: clamp(20px, 4vw, 56px);
+  --section-space: clamp(64px, 9vw, 120px);
+
+  /* Motion */
+  --ease-settle: cubic-bezier(0.2, 0.8, 0.25, 1);
+}
