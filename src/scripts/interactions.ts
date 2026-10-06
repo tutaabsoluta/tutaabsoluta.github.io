@@ -67,7 +67,6 @@ function initTileFlips(): void {
     .querySelectorAll<HTMLButtonElement>("[data-flip]")
     .forEach((button) => {
       const [detail, original] = controlled(button);
-      const sign = button.querySelector("[aria-hidden]");
       if (!detail || !original) return;
       button.addEventListener("click", () => {
         const open = button.getAttribute("aria-expanded") !== "true";
@@ -77,7 +76,6 @@ function initTileFlips(): void {
           (open ? button.dataset["labelHide"] : button.dataset["labelShow"]) ??
             "",
         );
-        if (sign) sign.textContent = open ? "−" : "+";
         detail.hidden = open;
         original.hidden = !open;
       });

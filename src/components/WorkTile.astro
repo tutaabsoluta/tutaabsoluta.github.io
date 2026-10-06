@@ -49,9 +49,7 @@ const originalId = `work-${t.id}-original`;
       data-label-show={`${ui.experience.showFull} ${t.title}`}
       data-label-hide={`${ui.experience.hideFull} ${t.title}`}
     >
-      <span class="tile__sign" aria-hidden="true">
-        +
-      </span>
+      <span class="tile__sign" aria-hidden="true"></span>
     </button>
   </div>
   <h3 class="tile__title">{t.title}</h3>
@@ -109,18 +107,57 @@ const originalId = `work-${t.id}-original`;
   }
 
   .tile__sign {
+    position: relative;
     width: 30px;
     height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     border: 2px solid var(--graphite);
     border-radius: 50%;
-    font: 800 17px/1 var(--font-display);
+    transition:
+      background-color 0.2s,
+      scale 0.15s var(--ease-settle);
+  }
+
+  /* Two bars draw the sign; the vertical one rotates flat to become "−". */
+  .tile__sign::before,
+  .tile__sign::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 12px;
+    height: 2.5px;
+    border-radius: 1px;
+    background: currentColor;
+  }
+
+  .tile__sign::after {
+    rotate: 90deg;
+    transition: rotate 0.28s var(--ease-settle);
+  }
+
+  .tile__toggle:active .tile__sign {
+    scale: 0.9;
   }
 
   .tile__toggle[aria-expanded="true"] .tile__sign {
     background: var(--paper);
+  }
+
+  .tile__toggle[aria-expanded="true"] .tile__sign::after {
+    rotate: 180deg;
+  }
+
+  /* Replays each time `hidden` is lifted, so the swapped-in text eases up. */
+  .tile__detail,
+  .tile__original {
+    animation: tile-text-in 0.32s var(--ease-settle);
+  }
+
+  @keyframes tile-text-in {
+    from {
+      opacity: 0;
+      translate: 0 6px;
+    }
   }
 
   .tile__title {
