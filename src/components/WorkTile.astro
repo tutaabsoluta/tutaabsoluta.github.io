@@ -48,7 +48,8 @@ const originalId = `work-${t.id}-original`;
   </h3>
   <p class="entry__detail">{t.detail}</p>
   <a class="entry__back" href="#how" hidden data-back>
-    <span aria-hidden="true">← </span>{ui.experience.backToHow}
+    <span aria-hidden="true">← </span>
+    {ui.experience.backToHow}
   </a>
   <button
     type="button"
@@ -102,8 +103,8 @@ const originalId = `work-${t.id}-original`;
   /* Highlighter stroke under the title, in the entry's tone. */
   .entry__mark {
     padding: 0 3px;
-    background: linear-gradient(var(--tone), var(--tone)) left bottom / 100%
-      40% no-repeat;
+    background: linear-gradient(var(--tone), var(--tone)) left bottom / 100% 40%
+      no-repeat;
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
     transition: background-size 0.25s var(--ease-settle);

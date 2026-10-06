@@ -29,7 +29,9 @@ const { experience } = content;
   </div>
 
   <ul class="log" data-fx="settle">
-    {experience.tiles.map((tile) => <WorkTile tile={tile} />)}
+    {experience.tiles.map((tile) => (
+      <WorkTile tile={tile} />
+    ))}
   </ul>
 
   <p class="tools" data-fx="fade">

@@ -43,7 +43,23 @@ const vars = [
 
 <div class:list={["printed", className]} aria-hidden="true" style={vars}>
   <div class="printed__fill"></div>
-  <div class="printed__line">{glyph}</div>
+  <div class="printed__line">
+    {glyph === "⌕" ? (
+      <svg
+        class="printed__icon"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.4"
+        stroke-linecap="round"
+      >
+        <circle cx="10.5" cy="10.5" r="6" />
+        <path d="M15 15 L20 20" />
+      </svg>
+    ) : (
+      glyph
+    )}
+  </div>
   <slot />
 </div>
 
@@ -69,6 +85,12 @@ const vars = [
     translate: var(--at) var(--at);
     background: var(--fill);
     transition: translate 0.25s var(--ease-settle);
+  }
+
+  /* The display font has no "⌕", so it is drawn to match the other glyphs. */
+  .printed__icon {
+    width: 1.25em;
+    height: 1.25em;
   }
 
   .printed__line {

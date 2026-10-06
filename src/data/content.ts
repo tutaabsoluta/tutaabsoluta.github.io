@@ -3,7 +3,7 @@
  * single source of truth; this module only adds types and validates the
  * enumerated fields (tones, shapes, link kinds) at build time.
  */
-import raw from "./content.json";
+import raw from "./content.json" with { type: "json" };
 
 export type LinkKind = "GitHub" | "LinkedIn" | "Email";
 export type Tone = "lavender" | "blue" | "green" | "peach" | "beige";

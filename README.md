@@ -12,6 +12,14 @@ Sergio Duran's portfolio ("Working Parts"). Astro + strict TypeScript, static ou
 | `npm run lint`    | ESLint (typescript-eslint + astro)  |
 | `npm run check`   | `astro check` (types + diagnostics) |
 | `npm run format`  | Prettier (write)                    |
+| `npm test`        | build + Playwright suite            |
+| `npm run test:ui` | Playwright UI mode                  |
+
+## Tests and deploy
+
+Playwright tests (`tests/`, page objects + fixtures) run against the built site at desktop and phone sizes: cross-links, toggles, navigation, motion, visual snapshots and axe accessibility checks.
+`.github/workflows/pipeline.yml` checks, tests and builds every push; only a passing `main` is deployed to GitHub Pages, together with `ci-report.json`, a public summary of the run.
+After an intended visual change, run the **Update visual baselines** workflow, then re-run **Test & deploy**.
 
 ## Content
 

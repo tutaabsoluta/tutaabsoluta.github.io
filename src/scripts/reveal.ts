@@ -106,5 +106,14 @@ export function initReveal(): void {
     { threshold: 0.12 },
   );
 
-  targets.forEach((el) => observer.observe(el));
+  targets.forEach((el) => {
+    // No effect at this width (often because the element is hidden here, so
+    // it would never intersect): mark it done now so it is visible if the
+    // viewport later grows.
+    if (resolve(el).fx === "none") {
+      el.dataset["fxDone"] = "";
+      return;
+    }
+    observer.observe(el);
+  });
 }

@@ -2,6 +2,11 @@
 dist/
 .astro/
 
+# test output
+test-results/
+playwright-report/
+reports/
+
 # dependencies
 node_modules/
 
