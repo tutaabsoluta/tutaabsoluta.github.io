@@ -154,6 +154,13 @@ const placement = [
   .hero-card__arrow {
     grid-area: arrow;
     font: 800 18px/1 var(--font-display);
+    transition: translate 0.2s var(--ease-settle);
+  }
+
+  @media (hover: hover) {
+    .hero-card__link:hover .hero-card__arrow {
+      translate: 3px 0;
+    }
   }
 
   .hero-card__link :global(.sticker) {
@@ -203,13 +210,15 @@ const placement = [
       box-shadow: 8px 8px 0 var(--tone);
       rotate: var(--rot);
       transition:
-        rotate 0.2s,
-        translate 0.2s;
+        rotate 0.2s var(--ease-settle),
+        translate 0.2s var(--ease-settle);
     }
 
-    .hero-card__link:hover {
-      rotate: 0deg;
-      translate: -3px -3px;
+    @media (hover: hover) {
+      .hero-card__link:hover {
+        rotate: 0deg;
+        translate: -3px -3px;
+      }
     }
 
     .hero-card__n {
@@ -258,7 +267,7 @@ const placement = [
       color: var(--graphite);
       text-decoration: none;
       rotate: 6deg;
-      transition: rotate 0.2s;
+      transition: rotate 0.25s var(--ease-settle);
     }
 
     .hero__talk:hover {

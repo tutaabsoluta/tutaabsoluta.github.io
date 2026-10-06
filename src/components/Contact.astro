@@ -68,7 +68,9 @@ const titleWords = contact.title.split(" ");
             style={`--bg:${s.bg};--fg:${s.fg};--tone:${s.tone}`}
           >
             <span>{l.kind}</span>
-            <span class="contact-link__label">{l.label} →</span>
+            <span class="contact-link__label">
+              {l.label} <span class="contact-link__arrow">→</span>
+            </span>
           </a>
         );
       })}
@@ -106,7 +108,7 @@ const titleWords = contact.title.split(" ");
     top: -70px;
     width: clamp(180px, 22vw, 280px);
     height: clamp(180px, 22vw, 280px);
-    transition: rotate 0.4s;
+    transition: rotate 0.4s var(--ease-settle);
   }
 
   .contact__circle:hover {
@@ -174,14 +176,23 @@ const titleWords = contact.title.split(" ");
     font: 700 17px/1.2 var(--font-body);
     text-decoration: none;
     transition:
-      transform 0.12s,
-      box-shadow 0.12s;
+      transform 0.12s var(--ease-settle),
+      box-shadow 0.12s var(--ease-settle);
   }
 
   .contact-link:hover {
     color: var(--fg);
-    transform: translate(-2px, -2px);
-    box-shadow: 8px 8px 0 var(--tone);
+  }
+
+  @media (hover: hover) {
+    .contact-link:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 8px 8px 0 var(--tone);
+    }
+
+    .contact-link:hover .contact-link__arrow {
+      translate: 3px 0;
+    }
   }
 
   .contact-link:active {
@@ -192,6 +203,11 @@ const titleWords = contact.title.split(" ");
   .contact-link__label {
     overflow-wrap: anywhere;
     text-align: right;
+  }
+
+  .contact-link__arrow {
+    display: inline-block;
+    transition: translate 0.2s var(--ease-settle);
   }
 
   .footer {

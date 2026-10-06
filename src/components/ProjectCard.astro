@@ -95,13 +95,15 @@ const tone = toneVar[p.tone];
     box-shadow: 8px 8px 0 var(--tone);
     rotate: var(--rot, 0deg);
     transition:
-      rotate 0.2s,
-      translate 0.2s;
+      rotate 0.2s var(--ease-settle),
+      translate 0.2s var(--ease-settle);
   }
 
-  .project:hover {
-    rotate: 0deg;
-    translate: 0 -3px;
+  @media (hover: hover) {
+    .project:hover {
+      rotate: 0deg;
+      translate: 0 -3px;
+    }
   }
 
   .project__drawing {
@@ -207,7 +209,7 @@ const tone = toneVar[p.tone];
 
   .chevron {
     display: inline-block;
-    transition: rotate 0.2s;
+    transition: rotate 0.25s var(--ease-settle);
   }
 
   .project__toggle[aria-expanded="true"] .chevron {
@@ -227,6 +229,31 @@ const tone = toneVar[p.tone];
     border: var(--border);
     border-radius: var(--radius-button);
     overflow: hidden;
+    animation: details-in 0.32s var(--ease-settle);
+  }
+
+  /* Replays each time `hidden` is lifted; rows follow the panel in. */
+  .row {
+    animation: details-in 0.32s var(--ease-settle) backwards;
+  }
+
+  .row:nth-child(2) {
+    animation-delay: 40ms;
+  }
+
+  .row:nth-child(3) {
+    animation-delay: 80ms;
+  }
+
+  .row:nth-child(n + 4) {
+    animation-delay: 120ms;
+  }
+
+  @keyframes details-in {
+    from {
+      opacity: 0;
+      translate: 0 6px;
+    }
   }
 
   .row {

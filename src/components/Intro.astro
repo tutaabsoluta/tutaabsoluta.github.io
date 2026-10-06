@@ -121,14 +121,19 @@ const [first = "", ...rest] = person.name.split(" ");
     font: 700 16px/1 var(--font-body);
     text-decoration: none;
     transition:
-      transform 0.12s,
-      box-shadow 0.12s;
+      transform 0.12s var(--ease-settle),
+      box-shadow 0.12s var(--ease-settle);
   }
 
   .press-button:hover {
     color: var(--fg);
-    transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0 var(--tone);
+  }
+
+  @media (hover: hover) {
+    .press-button:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 var(--tone);
+    }
   }
 
   .press-button:active {

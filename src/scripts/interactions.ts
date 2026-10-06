@@ -82,8 +82,27 @@ function initTileFlips(): void {
     });
 }
 
+/** Calls `done` once the page has stopped scrolling for `quietMs`. */
+function afterScrollSettles(done: () => void, quietMs = 120): () => void {
+  let timer = window.setTimeout(finish, quietMs);
+  function onScroll(): void {
+    window.clearTimeout(timer);
+    timer = window.setTimeout(finish, quietMs);
+  }
+  function finish(): void {
+    window.removeEventListener("scroll", onScroll);
+    done();
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  return () => {
+    window.clearTimeout(timer);
+    window.removeEventListener("scroll", onScroll);
+  };
+}
+
 function initChipFlash(): void {
   let timer: number | undefined;
+  let cancelWait: (() => void) | undefined;
   let flashed: HTMLElement | null = null;
 
   document
@@ -95,13 +114,18 @@ function initChipFlash(): void {
         );
         if (!target) return;
         window.clearTimeout(timer);
+        cancelWait?.();
         flashed?.removeAttribute("data-flash");
-        flashed = target;
-        target.setAttribute("data-flash", "");
-        timer = window.setTimeout(() => {
-          target.removeAttribute("data-flash");
-          flashed = null;
-        }, FLASH_MS);
+        flashed = null;
+        // Wait for the smooth scroll to land so the highlight is seen in full.
+        cancelWait = afterScrollSettles(() => {
+          flashed = target;
+          target.setAttribute("data-flash", "");
+          timer = window.setTimeout(() => {
+            target.removeAttribute("data-flash");
+            flashed = null;
+          }, FLASH_MS);
+        });
       });
     });
 }

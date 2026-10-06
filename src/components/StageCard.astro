@@ -165,6 +165,7 @@ const tone = toneVar[s.tone];
     font-weight: 700;
     color: var(--graphite);
     text-decoration: none;
+    transition: background-color 0.15s;
   }
 
   /* Extend the hit area to 44px without changing the drawn chip. */
@@ -204,17 +205,22 @@ const tone = toneVar[s.tone];
       box-shadow: 7px 7px 0 var(--tone);
       rotate: var(--rot);
       transition:
-        rotate 0.2s,
-        translate 0.2s;
+        rotate 0.2s var(--ease-settle),
+        translate 0.2s var(--ease-settle);
       --printed-size: 60px;
       --printed-offset: 5px;
       --printed-glyph: 28px;
     }
+  }
 
+  @media (min-width: 1000px) and (hover: hover) {
     .stage:hover {
       rotate: 0deg;
       translate: 0 -3px;
     }
+  }
+
+  @media (min-width: 1000px) {
 
     .stage__n {
       justify-self: end;

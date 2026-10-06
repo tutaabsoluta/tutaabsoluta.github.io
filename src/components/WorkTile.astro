@@ -73,18 +73,34 @@ const originalId = `work-${t.id}-original`;
     border-radius: var(--radius-card-sm);
     rotate: var(--rot);
     transition:
-      rotate 0.2s,
-      translate 0.2s,
+      rotate 0.2s var(--ease-settle),
+      translate 0.2s var(--ease-settle),
       box-shadow 0.3s;
   }
 
-  .tile:hover {
-    rotate: 0deg;
-    translate: 0 -3px;
+  @media (hover: hover) {
+    .tile:hover {
+      rotate: 0deg;
+      translate: 0 -3px;
+    }
   }
 
   .tile[data-flash] {
     box-shadow: 0 0 0 4px var(--ink-blue);
+    animation: tile-wiggle 0.5s var(--ease-settle);
+  }
+
+  /* One nudge when a "Seen in" chip lands here. */
+  @keyframes tile-wiggle {
+    25% {
+      rotate: -2deg;
+    }
+    55% {
+      rotate: 1.5deg;
+    }
+    80% {
+      rotate: -0.5deg;
+    }
   }
 
   .tile__top {

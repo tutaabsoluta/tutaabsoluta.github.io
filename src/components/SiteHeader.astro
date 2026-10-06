@@ -84,6 +84,7 @@ import MobileMenu from "./MobileMenu.astro";
 
   .nav-link {
     padding: 0 14px;
+    transition: background-color 0.15s;
   }
 
   .nav-link:hover {
@@ -96,13 +97,15 @@ import MobileMenu from "./MobileMenu.astro";
     background: var(--soft-peach);
     box-shadow: 3px 3px 0 var(--graphite);
     transition:
-      transform 0.12s,
-      box-shadow 0.12s;
+      transform 0.12s var(--ease-settle),
+      box-shadow 0.12s var(--ease-settle);
   }
 
-  .nav-contact:hover {
-    transform: translate(-1px, -1px);
-    box-shadow: 4px 4px 0 var(--graphite);
+  @media (hover: hover) {
+    .nav-contact:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 4px 4px 0 var(--graphite);
+    }
   }
 
   .nav-contact:active {
