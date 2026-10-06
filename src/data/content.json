@@ -7,9 +7,9 @@
     "summary": "Test automation for web products: Playwright UI and API tests, built into CI/CD workflows."
   },
   "links": [
-    { "kind": "GitHub", "label": "[GITHUB_URL]", "href": "[GITHUB_URL]" },
-    { "kind": "LinkedIn", "label": "[LINKEDIN_URL]", "href": "[LINKEDIN_URL]" },
-    { "kind": "Email", "label": "[EMAIL]", "href": "mailto:[EMAIL]" }
+    { "kind": "GitHub", "label": "tutaabsoluta", "href": "https://github.com/tutaabsoluta" },
+    { "kind": "LinkedIn", "label": "sergioduranleiton", "href": "https://www.linkedin.com/in/sergioduranleiton" },
+    { "kind": "Email", "label": "fungusdev@gmail.com", "href": "mailto:fungusdev@gmail.com" }
   ],
   "heroCards": [
     {
