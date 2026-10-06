@@ -126,6 +126,18 @@ const tone = toneVar[s.tone];
     border: 2px solid var(--graphite);
     border-radius: var(--radius-pill);
     padding: 5px 8px;
+    transition: background-color 0.2s;
+  }
+
+  @media (hover: hover) {
+    .stage:hover .stage__n {
+      background: var(--tone);
+    }
+
+    /* The fill slides back under the outline: the "print" lines up. */
+    .stage:hover {
+      --printed-offset: 0px;
+    }
   }
 
   .stage__name {

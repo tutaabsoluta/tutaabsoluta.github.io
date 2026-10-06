@@ -62,9 +62,13 @@ const vars = [
     border-radius: var(--radius);
   }
 
+  /* Cards set --printed-shift on hover to slide the fill further out of
+     register. */
   .printed__fill {
-    translate: var(--printed-offset, 5px) var(--printed-offset, 5px);
+    --at: calc(var(--printed-offset, 5px) + var(--printed-shift, 0px));
+    translate: var(--at) var(--at);
     background: var(--fill);
+    transition: translate 0.25s var(--ease-settle);
   }
 
   .printed__line {
