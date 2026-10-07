@@ -17,3 +17,15 @@ test("the page loads without errors and says who it is", async ({ page }) => {
   );
   expect(errors).toEqual([]);
 });
+
+test("a shared link gets a preview image", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+    "content",
+    /^https:\/\/.+\/og\.png$/,
+  );
+  await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute(
+    "content",
+    "summary_large_image",
+  );
+});

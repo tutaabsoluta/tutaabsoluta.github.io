@@ -76,3 +76,21 @@ test("every in-page link points at something that exists", async ({
   );
   expect(missing).toEqual([]);
 });
+
+test("external links open in a new tab without leaking this page", async ({
+  page,
+  portfolio,
+}) => {
+  await expect(portfolio.header.menuToggle).toBeAttached();
+  const unsafe = await page.evaluate(() =>
+    [...document.querySelectorAll<HTMLAnchorElement>('a[href^="http"]')]
+      .filter(
+        (a) =>
+          a.target !== "_blank" ||
+          !a.relList.contains("noopener") ||
+          !a.relList.contains("noreferrer"),
+      )
+      .map((a) => a.href),
+  );
+  expect(unsafe).toEqual([]);
+});

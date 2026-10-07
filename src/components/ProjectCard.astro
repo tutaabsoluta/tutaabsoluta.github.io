@@ -1,5 +1,5 @@
 ---
-import { toneVar, ui, type Project } from "../data/content";
+import { linkAttrs, toneVar, ui, type Project } from "../data/content";
 import HandArrow from "./HandArrow.astro";
 import PrintedShape from "./PrintedShape.astro";
 import Sticker from "./Sticker.astro";
@@ -67,7 +67,7 @@ const tone = toneVar[p.tone];
         ↓
       </span>
     </button>
-    <a class="project__repo" href={p.repository}>
+    <a class="project__repo" href={p.repository} {...linkAttrs(p.repository)}>
       {p.repository}
     </a>
   </div>

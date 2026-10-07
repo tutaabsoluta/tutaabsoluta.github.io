@@ -228,6 +228,34 @@ export const ui = {
   },
   how: { title: "How I work", stage: "Stage", seenIn: "Seen in" },
   footer: { backToTop: "Back to top ↑" },
+  /** The 404 page: a receipt for the one test that failed. */
+  notFound: {
+    title: "Page not found · Sergio Duran",
+    description: "This address doesn't exist on Sergio Duran's portfolio.",
+    kicker: "Working Parts · test receipt",
+    heading: "404",
+    replaying: "a test just failed. live. in front of you.",
+    group: "This visit",
+    siteUp: "site is up",
+    lastRun: (n: number, passed: number) =>
+      `run #${n}: ${passed} tests passed (so it's not us)`,
+    searched: "looked under the footer",
+    asked: "asked the GitHub API",
+    pageExists: (path: string) => `page exists: ${path}`,
+    error: "Error: expect(page).toExist()",
+    expected: (path: string) => `Expected: ${path}`,
+    received: "Received: this receipt",
+    note: "100% reproducible. Filed under: probably a typo.",
+    stamp: "Failed",
+    home: "← back to the working parts",
+  },
+  /** The share-preview card (/og, screenshotted by scripts/og-image.mjs). */
+  og: {
+    alt: (name: string) =>
+      `${name}'s portfolio: test automation, built to be checked.`,
+    tag: "Working Parts",
+    tested: (n: number) => `${n} tests pass on every deploy`,
+  },
   /** The footer test-status pill and its receipt (the easter egg). */
   ci: {
     note: "psst… this site tests itself",
@@ -250,6 +278,7 @@ export const ui = {
       "motion.spec.ts": "Motion",
       "visual.spec.ts": "Looks",
       "accessibility.spec.ts": "Accessibility",
+      "not-found.spec.ts": "Lost pages",
       "easter-egg.spec.ts": "This receipt",
     } as Record<string, string>,
     totals: (passed: number, failed: number) =>
@@ -265,3 +294,17 @@ export const ui = {
     close: "Close receipt",
   },
 } as const;
+
+/**
+ * Attributes for a link: external http(s) links open in a new tab without
+ * exposing this page (noopener) or the referrer (noreferrer). mailto: and
+ * in-page links are left alone.
+ */
+export function linkAttrs(href: string): {
+  target?: "_blank";
+  rel?: "noopener noreferrer";
+} {
+  return /^https?:\/\//.test(href)
+    ? { target: "_blank", rel: "noopener noreferrer" }
+    : {};
+}

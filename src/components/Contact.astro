@@ -1,5 +1,11 @@
 ---
-import { content, linkByKind, ui, type LinkKind } from "../data/content";
+import {
+  content,
+  linkAttrs,
+  linkByKind,
+  ui,
+  type LinkKind,
+} from "../data/content";
 import CiStatus from "./CiStatus.astro";
 import HandArrow from "./HandArrow.astro";
 import PrintedShape from "./PrintedShape.astro";
@@ -73,6 +79,7 @@ const titleWords = contact.title.split(" ");
           <a
             class="contact-link"
             href={l.href}
+            {...linkAttrs(l.href)}
             data-fx="settle"
             data-delay={i * 80}
             style={`--bg:${s.bg};--fg:${s.fg};--tone:${s.tone}`}

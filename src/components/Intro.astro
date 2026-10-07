@@ -1,5 +1,5 @@
 ---
-import { content, ui, type LinkKind } from "../data/content";
+import { content, linkAttrs, ui, type LinkKind } from "../data/content";
 import HeroContents from "./HeroContents.astro";
 import SectionTag from "./SectionTag.astro";
 
@@ -51,6 +51,7 @@ const nowrap = (text: string): string => text.replaceAll(" ", "\u00a0");
             <a
               class="press-button"
               href={l.href}
+              {...linkAttrs(l.href)}
               aria-label={`${l.kind}: ${l.label}`}
               style={`--bg:${s.bg};--fg:${s.fg};--tone:${s.tone}`}
             >

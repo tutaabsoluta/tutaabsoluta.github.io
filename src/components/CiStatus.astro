@@ -45,13 +45,18 @@ import { ui } from "../data/content";
     </p>
     <p class="receipt__oops" data-ci-oops hidden>
       <span data-ci-oops-text></span>
-      <a target="_blank" rel="noopener" data-ci-oops-link>
+      <a target="_blank" rel="noopener noreferrer" data-ci-oops-link>
         {ui.ci.oopsLink}
       </a>
     </p>
     <div class="receipt__end" data-ci-end>
       <span class="receipt__stamp" data-ci-stamp></span>
-      <a class="receipt__link" target="_blank" rel="noopener" data-ci-link>
+      <a
+        class="receipt__link"
+        target="_blank"
+        rel="noopener noreferrer"
+        data-ci-link
+      >
         {ui.ci.viewRun}
       </a>
     </div>

@@ -75,6 +75,10 @@ jobs:
       - name: Save test results into the site
         run: node scripts/ci-report.mjs
 
+      # Share-preview image, rendered from the current content: no image in the repo.
+      - name: Generate share image
+        run: node scripts/og-image.mjs
+
       - name: Upload test report
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
