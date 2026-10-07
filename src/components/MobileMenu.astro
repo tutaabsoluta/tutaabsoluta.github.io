@@ -86,7 +86,14 @@ const items = [...ui.nav, ui.navContact];
     font: 800 20px/1 var(--font-display);
     color: var(--graphite);
     text-decoration: none;
-    transition: background-color 0.15s;
+    transition:
+      background-color 0.15s,
+      scale 0.1s var(--ease-settle);
+  }
+
+  a:active {
+    background: var(--cream);
+    scale: 0.98;
   }
 
   a:hover {

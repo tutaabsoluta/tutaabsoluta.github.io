@@ -4,6 +4,47 @@
  */
 
 const FLASH_MS = 1600;
+const EASE = "cubic-bezier(0.2, 0.8, 0.25, 1)"; // --ease-settle
+const running = new WeakMap<HTMLElement, Animation>();
+
+/**
+ * Shows or hides a panel, animating its height (and top margin) so the
+ * content below glides instead of jumping, in both directions. The panel's
+ * own CSS entrance (fade + rise) still plays on open. With reduced motion it
+ * simply toggles `hidden`.
+ */
+function setPanel(panel: HTMLElement, open: boolean): void {
+  running.get(panel)?.cancel();
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    panel.hidden = !open;
+    return;
+  }
+
+  if (open) panel.hidden = false;
+  const full = {
+    height: `${panel.offsetHeight}px`,
+    marginTop: getComputedStyle(panel).marginTop,
+    opacity: 1,
+  };
+  const none = { height: "0px", marginTop: "0px", opacity: 0 };
+
+  panel.style.overflow = "hidden";
+  const animation = panel.animate(open ? [none, full] : [full, none], {
+    duration: open ? 320 : 220,
+    easing: EASE,
+  });
+  running.set(panel, animation);
+
+  const settle = (): void => {
+    panel.style.overflow = "";
+    running.delete(panel);
+  };
+  animation.addEventListener("cancel", settle);
+  animation.addEventListener("finish", () => {
+    if (!open) panel.hidden = true;
+    settle();
+  });
+}
 
 function controlled(button: HTMLElement): HTMLElement[] {
   return (button.getAttribute("aria-controls") ?? "")
@@ -22,7 +63,7 @@ function initMenu(): void {
     toggle.setAttribute("aria-expanded", String(open));
     toggle.textContent =
       (open ? toggle.dataset["labelClose"] : toggle.dataset["labelOpen"]) ?? "";
-    menu.hidden = !open;
+    setPanel(menu, open);
   };
 
   toggle.addEventListener("click", () => {
@@ -34,7 +75,10 @@ function initMenu(): void {
   });
 
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && !menu.hidden) {
+    if (
+      event.key === "Escape" &&
+      toggle.getAttribute("aria-expanded") === "true"
+    ) {
       setOpen(false);
       toggle.focus();
     }
@@ -57,7 +101,7 @@ function initDisclosures(): void {
       button.addEventListener("click", () => {
         const open = button.getAttribute("aria-expanded") !== "true";
         button.setAttribute("aria-expanded", String(open));
-        panel.hidden = !open;
+        setPanel(panel, open);
       });
     });
 }
@@ -76,7 +120,7 @@ function initTileFlips(): void {
           (open ? button.dataset["labelHide"] : button.dataset["labelShow"]) ??
             "",
         );
-        original.hidden = !open;
+        setPanel(original, open);
       });
     });
 }

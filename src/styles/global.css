@@ -49,6 +49,12 @@ button {
   color: inherit;
 }
 
+/* Every tappable thing has its own press feedback; drop the grey flash. */
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
 a {
   color: var(--ink-blue);
   text-underline-offset: 3px;

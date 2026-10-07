@@ -177,7 +177,13 @@ const tone = toneVar[s.tone];
     font-weight: 700;
     color: var(--graphite);
     text-decoration: none;
-    transition: background-color 0.15s;
+    transition:
+      background-color 0.15s,
+      scale 0.1s var(--ease-settle);
+  }
+
+  .chip:active {
+    scale: 0.94;
   }
 
   /* Extend the hit area to 44px without changing the drawn chip. */

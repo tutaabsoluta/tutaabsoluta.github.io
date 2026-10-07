@@ -38,7 +38,9 @@ const placement = [
         >
           <a class="hero-card__link" href={c.href}>
             <span class="hero-card__n">{c.n}</span>
-            <span class="hero-card__title">{c.title}</span>
+            <span class="hero-card__title">
+              <span class="hero-card__mark">{c.title}</span>
+            </span>
             <span class="hero-card__fact">{c.fact}</span>
             <span class="hero-card__arrow" aria-hidden="true">
               →
@@ -126,6 +128,12 @@ const placement = [
     box-shadow: 5px 5px 0 var(--tone);
     color: var(--graphite);
     text-decoration: none;
+    transition: scale 0.1s var(--ease-settle);
+  }
+
+  /* Touch and click feedback: a quick press. */
+  .hero-card__link:active {
+    scale: 0.97;
   }
 
   .hero-card__link:hover {
@@ -144,6 +152,21 @@ const placement = [
   .hero-card__title {
     grid-area: title;
     font: 800 20px/1 var(--font-display);
+  }
+
+  /* Highlighter that sweeps in on hover, as on the log rows: "this is a link". */
+  .hero-card__mark {
+    background: linear-gradient(var(--tone), var(--tone)) left bottom / 0% 38%
+      no-repeat;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    transition: background-size 0.3s var(--ease-settle);
+  }
+
+  @media (hover: hover) {
+    .hero-card__link:hover .hero-card__mark {
+      background-size: 100% 38%;
+    }
   }
 
   .hero-card__fact {
@@ -211,7 +234,8 @@ const placement = [
       rotate: var(--rot);
       transition:
         rotate 0.2s var(--ease-settle),
-        translate 0.2s var(--ease-settle);
+        translate 0.2s var(--ease-settle),
+        scale 0.1s var(--ease-settle);
     }
 
     @media (hover: hover) {

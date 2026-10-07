@@ -206,6 +206,11 @@ const tone = toneVar[p.tone];
     background: none;
     font: 700 16px/1 var(--font-body);
     cursor: pointer;
+    transition: scale 0.1s var(--ease-settle);
+  }
+
+  .project__toggle:active {
+    scale: 0.96;
   }
 
   .chevron {
