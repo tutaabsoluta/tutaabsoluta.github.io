@@ -1,0 +1,207 @@
+---
+/**
+ * The 1200×630 share-preview card. Not a page for visitors: the pipeline
+ * screenshots it into dist/og.png (scripts/og-image.mjs) and then removes
+ * it, so the image is always built from the current content and design.
+ */
+import BaseHead from "../components/BaseHead.astro";
+import PrintedShape from "../components/PrintedShape.astro";
+import { content, ui } from "../data/content";
+
+const { person } = content;
+const [first = "", ...rest] = person.name.split(" ");
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead
+      title={`${person.name} · share card`}
+      description={person.summary}
+    >
+      <meta name="robots" content="noindex" />
+    </BaseHead>
+  </head>
+  <body class="og-body">
+    <main class="og" data-og>
+      <div class="og__text">
+        <span class="og__tag">{ui.og.tag}</span>
+        <h1 class="og__name">
+          {first}
+          <br />
+          {rest.join(" ")}
+        </h1>
+        <p class="og__role">
+          {person.role} · {person.company.replaceAll(" ", " ")}
+        </p>
+        <p class="og__summary">{person.summary}</p>
+      </div>
+
+      <div class="og__parts" aria-hidden="true">
+        <PrintedShape
+          class="og__shape og__shape--a"
+          size={150}
+          offset={10}
+          fill="var(--dusty-green)"
+          radius="50%"
+          glyph="✓"
+          glyphSize={64}
+        />
+        <PrintedShape
+          class="og__shape og__shape--b"
+          size={120}
+          offset={9}
+          fill="var(--soft-peach)"
+          radius="10px 30px 10px 30px"
+          glyph="↻"
+          glyphSize={52}
+        />
+        <PrintedShape
+          class="og__shape og__shape--c"
+          size={110}
+          offset={8}
+          fill="var(--muted-blue)"
+          radius="50%"
+          glyph="⌕"
+          glyphSize={46}
+        />
+        <span class="og__pill" data-og-pill hidden>
+          <span class="og__dot"></span>
+          <span data-og-tested></span>
+        </span>
+      </div>
+    </main>
+
+    <script>
+      import { ui } from "../data/content";
+
+      // Real count from this deploy's run; the card is ready either way.
+      const root = document.querySelector<HTMLElement>("[data-og]");
+      fetch("/ci-report.json")
+        .then((r) => (r.ok ? r.json() : null))
+        .then((report: { totals?: { passed?: number } } | null) => {
+          const passed = report?.totals?.passed;
+          const pill = document.querySelector<HTMLElement>("[data-og-pill]");
+          const text = document.querySelector("[data-og-tested]");
+          if (pill && text && passed) {
+            text.textContent = ui.og.tested(passed);
+            pill.hidden = false;
+          }
+        })
+        .catch(() => undefined)
+        .finally(() => root?.setAttribute("data-og-ready", ""));
+    </script>
+  </body>
+</html>
+
+<style>
+  .og-body {
+    margin: 0;
+  }
+
+  .og {
+    position: relative;
+    width: 1200px;
+    height: 630px;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    align-items: center;
+    padding: 56px 64px;
+    box-sizing: border-box;
+    border: 6px solid var(--graphite);
+  }
+
+  .og__text {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .og__tag {
+    align-self: flex-start;
+    padding: 8px 16px;
+    background: var(--dusty-green);
+    border: var(--border);
+    border-radius: var(--radius-pill);
+    font: 700 18px/1 var(--font-body);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    rotate: -2deg;
+  }
+
+  .og__name {
+    font: 800 150px/0.82 var(--font-display);
+    font-stretch: 76%;
+    letter-spacing: -0.035em;
+  }
+
+  .og__role {
+    font: 700 28px/1.2 var(--font-body);
+  }
+
+  .og__summary {
+    max-width: 30ch;
+    font: 22px/1.4 var(--font-body);
+    color: var(--text-body);
+  }
+
+  .og__parts {
+    position: relative;
+    height: 100%;
+  }
+
+  .og__parts::before {
+    content: "";
+    position: absolute;
+    inset: 40px 10px 40px 30px;
+    background: var(--warm-beige);
+    border-radius: 52% 48% 44% 56% / 48% 56% 44% 52%;
+  }
+
+  .og__parts :global(.og__shape) {
+    position: absolute;
+  }
+
+  .og__parts :global(.og__shape--a) {
+    left: 60px;
+    top: 90px;
+    rotate: -6deg;
+  }
+
+  .og__parts :global(.og__shape--b) {
+    right: 40px;
+    top: 160px;
+    rotate: 8deg;
+  }
+
+  .og__parts :global(.og__shape--c) {
+    left: 120px;
+    bottom: 120px;
+    rotate: 4deg;
+  }
+
+  .og__pill {
+    position: absolute;
+    right: 10px;
+    bottom: 56px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 18px;
+    background: var(--paper);
+    border: var(--border);
+    border-radius: var(--radius-pill);
+    box-shadow: 4px 4px 0 var(--dusty-green);
+    font: 700 20px/1 var(--font-body);
+    rotate: -3deg;
+  }
+
+  .og__dot {
+    width: 14px;
+    height: 14px;
+    border: 2px solid var(--graphite);
+    border-radius: 50%;
+    background: var(--dusty-green);
+  }
+</style>
