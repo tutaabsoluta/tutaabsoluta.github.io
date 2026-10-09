@@ -32,7 +32,9 @@ const [first = "", ...rest] = person.name.split(" ");
           {rest.join(" ")}
         </h1>
         <p class="og__role">
-          {person.role} · {person.company.replaceAll(" ", " ")}
+          {person.role}
+          <br />
+          {ui.og.at(person.company)}
         </p>
         <p class="og__summary">{person.summary}</p>
       </div>

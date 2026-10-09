@@ -3,6 +3,8 @@
  * Playwright, then removes the card page from the deploy. Runs in the
  * pipeline after ci-report.mjs, so the card shows this deploy's real test
  * count. The built site is served straight from dist/, no server needed.
+ * It also renders favicon.svg to dist/apple-touch-icon.png (180×180, on the
+ * page's cream, since iOS doesn't do transparency), so no image lives in git.
  *
  * Usage (after build): node scripts/og-image.mjs
  */
@@ -45,7 +47,16 @@ await page.goto(`${ORIGIN}/og/`);
 await page.locator("[data-og-ready]").waitFor();
 await page.evaluate(() => document.fonts.ready);
 await page.screenshot({ path: join(DIST, "og.png") });
+
+await page.setViewportSize({ width: 180, height: 180 });
+await page.setContent(
+  `<body style="margin:0;height:100vh;display:grid;place-items:center;background:#f5efe4">
+    <img src="${ORIGIN}/favicon.svg" width="140" height="140" alt="">
+  </body>`,
+);
+await page.locator("img").evaluate((img) => img.decode());
+await page.screenshot({ path: join(DIST, "apple-touch-icon.png") });
 await browser.close();
 
 await rm(join(DIST, "og"), { recursive: true, force: true });
-console.log(`og-image: ${DIST}/og.png`);
+console.log(`og-image: ${DIST}/og.png, ${DIST}/apple-touch-icon.png`);

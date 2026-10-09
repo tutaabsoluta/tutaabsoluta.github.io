@@ -29,3 +29,24 @@ test("a shared link gets a preview image", async ({ page }) => {
     "summary_large_image",
   );
 });
+
+test("search engines get a robots file, a sitemap and who this page is about", async ({
+  page,
+  request,
+}) => {
+  const robots = await request.get("/robots.txt");
+  expect(robots.ok()).toBe(true);
+  expect(await robots.text()).toContain("Sitemap:");
+
+  const sitemap = await request.get("/sitemap.xml");
+  expect(sitemap.ok()).toBe(true);
+  expect(await sitemap.text()).toContain("<loc>https://");
+
+  await page.goto("/");
+  const data = JSON.parse(
+    (await page.locator('script[type="application/ld+json"]').textContent()) ??
+      "{}",
+  ) as { "@type"?: string; name?: string };
+  expect(data["@type"]).toBe("Person");
+  expect(data.name).toBe(content.person.name);
+});

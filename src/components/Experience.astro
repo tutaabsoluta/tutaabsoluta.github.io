@@ -28,6 +28,9 @@ const { experience } = content;
     </div>
   </div>
 
+  <p class="log-hint kalam-note" aria-hidden="true" data-fx="fade">
+    {ui.experience.hint}
+  </p>
   <ul class="log" data-fx="settle">
     {experience.tiles.map((tile) => (
       <WorkTile tile={tile} />
@@ -81,6 +84,13 @@ const { experience } = content;
 
   .employer__meta {
     font: 17px/1.35 var(--font-body);
+  }
+
+  /* Tells sighted visitors what the +/− does (the buttons have aria labels). */
+  .log-hint {
+    align-self: flex-end;
+    margin: 0 8px calc(clamp(28px, 4vw, 40px) * -1 + 6px);
+    font-size: 20px;
   }
 
   /* One sheet of ruled lines, unlike the card grids around it. */

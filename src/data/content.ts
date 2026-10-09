@@ -224,6 +224,7 @@ export const ui = {
     showFull: "Show full description:",
     hideFull: "Hide full description:",
     toolsUsed: "Tools used",
+    hint: "+ opens the full story",
     backToHow: "back to How I work",
   },
   how: { title: "How I work", stage: "Stage", seenIn: "Seen in" },
@@ -255,6 +256,7 @@ export const ui = {
       `${name}'s portfolio: test automation, built to be checked.`,
     tag: "Working Parts",
     tested: (n: number) => `${n} tests pass on every deploy`,
+    at: (company: string) => `at ${company}`,
   },
   /** The footer test-status pill and its receipt (the easter egg). */
   ci: {
