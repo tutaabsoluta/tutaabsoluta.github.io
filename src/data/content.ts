@@ -83,6 +83,18 @@ export interface Stage {
   shape: Shape;
 }
 
+export interface Volunteer {
+  sticker: string;
+  title: string;
+  body: string;
+  note: string;
+  whoLabel: string;
+  who: { label: string; tone: TintTone }[];
+  helpLabel: string;
+  help: { glyph: string; text: string }[];
+  cta: { label: string; href: string };
+}
+
 export interface Content {
   person: Person;
   links: Link[];
@@ -90,6 +102,7 @@ export interface Content {
   projects: Project[];
   experience: Experience;
   howIWork: { intro: string; stages: Stage[] };
+  volunteer: Volunteer;
   contact: { title: string; line: string; note: string; order: LinkKind[] };
 }
 
@@ -152,6 +165,13 @@ export const content: Content = {
       }),
     })),
   },
+  volunteer: {
+    ...raw.volunteer,
+    who: raw.volunteer.who.map((w, i) => ({
+      ...w,
+      tone: oneOf(tintTones, w.tone, `volunteer.who[${i}].tone`),
+    })),
+  },
   contact: {
     ...raw.contact,
     order: raw.contact.order.map((k, i) =>
@@ -200,6 +220,7 @@ export const ui = {
     { href: "#build", label: "What I build" },
     { href: "#experience", label: "What I've worked on" },
     { href: "#how", label: "How I work" },
+    { href: "#volunteer", label: "Volunteer" },
   ],
   navContact: { href: "#contact", label: "Contact" },
   menuOpen: "Menu",

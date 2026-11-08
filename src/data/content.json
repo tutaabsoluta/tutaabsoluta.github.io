@@ -227,6 +227,26 @@
       }
     ]
   },
+  "volunteer": {
+    "sticker": "Available now",
+    "title": "Open to volunteer work",
+    "body": "Available as a volunteer developer for nonprofits and small businesses that need a hand with their software.",
+    "note": "small team? no problem",
+    "whoLabel": "Who",
+    "who": [
+      { "label": "Nonprofits (NGOs)", "tone": "lavenderTint" },
+      { "label": "Small businesses (PYMEs)", "tone": "blueTint" },
+      { "label": "Micro businesses", "tone": "peachTint" }
+    ],
+    "helpLabel": "Ways to help",
+    "help": [
+      { "glyph": "✓", "text": "Testing a website or app before it goes live" },
+      { "glyph": "↻", "text": "Setting up automated tests with Playwright" },
+      { "glyph": "→", "text": "Running those tests automatically with GitHub Actions" },
+      { "glyph": "▢", "text": "Frontend work with JavaScript and Vue.js" }
+    ],
+    "cta": { "label": "Tell me about your project →", "href": "#contact" }
+  },
   "contact": {
     "title": "Let's talk.",
     "line": "Sergio Duran · Software Developer, Test Automation · Costa Rica",
