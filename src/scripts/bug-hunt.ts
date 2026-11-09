@@ -3,7 +3,9 @@
  *
  * 1. FleeBug (02): the bug runs from the cursor. Each escape changes the
  *    pencil note; after the last one it runs off down the page.
- * 2. BugFight (volunteer): click to swing the sword. Five hits, each one
+ * 2. BugFight (volunteer): only appears once the bug has escaped from 02
+ *    (a `bug:escaped` event), running in when it scrolls into view. Click to
+ *    swing the sword. Five hits, each one
  *    adds visible damage (`hit-1` … `hit-5` on the svg); the fifth knocks
  *    it out, legs up with X eyes.
  */
@@ -37,6 +39,7 @@ function initFlee(): void {
 
   const runOff = (): void => {
     gone = true;
+    document.dispatchEvent(new CustomEvent("bug:escaped"));
     setNote(note, ui.bug.flee[ui.bug.flee.length - 1] ?? "");
     if (reducedMotion()) {
       bug.style.visibility = "hidden";
@@ -105,6 +108,24 @@ function initFight(): void {
   if (!button || !scene || !arm || !bug || !pow || !note) return;
 
   let hits = 0;
+
+  // Locked until the bug escapes in 02; then it runs in when first seen.
+  const root = button.closest<HTMLElement>("[data-fight-root]");
+  document.addEventListener(
+    "bug:escaped",
+    () => {
+      if (!root) return;
+      root.hidden = false;
+      if (reducedMotion() || !("IntersectionObserver" in window)) return;
+      const seen = new IntersectionObserver((entries) => {
+        if (!entries.some((e) => e.isIntersecting)) return;
+        seen.disconnect();
+        root.setAttribute("data-arrive", "");
+      });
+      seen.observe(root);
+    },
+    { once: true },
+  );
 
   button.addEventListener("click", () => {
     if (hits >= HITS) {

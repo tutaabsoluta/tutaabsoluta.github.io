@@ -26,15 +26,39 @@ test.describe("The bug", () => {
       .not.toBe(before.x);
   });
 
-  test("five hits squash the bug on the volunteer page", async ({
+  test("once it escapes, five hits squash it on the volunteer page", async ({
     page,
     portfolio,
   }) => {
     await expect(portfolio.projects.section).toBeVisible();
+    const fightRoot = page.locator("[data-fight-root]");
+    await expect(fightRoot).toBeHidden();
+
+    // Chase the bug in What I build until it runs off.
+    const bug = page.locator("[data-flee-bug]");
+    const fleeNote = page.locator("[data-flee-note]");
+    const escaped = ui.bug.flee[ui.bug.flee.length - 1] ?? "";
+    await bug.scrollIntoViewIfNeeded();
+    for (
+      let i = 0;
+      i < 8 && (await fleeNote.textContent())?.trim() !== escaped;
+      i++
+    ) {
+      const box = await bug.boundingBox();
+      if (!box) break;
+      await page.mouse.move(box.x - 140, box.y + box.height / 2);
+      await page.waitForTimeout(400);
+      await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2, {
+        steps: 4,
+      });
+      await page.waitForTimeout(400);
+    }
+    await expect(fleeNote).toHaveText(escaped);
     const fight = page.getByRole("button", { name: ui.bug.hitLabel });
     const scene = page.locator("[data-fight-scene]");
     const note = page.locator("[data-fight-note]");
     await fight.scrollIntoViewIfNeeded();
+    await expect(fightRoot).toBeVisible();
 
     for (let hit = 1; hit <= 5; hit++) {
       await fight.click();

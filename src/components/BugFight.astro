@@ -4,12 +4,14 @@
  * catches the bug that ran away in 02. Each click is a sword swing; the
  * bug takes visible damage over five hits and ends up legs-up with X eyes.
  * Behaviour: scripts/bug-hunt.ts (adds `hit-1` … `hit-5` to the svg).
- * A real button, so it works from the keyboard too. Desktop only (≥900px).
+ * Hidden until the bug escapes in 02 (FleeBug); then it runs in when the
+ * flyer comes into view. A real button, so it works from the keyboard too.
+ * Desktop only (≥900px).
  */
 import { ui } from "../data/content";
 ---
 
-<div class="fight">
+<div class="fight" hidden data-fight-root>
   <button
     type="button"
     class="fight__button"
@@ -113,6 +115,28 @@ import { ui } from "../data/content";
     transform-box: view-box;
     transform-origin: 90px 36px;
     transition: rotate 0.5s var(--ease-stamp);
+  }
+
+  /* Arriving from 02: the bug runs in from the top right. */
+  .fight[data-arrive] .fight__bug {
+    animation: bug-arrive 0.9s var(--ease-settle);
+  }
+
+  .fight[data-arrive] .fight__note {
+    animation: note-swap 0.4s var(--ease-settle) 0.7s backwards;
+  }
+
+  @keyframes bug-arrive {
+    0% {
+      opacity: 0;
+      translate: 70px -90px;
+      rotate: 60deg;
+    }
+    60% {
+      opacity: 1;
+      translate: -6px 4px;
+      rotate: -8deg;
+    }
   }
 
   /* Damage piles up: each hit shows its layer and knocks a part off. */
