@@ -1,0 +1,39 @@
+---
+/**
+ * A strip of translucent tape with ragged ends. Position, size and tilt come
+ * from the inline `place` style; it "sticks" on reveal.
+ */
+interface Props {
+  /** e.g. "left:18%;top:-6px;width:120px;height:30px;rotate:-5deg" */
+  place: string;
+  /** Lighter tape (on the darker labels). */
+  light?: boolean;
+  delay?: number;
+  /** Stuck on from the start (inside things that open, e.g. the menu). */
+  still?: boolean;
+}
+
+const { place, light = false, delay = 0, still = false } = Astro.props;
+---
+
+<span
+  class:list={["tape", { "tape--light": light }]}
+  aria-hidden="true"
+  data-fx={still ? undefined : "tape"}
+  data-delay={still ? undefined : delay}
+  style={place}></span>
+
+<style>
+  .tape {
+    position: absolute;
+    z-index: 2;
+    background: var(--tape);
+    clip-path: polygon(2% 8%, 98% 0, 100% 45%, 97% 100%, 3% 92%, 0 50%);
+    transform-origin: left center;
+    pointer-events: none;
+  }
+
+  .tape--light {
+    background: var(--tape-light);
+  }
+</style>

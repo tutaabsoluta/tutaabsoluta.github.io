@@ -1,0 +1,40 @@
+---
+/**
+ * A rubber stamp in pen blue: double border, tilted, a little faded.
+ * Decorative; the status it shows is always stated in real text too.
+ */
+interface Props {
+  label: string;
+  place?: string;
+  delay?: number;
+}
+
+const { label, place = "", delay = 0 } = Astro.props;
+---
+
+<span
+  class="stamp"
+  aria-hidden="true"
+  data-fx="stamp"
+  data-delay={delay}
+  style={place}
+>
+  {label}
+</span>
+
+<style>
+  .stamp {
+    position: absolute;
+    /* Slightly faded ink (not opacity, so reveals end fully visible). */
+    --ink-faded: color-mix(in srgb, var(--pen) 85%, transparent);
+    border: 3px double var(--ink-faded);
+    color: var(--ink-faded);
+    font: 700 15px/1 var(--font-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 8px 10px;
+    rotate: -9deg;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+</style>

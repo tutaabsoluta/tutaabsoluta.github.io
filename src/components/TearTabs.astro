@@ -1,0 +1,307 @@
+---
+/**
+ * Contact's tear-off tabs: a paper strip with one coupon per reason to
+ * write. Tearing one off opens an email that's already half written (see
+ * scripts/tear-tabs.ts), so it adds something the plain links above don't.
+ */
+import { content, emailAddress, ui } from "../data/content";
+
+const email = emailAddress();
+const tilts = [0, 1.2, -0.8, 1.5];
+
+const mailto = (subject: string, prompts: readonly string[]): string =>
+  `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(ui.contact.body(subject, prompts))}`;
+---
+
+<div id="tabs" class="tear" data-fx="settle">
+  <p class="tear__head grain">
+    <span class="tear__take pen-note">
+      <span aria-hidden="true">✂ </span>
+      {ui.contact.takeTab}
+    </span>
+    <span class="tear__hint">{ui.contact.takeTabHint}</span>
+  </p>
+
+  <ul class="tabs" aria-label={ui.contact.tabsLabel}>
+    {content.contact.tabs.map((t, i) => (
+      <li class="tab-slot" style={`--tilt:${tilts[i % tilts.length]}deg`}>
+        <span class="tab-slot__stub" aria-hidden="true"></span>
+        <a
+          class="tab"
+          href={mailto(t.subject, t.prompts)}
+          aria-label={ui.contact.tabAria(t.subject)}
+          data-tear
+        >
+          <span class="tab__n" aria-hidden="true">
+            {i + 1}
+          </span>
+          <span class="tab__what">{t.tab}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+
+  <p class="tear__status" role="status">
+    <span class="pen-note" data-tear-taken hidden>
+      {ui.contact.taken}
+    </span>
+    <span class="tear__no-app" data-tear-taken hidden>
+      {ui.contact.noApp}
+    </span>
+  </p>
+</div>
+
+<style>
+  .tear {
+    max-width: 920px;
+    margin: clamp(48px, 7vw, 80px) auto 0;
+    rotate: -0.5deg;
+  }
+
+  /* The top of the sheet the tabs are cut into. */
+  .tear__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: center;
+    gap: 4px 16px;
+    padding: 18px 20px 16px;
+    background-color: var(--paper);
+    box-shadow: var(--lift-sm);
+    text-align: center;
+  }
+
+  .tear__take {
+    font-size: 24px;
+    rotate: -1.5deg;
+  }
+
+  .tear__hint {
+    font: 400 14px/1.4 var(--font-mono);
+    color: var(--pencil);
+  }
+
+  /* One coupon per reason to write; each has its own piece of the
+     perforation, so a torn one leaves a real gap. */
+  .tabs {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .tab-slot {
+    position: relative;
+    min-width: 0;
+    border-top: 2px dashed var(--pencil);
+    rotate: var(--tilt);
+    transform-origin: top center;
+    transition:
+      rotate 0.25s var(--ease-settle),
+      translate 0.25s var(--ease-settle);
+  }
+
+  .tab-slot + .tab-slot {
+    border-left: 2px dashed var(--pencil);
+  }
+
+  /* Hovering a tab tugs it, like a finger testing the perforation. */
+  @media (hover: hover) {
+    .tab-slot:not([data-torn]):hover {
+      rotate: calc(var(--tilt) + 2.5deg);
+      translate: 0 3px;
+    }
+  }
+
+  .tab {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    height: 100%;
+    min-height: 132px;
+    padding: 14px 16px 16px;
+    background-color: var(--paper);
+    background-image: var(--grain);
+    color: var(--ink);
+    text-decoration: none;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-drag: none;
+    touch-action: manipulation;
+  }
+
+  .tab:active {
+    cursor: grabbing;
+  }
+
+  /* A circled number, so a tab can be asked for by name ("tab 2"). */
+  .tab__n {
+    flex: none;
+    width: 30px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    border: 2px solid var(--ink);
+    border-radius: 52% 46% 50% 44% / 56% 50% 52% 46%;
+    font: 400 15px/1 var(--font-hand);
+    transition: background-color 0.15s;
+  }
+
+  .tab:hover .tab__n {
+    background: var(--highlighter);
+  }
+
+  .tab__what {
+    font: 400 clamp(17px, 1.7vw, 20px) / 1.15 var(--font-hand);
+  }
+
+
+  /* While dragged, the tab follows the pointer (styles set by script). */
+  .tab[data-pulling] {
+    position: relative;
+    z-index: 3;
+    box-shadow: var(--lift);
+  }
+
+  /* Torn off: only a ragged stub stays. The link stays where it was
+     (focusable, still opens the draft). */
+  .tab-slot__stub {
+    display: none;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 14px;
+    background: var(--paper) var(--grain);
+    clip-path: polygon(
+      0 0,
+      100% 0,
+      100% 60%,
+      88% 100%,
+      76% 55%,
+      63% 90%,
+      50% 50%,
+      38% 95%,
+      25% 55%,
+      12% 100%,
+      0 65%
+    );
+  }
+
+  /* The page shows through where the tab was. */
+  .tab-slot[data-torn] {
+    border-color: transparent;
+  }
+
+  .tab-slot[data-torn] .tab-slot__stub {
+    display: block;
+  }
+
+  .tab-slot[data-torn] .tab {
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .tab-slot[data-torn] .tab > * {
+    visibility: hidden;
+  }
+
+  /* Arriving from the volunteer flyer's link: the tabs give a little tug,
+     one after another, once the scroll has landed. */
+  .tear:target .tab-slot {
+    animation: tug 0.6s var(--ease-settle) 0.7s;
+  }
+
+  .tear:target .tab-slot:nth-child(2) {
+    animation-delay: 0.78s;
+  }
+
+  .tear:target .tab-slot:nth-child(3) {
+    animation-delay: 0.86s;
+  }
+
+  .tear:target .tab-slot:nth-child(4) {
+    animation-delay: 0.94s;
+  }
+
+  @keyframes tug {
+    35% {
+      rotate: calc(var(--tilt) + 4deg);
+      translate: 0 4px;
+    }
+    70% {
+      rotate: calc(var(--tilt) - 1.5deg);
+    }
+  }
+
+  /* Phones: two rows of two. */
+  @media (max-width: 639.98px) {
+    .tabs {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .tab-slot + .tab-slot:nth-child(odd) {
+      border-left: 0;
+    }
+
+    .tab {
+      min-height: 120px;
+      padding: 12px;
+    }
+  }
+
+  .tear__status {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    margin-top: 24px;
+    text-align: center;
+  }
+
+  .tear__status > * {
+    animation: status-in 0.4s var(--ease-settle);
+  }
+
+  .tear__status .pen-note {
+    rotate: -2deg;
+  }
+
+  .tear__no-app {
+    font: 400 14px/1.4 var(--font-mono);
+    color: var(--pencil);
+  }
+
+  @keyframes status-in {
+    from {
+      opacity: 0;
+      translate: 0 -8px;
+    }
+  }
+</style>
+
+<style is:global>
+  /* The torn-off tab, falling (a copy appended to <body> by the script). */
+  .tab-falling {
+    position: fixed;
+    z-index: 50;
+    margin: 0;
+    pointer-events: none;
+    box-shadow: var(--lift);
+    clip-path: polygon(
+      0 8px,
+      12% 0,
+      25% 7px,
+      38% 1px,
+      50% 8px,
+      63% 2px,
+      76% 8px,
+      88% 0,
+      100% 6px,
+      100% 100%,
+      0 100%
+    );
+  }
+</style>
