@@ -1,73 +1,182 @@
 ---
 import { content, ui } from "../data/content";
-import SectionTag from "./SectionTag.astro";
-import StageCard from "./StageCard.astro";
+import PageBreak from "./PageBreak.astro";
+import Tape from "./Tape.astro";
 
 const { howIWork } = content;
+/** Hand-drawn circles never come out the same twice. */
+const circles = [
+  "M22 4 C 36 3, 42 14, 40 24 C 38 34, 26 39, 16 36 C 6 33, 2 22, 5 13 C 8 6, 16 3, 27 5",
+  "M20 5 C 32 2, 41 11, 40 21 C 39 32, 29 38, 18 37 C 8 35, 3 26, 4 16 C 6 8, 14 3, 25 4",
+  "M24 3 C 35 4, 42 15, 39 25 C 36 35, 24 39, 14 35 C 5 31, 2 20, 6 12 C 10 5, 18 2, 28 6",
+];
 ---
 
-<section id="how" class="block-wrap" aria-labelledby="h-how">
-  <div class="block how">
-    <div class="section-head">
-      <div class="section-head__title">
-        <SectionTag label={ui.tags.how} bg="var(--paper)" />
-        <h2 id="h-how" class="display-h2" data-fx="settle">
-          {ui.how.title}
-        </h2>
-      </div>
-      <p class="how__intro" data-fx="settle" data-delay="100">
-        {howIWork.intro}
-      </p>
-    </div>
+<section id="how" class="section" aria-labelledby="h-how">
+  <PageBreak label={ui.tabs.how} x={40} bg="var(--paper)" />
+  <div class="section-head">
+    <p class="mono-kicker">{ui.how.kicker}</p>
+    <h2 id="h-how" class="display-h2" data-fx="settle">{ui.how.title}</h2>
+  </div>
 
-    <ol class="stages">
-      {howIWork.stages.map((stage, index) => (
-        <StageCard stage={stage} index={index} />
+  <div class="notebook grain" data-fx="settle">
+    <Tape
+      delay={260}
+      place="left:50%;top:-14px;width:130px;height:30px;margin-left:-65px;rotate:-2deg"
+    />
+    <p class="notebook__intro">{howIWork.intro}</p>
+    <ol class="steps">
+      {howIWork.stages.map((s, i) => (
+        <li id={`stage-${s.n}`} class="step" style={`--tilt:${i % 2 ? 4 : -5}deg`}>
+          <span class="step__n">
+            <svg class="step__circle" aria-hidden="true" viewBox="0 0 44 40">
+              <path
+                data-draw
+                data-delay={i * 90}
+                pathLength="1"
+                d={circles[i % circles.length]}
+              />
+            </svg>
+            <span class="visually-hidden">{ui.how.stage} </span>
+            {Number(s.n)}
+          </span>
+          <h3 class="step__name">{s.name}</h3>
+          <p class="step__what">{s.what}</p>
+          <p class="step__seen">
+            <span aria-hidden="true">↳ </span>
+            {s.seen.map((x, j) => (
+              <>
+                {j > 0 && <span aria-hidden="true"> + </span>}
+                <a
+                  class="step__link swipe"
+                  href={`#work-${x.tile}`}
+                  data-flash-target={`work-${x.tile}`}
+                >
+                  {x.label}
+                </a>
+              </>
+            ))}
+          </p>
+        </li>
       ))}
     </ol>
   </div>
 </section>
 
 <style>
-  .how {
-    background: var(--block-sage);
-    display: flex;
-    flex-direction: column;
-    gap: clamp(28px, 4vw, 48px);
-  }
-
-  .how__intro {
-    max-width: 26ch;
-    font: clamp(19px, 1.8vw, 22px) / 1.4 var(--font-body);
-  }
-
-  /* Narrow: vertical list with a dashed spine */
-  .stages {
+  /* One notebook page: a vertical margin line and ruled lines. */
+  .notebook {
+    --margin: clamp(44px, 7vw, 84px);
     position: relative;
+    padding: 28px clamp(16px, 3vw, 40px) 36px clamp(56px, 9vw, 108px);
+    background-color: var(--paper);
+    background-image:
+      linear-gradient(
+        90deg,
+        transparent 0 var(--margin),
+        var(--margin-line) var(--margin) calc(var(--margin) + 2px),
+        transparent 0
+      ),
+      repeating-linear-gradient(transparent 0 35px, var(--rule-line) 35px 36px);
+    box-shadow:
+      1px 2px 0 rgb(26 26 26 / 0.16),
+      0 18px 30px -22px rgb(26 26 26 / 0.5);
+    rotate: -0.6deg;
+  }
+
+  .notebook__intro {
+    max-width: 30ch;
+    margin-bottom: 28px;
+    font: 400 clamp(22px, 2.4vw, 28px) / 1.3 var(--font-hand);
+  }
+
+  .steps {
     list-style: none;
     margin: 0;
-    padding: 0 0 0 38px;
+    padding: 0;
   }
 
-  .stages::before {
-    content: "";
+  .step {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 28px;
+    align-items: baseline;
+    padding: 14px 0;
+    border-bottom: 1px dashed var(--perforation);
+    scroll-margin-top: 40px;
+  }
+
+  .step__n {
+    position: relative;
+    flex: 0 0 auto;
+    width: 44px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font: 400 22px/1 var(--font-hand);
+    rotate: var(--tilt);
+  }
+
+  .step__circle {
     position: absolute;
-    left: 10px;
-    top: 24px;
-    bottom: 24px;
-    border-left: 2.5px dashed var(--graphite);
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    z-index: -1;
+    fill: transparent;
+    stroke: var(--ink);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    transition: fill 0.2s;
   }
 
-  @media (min-width: 1000px) {
-    .stages {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 64px 72px;
-      padding: 0 8px 0 0;
+  @media (hover: hover) {
+    .step:hover .step__circle {
+      fill: var(--highlighter);
     }
+  }
 
-    .stages::before {
-      display: none;
-    }
+  .step__name {
+    flex: 0 0 200px;
+    font: 800 clamp(26px, 2.6vw, 34px) / 1 var(--font-sans);
+    letter-spacing: -0.04em;
+    text-transform: lowercase;
+  }
+
+  .step__what {
+    flex: 1 1 260px;
+    font: 400 18px/1.5 var(--font-sans);
+  }
+
+  .step__seen {
+    flex: 0 1 260px;
+    font: 400 17px/1.6 var(--font-hand);
+    color: var(--pen);
+    rotate: -1.5deg;
+  }
+
+  /* Inline, so it wraps with the ↳; padding gives a 44px tap target. */
+  .step__link {
+    padding: 12px 0;
+    color: var(--pen);
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 4px;
+  }
+
+  .step__link:hover {
+    color: var(--ink);
+  }
+
+  .step__link:active {
+    translate: 0 1px;
+  }
+
+  /* The return link landed here: underline the step in pen. */
+  .step:target .step__name {
+    background: linear-gradient(var(--highlighter), var(--highlighter)) left
+      bottom / 100% 40% no-repeat;
   }
 </style>

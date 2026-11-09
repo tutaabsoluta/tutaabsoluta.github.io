@@ -1,113 +1,130 @@
 ---
 import { ui } from "../data/content";
+import Tape from "./Tape.astro";
 
 const items = [...ui.nav, ui.navContact];
 ---
 
 <nav id="mobile-menu" class="mobile-menu" aria-label="Main" hidden>
-  <ul>
-    {items.map((item) => (
-      <li>
-        <a href={item.href} data-menu-link>
-          <span>{item.label}</span>
-          <span aria-hidden="true">→</span>
-        </a>
-      </li>
-    ))}
-  </ul>
+  <div class="mobile-menu__sheet grain">
+    <Tape still place="right:28px;top:-12px;width:84px;height:24px;rotate:6deg" />
+    <ul>
+      {items.map((item, i) => (
+        <li>
+          <a href={item.href} data-menu-link>
+            <span class="mobile-menu__n" aria-hidden="true">
+              {String(i + 1).padStart(2, "0")}
+            </span>
+            <span class="mobile-menu__label">{item.label}</span>
+            <span class="mobile-menu__arrow" aria-hidden="true">→</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
 </nav>
 
 <style>
   .mobile-menu {
     position: relative;
     z-index: 20;
-    margin: 0 20px 8px;
+    margin: 14px var(--gutter) 8px;
+  }
+
+  /* An index card dropped from the Menu button; the links follow. */
+  .mobile-menu__sheet {
+    position: relative;
+    padding: 10px 14px 10px 54px;
+    background-color: var(--paper);
+    background-image:
+      linear-gradient(
+        90deg,
+        transparent 0 40px,
+        var(--margin-line) 40px 42px,
+        transparent 42px
+      ),
+      repeating-linear-gradient(transparent 0 51px, var(--rule-line) 51px 52px);
+    box-shadow: var(--lift);
+    rotate: -0.6deg;
+    transform-origin: top right;
+    animation: menu-drop 0.32s var(--ease-settle);
+  }
+
+  @keyframes menu-drop {
+    from {
+      opacity: 0;
+      translate: 0 -12px;
+      rotate: -3deg;
+    }
   }
 
   ul {
     list-style: none;
     margin: 0;
-    padding: 8px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    background: var(--paper);
-    border: var(--border);
-    border-radius: var(--radius-card-sm);
-    box-shadow: 5px 5px 0 var(--lavender);
-    transform-origin: top right;
-    animation: menu-drop 0.3s var(--ease-settle);
-  }
-
-  /* Replays each time `hidden` is lifted: the card drops from the toggle,
-     then the links follow. */
-  @keyframes menu-drop {
-    from {
-      opacity: 0;
-      translate: 0 -10px;
-      rotate: -1.5deg;
-    }
+    padding: 0;
   }
 
   li {
+    position: relative;
     animation: menu-item-in 0.28s var(--ease-settle) backwards;
   }
 
   li:nth-child(2) {
-    animation-delay: 30ms;
+    animation-delay: 40ms;
   }
 
   li:nth-child(3) {
-    animation-delay: 60ms;
+    animation-delay: 80ms;
   }
 
   li:nth-child(4) {
-    animation-delay: 90ms;
+    animation-delay: 120ms;
   }
 
   li:nth-child(n + 5) {
-    animation-delay: 120ms;
+    animation-delay: 160ms;
   }
 
   @keyframes menu-item-in {
     from {
       opacity: 0;
-      translate: 0 -4px;
+      translate: -6px 0;
     }
   }
 
   a {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    min-height: 48px;
-    padding: 0 14px;
-    border-radius: 10px;
-    font: 800 20px/1 var(--font-display);
-    color: var(--graphite);
+    gap: 12px;
+    min-height: 52px;
+    font: 800 24px/1 var(--font-sans);
+    letter-spacing: -0.03em;
+    text-transform: lowercase;
     text-decoration: none;
-    transition:
-      background-color 0.15s,
-      scale 0.1s var(--ease-settle);
+    transition: scale 0.1s var(--ease-settle);
   }
 
   a:active {
-    background: var(--cream);
     scale: 0.98;
   }
 
-  a:hover {
-    background: var(--cream);
+  .mobile-menu__n {
+    position: absolute;
+    left: -44px;
+    width: 30px;
+    text-align: center;
+    font: 400 12px/1 var(--font-mono);
+    letter-spacing: 0;
+    color: var(--pencil);
   }
 
-  a span:last-child {
-    transition: translate 0.2s var(--ease-settle);
+  .mobile-menu__label {
+    flex: 1;
   }
 
-  @media (hover: hover) {
-    a:hover span:last-child {
-      translate: 3px 0;
-    }
+  .mobile-menu__arrow {
+    font: 400 22px/1 var(--font-hand);
+    color: var(--pen);
   }
 
   @media (min-width: 760px) {

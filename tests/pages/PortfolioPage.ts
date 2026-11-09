@@ -4,6 +4,7 @@ import { ExperienceLog } from "./ExperienceLog";
 import { HowIWork } from "./HowIWork";
 import { Projects } from "./Projects";
 import { SiteHeader } from "./SiteHeader";
+import { TearTabs } from "./TearTabs";
 
 /** The one-page portfolio, composed of one page object per section. */
 export class PortfolioPage {
@@ -11,6 +12,7 @@ export class PortfolioPage {
   readonly projects: Projects;
   readonly log: ExperienceLog;
   readonly howIWork: HowIWork;
+  readonly tearTabs: TearTabs;
   readonly ci: CiReceipt;
 
   constructor(readonly page: Page) {
@@ -18,6 +20,7 @@ export class PortfolioPage {
     this.projects = new Projects(page);
     this.log = new ExperienceLog(page);
     this.howIWork = new HowIWork(page);
+    this.tearTabs = new TearTabs(page);
     this.ci = new CiReceipt(page);
   }
 

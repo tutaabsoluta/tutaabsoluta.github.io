@@ -1,106 +1,192 @@
 ---
-import { content, linkAttrs, ui, type LinkKind } from "../data/content";
-import HeroContents from "./HeroContents.astro";
-import SectionTag from "./SectionTag.astro";
+import { content, linkAttrs, ui } from "../data/content";
+import Tape from "./Tape.astro";
 
 const { person, links } = content;
-
-const linkStyle: Record<LinkKind, { bg: string; fg: string; tone: string }> = {
-  GitHub: {
-    bg: "var(--graphite)",
-    fg: "var(--cream)",
-    tone: "var(--muted-blue)",
-  },
-  LinkedIn: {
-    bg: "var(--paper)",
-    fg: "var(--graphite)",
-    tone: "var(--lavender)",
-  },
-  Email: {
-    bg: "var(--paper)",
-    fg: "var(--graphite)",
-    tone: "var(--soft-peach)",
-  },
-};
-
 const [first = "", ...rest] = person.name.split(" ");
-
-/** Keeps a name on one line ("Critical Mass" never splits). */
-const nowrap = (text: string): string => text.replaceAll(" ", "\u00a0");
+const [before = "", after = ""] = person.summary.split(person.highlight);
 ---
 
-<section id="intro" class="intro" aria-labelledby="h-intro">
-  <div class="intro__text">
-    <SectionTag label={ui.tags.intro} bg="var(--dusty-green)" />
-    <h1 id="h-intro" class="intro__name" data-fx="settle" data-delay="60">
-      {first}
-      <br />
+<section id="intro" class="section intro" aria-labelledby="h-intro">
+  <p class="mono-kicker intro__kicker" data-fx="fade">{ui.intro.kicker}</p>
+  <h1 id="h-intro" class="intro__name">
+    <span class="intro__line" data-fx="settle" data-delay="40">{first}</span>
+    <br />
+    <span class="intro__line" data-fx="settle" data-delay="120">
       {rest.join(" ")}
-    </h1>
-    <p class="intro__role" data-fx="settle" data-delay="140">
-      {person.role} at {nowrap(person.company)} · {person.location}
-    </p>
-    <p class="intro__summary" data-fx="settle" data-delay="200">
-      {person.summary}
-    </p>
-    <ul class="intro__links" data-fx="settle" data-delay="260">
-      {links.map((l) => {
-        const s = linkStyle[l.kind];
-        return (
+    </span>
+    <svg
+      class="intro__underline"
+      aria-hidden="true"
+      viewBox="0 0 400 30"
+      preserveAspectRatio="none"
+    >
+      <path
+        data-draw
+        data-delay="520"
+        data-duration="700"
+        pathLength="1"
+        d="M4 18 C 80 8, 150 26, 230 14 S 360 6, 396 16"></path>
+    </svg>
+  </h1>
+
+  <div class="intro__row">
+    <div class="intro__label grain" data-fx="drop" data-delay="260">
+      <Tape
+        light
+        delay={620}
+        place="left:36%;top:-14px;width:110px;height:28px;rotate:4deg"
+      />
+      <p class="intro__role">
+        {person.label[0]}
+        <br />
+        {person.label[1]}
+      </p>
+      <p class="intro__meta">{person.location} · {person.tenure}</p>
+    </div>
+
+    <div class="intro__text">
+      <p class="intro__summary" data-fx="settle" data-delay="340">
+        {before}<mark>{person.highlight}</mark>{after}
+      </p>
+      <ul class="intro__links" data-fx="settle" data-delay="420">
+        {links.map((l) => (
           <li>
-            <a
-              class="press-button"
-              href={l.href}
-              {...linkAttrs(l.href)}
-              aria-label={`${l.kind}: ${l.label}`}
-              style={`--bg:${s.bg};--fg:${s.fg};--tone:${s.tone}`}
-            >
-              {l.kind}
+            <a class="intro__link swipe" href={l.href} {...linkAttrs(l.href)}>
+              <span class="intro__arrow" aria-hidden="true">→</span>
+              <span class="intro__kind">{l.kind}</span>
+              <span class="intro__handle">{l.label}</span>
             </a>
           </li>
-        );
-      })}
-    </ul>
+        ))}
+      </ul>
+    </div>
   </div>
 
-  <HeroContents />
+  <p class="intro__note pen-note" aria-hidden="true" data-fx="fade" data-delay="900">
+    {ui.intro.note[0]}
+    <br />
+    {ui.intro.note[1]}
+  </p>
 </section>
 
 <style>
   .intro {
-    max-width: var(--max-width);
-    margin: 0 auto;
-    padding: clamp(24px, 5vw, 64px) var(--gutter) var(--section-space);
-    display: flex;
-    flex-wrap: wrap;
-    gap: 48px;
-    align-items: center;
-    justify-content: space-between;
+    position: relative;
+    padding-top: clamp(40px, 7vw, 96px);
+    padding-bottom: clamp(56px, 8vw, 100px);
   }
 
-  .intro__text {
-    flex: 1 1 440px;
-    min-width: 0;
-    max-width: 600px;
-    display: flex;
-    flex-direction: column;
-    gap: 22px;
+  .intro__kicker {
+    margin-bottom: 14px;
   }
 
   .intro__name {
-    font: 800 clamp(84px, 13vw, 164px) / 0.82 var(--font-display);
-    font-stretch: 76%;
-    letter-spacing: -0.035em;
+    position: relative;
+    display: inline-block;
+    font: 800 clamp(72px, 14vw, 200px) / 0.82 var(--font-sans);
+    letter-spacing: -0.055em;
+    text-transform: lowercase;
+  }
+
+  .intro__line {
+    display: inline-block;
+  }
+
+  .intro__underline {
+    position: absolute;
+    left: -2%;
+    bottom: -18px;
+    width: 78%;
+    height: 26px;
+    overflow: visible;
+    fill: none;
+    stroke: var(--pen);
+    stroke-width: 5;
+    stroke-linecap: round;
+  }
+
+  /* Hovering the name scribbles the underline again. */
+  @media (hover: hover) {
+    .fx .intro__name:hover path[data-fx-done] {
+      animation: scribble 0.6s var(--ease-settle);
+    }
+  }
+
+  @keyframes scribble {
+    from {
+      stroke-dashoffset: 1;
+    }
+  }
+
+  .intro__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px 56px;
+    align-items: flex-start;
+    margin-top: clamp(40px, 5vw, 64px);
+  }
+
+  /* A label stuck on with tape. */
+  .intro__label {
+    position: relative;
+    flex: 0 1 360px;
+    padding: 26px 24px 22px;
+    background-color: var(--label);
+    box-shadow: 2px 3px 0 rgb(26 26 26 / 0.18);
+    rotate: -2.5deg;
+    transition: rotate 0.25s var(--ease-settle);
+  }
+
+  @media (hover: hover) {
+    .intro__label:hover {
+      rotate: -1deg;
+    }
   }
 
   .intro__role {
-    font: 700 clamp(19px, 1.8vw, 22px) / 1.3 var(--font-body);
+    font: 400 clamp(24px, 2.6vw, 30px) / 1.15 var(--font-hand);
+    text-transform: lowercase;
+  }
+
+  .intro__meta {
+    margin-top: 12px;
+    font: 400 14px/1.4 var(--font-mono);
+    text-transform: lowercase;
+  }
+
+  .intro__text {
+    flex: 1 1 380px;
+    max-width: 560px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
   }
 
   .intro__summary {
-    max-width: 34ch;
-    font: clamp(18px, 1.7vw, 21px) / 1.5 var(--font-body);
-    color: var(--text-body);
+    font: 400 clamp(20px, 2vw, 25px) / 1.45 var(--font-sans);
+  }
+
+  /* The highlighter stroke, drawn once the sentence lands. */
+  .intro__summary mark {
+    background: linear-gradient(var(--highlighter), var(--highlighter)) left
+      center / 100% 100% no-repeat;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+
+  .fx .intro__summary:not([data-fx-done]) mark {
+    background-size: 0% 100%;
+  }
+
+  .fx .intro__summary[data-fx-done] mark {
+    animation: mark-sweep 0.6s var(--ease-settle) 0.75s backwards;
+  }
+
+  @keyframes mark-sweep {
+    from {
+      background-size: 0% 100%;
+    }
   }
 
   .intro__links {
@@ -109,39 +195,62 @@ const nowrap = (text: string): string => text.replaceAll(" ", "\u00a0");
     padding: 0;
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 6px 28px;
+    font: 400 16px/1.3 var(--font-mono);
   }
 
-  .press-button {
-    display: flex;
+  .intro__link {
+    display: inline-flex;
     align-items: center;
-    min-height: 48px;
-    padding: 0 18px;
-    border: var(--border);
-    border-radius: var(--radius-button);
-    background: var(--bg);
-    color: var(--fg);
-    box-shadow: 4px 4px 0 var(--tone);
-    font: 700 16px/1 var(--font-body);
+    gap: 8px;
+    min-height: 44px;
     text-decoration: none;
-    transition:
-      transform 0.12s var(--ease-settle),
-      box-shadow 0.12s var(--ease-settle);
   }
 
-  .press-button:hover {
-    color: var(--fg);
+  .intro__kind {
+    text-transform: lowercase;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+  }
+
+  .intro__handle {
+    color: var(--pencil);
+  }
+
+  .intro__arrow {
+    display: inline-block;
+    transition: translate 0.2s var(--ease-settle);
   }
 
   @media (hover: hover) {
-    .press-button:hover {
-      transform: translate(-2px, -2px);
-      box-shadow: 6px 6px 0 var(--tone);
+    .intro__link:hover .intro__arrow {
+      translate: 4px 0;
     }
   }
 
-  .press-button:active {
-    transform: translate(4px, 4px);
-    box-shadow: 0 0 0 var(--tone);
+  .intro__link:active {
+    translate: 0 1px;
+  }
+
+  .intro__note {
+    position: absolute;
+    right: clamp(16px, 4vw, 48px);
+    top: clamp(40px, 8vw, 120px);
+    max-width: 170px;
+    font-size: clamp(18px, 1.8vw, 22px);
+    text-align: right;
+    rotate: 6deg;
+  }
+
+  /* On phones the note would sit on the name; it moves under the links. */
+  @media (max-width: 699.98px) {
+    .intro__note {
+      position: static;
+      max-width: none;
+      margin-top: 32px;
+      text-align: left;
+      rotate: -3deg;
+    }
   }
 </style>

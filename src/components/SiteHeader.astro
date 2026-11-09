@@ -1,25 +1,24 @@
 ---
-import { content, ui } from "../data/content";
+import { ui } from "../data/content";
 import MobileMenu from "./MobileMenu.astro";
 ---
 
 <header class="site-header">
-  <a class="site-header__name" href="#intro">
-    {content.person.name}
-  </a>
+  <a class="site-header__brand swipe" href="#intro">{ui.brand}</a>
 
   <nav class="site-header__nav" aria-label="Main">
     <ul>
       {ui.nav.map((item) => (
         <li>
-          <a class="nav-link" href={item.href}>
+          <a class="nav-link swipe" href={item.href}>
             {item.label}
           </a>
         </li>
       ))}
       <li>
-        <a class="nav-contact" href={ui.navContact.href}>
+        <a class="nav-link nav-link--contact swipe" href={ui.navContact.href}>
           {ui.navContact.label}
+          <span class="nav-link__arrow" aria-hidden="true">→</span>
         </a>
       </li>
     </ul>
@@ -45,20 +44,22 @@ import MobileMenu from "./MobileMenu.astro";
     z-index: 20;
     max-width: var(--max-width);
     margin: 0 auto;
-    padding: 20px var(--gutter);
+    padding: 14px var(--gutter);
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    gap: 16px;
+    gap: 8px 24px;
+    font: 400 14px/1.4 var(--font-mono);
+    border-bottom: 1.5px solid var(--pencil);
   }
 
-  .site-header__name {
+  .site-header__brand {
     display: inline-flex;
     align-items: center;
     min-height: 44px;
-    font: 800 20px/1 var(--font-display);
-    font-stretch: 85%;
-    color: var(--graphite);
+    padding: 0 2px;
+    font-weight: 700;
     text-decoration: none;
   }
 
@@ -67,61 +68,65 @@ import MobileMenu from "./MobileMenu.astro";
     margin: 0;
     padding: 0;
     display: flex;
-    gap: 4px;
-    align-items: center;
-    font: 700 15px/1 var(--font-body);
-  }
-
-  .nav-link,
-  .nav-contact {
-    display: flex;
-    align-items: center;
-    min-height: 44px;
-    color: var(--graphite);
-    text-decoration: none;
-    border-radius: var(--radius-pill);
+    flex-wrap: wrap;
+    gap: 4px 18px;
   }
 
   .nav-link {
-    padding: 0 14px;
-    transition: background-color 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    padding: 0 2px;
+    text-transform: lowercase;
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
   }
 
-  .nav-link:hover {
-    background: var(--warm-beige);
+  .nav-link--contact {
+    font-weight: 700;
   }
 
-  .nav-contact {
-    padding: 0 16px;
-    border: var(--border);
-    background: var(--soft-peach);
-    box-shadow: 3px 3px 0 var(--graphite);
-    transition:
-      transform 0.12s var(--ease-settle),
-      box-shadow 0.12s var(--ease-settle);
+  .nav-link__arrow {
+    display: inline-block;
+    transition: translate 0.2s var(--ease-settle);
   }
 
   @media (hover: hover) {
-    .nav-contact:hover {
-      transform: translate(-1px, -1px);
-      box-shadow: 4px 4px 0 var(--graphite);
+    .nav-link--contact:hover .nav-link__arrow {
+      translate: 4px 0;
     }
   }
 
-  .nav-contact:active {
-    transform: translate(3px, 3px);
-    box-shadow: 0 0 0 var(--graphite);
+  .nav-link:active,
+  .site-header__brand:active {
+    translate: 0 1px;
   }
 
+  /* A pencilled box with a hand-drawn wobble. */
   .menu-toggle {
     display: none;
     min-height: 44px;
     padding: 0 16px;
-    border: var(--border);
-    border-radius: var(--radius-pill);
+    border: 2px solid var(--ink);
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
     background: var(--paper);
-    font: 700 15px/1 var(--font-body);
+    font: 700 14px/1 var(--font-mono);
+    text-transform: lowercase;
     cursor: pointer;
+    rotate: 1.5deg;
+    transition:
+      rotate 0.2s var(--ease-settle),
+      scale 0.1s var(--ease-settle);
+  }
+
+  .menu-toggle[aria-expanded="true"] {
+    rotate: -1.5deg;
+    background: var(--highlighter);
+  }
+
+  .menu-toggle:active {
+    scale: 0.94;
   }
 
   @media (max-width: 759.98px) {

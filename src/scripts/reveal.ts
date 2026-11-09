@@ -1,38 +1,71 @@
 /**
- * One-shot reveal animations (settle, drop, pop, fade, draw) driven by
- * IntersectionObserver + Web Animations. Nothing loops.
+ * One-shot reveal animations driven by IntersectionObserver + Web
+ * Animations. Nothing loops.
  *
  * Elements opt in with `data-fx` (and optional `data-delay`). An element can
  * switch effect/delay below a breakpoint with `data-narrow` (a media query),
- * `data-fx-narrow` and `data-delay-narrow`. Arrows opt in with `data-draw`.
+ * `data-fx-narrow` and `data-delay-narrow`. SVG strokes opt in with
+ * `data-draw` (they draw themselves, like a pen).
+ *
+ * `data-fx-done` is set the moment an element starts revealing, so CSS can
+ * chain its own follow-up animations onto it (a strike-through being drawn,
+ * a highlighter stroke).
  *
  * The inline head script only adds `html.fx` when motion is allowed, so with
  * reduced motion or no JS everything is simply visible.
  */
 
-type Effect = "settle" | "drop" | "pop" | "fade";
+type Effect = "settle" | "drop" | "pop" | "fade" | "stamp" | "tape" | "rise";
 
 const EASE = "cubic-bezier(.2,.8,.25,1)";
+const STAMP = "cubic-bezier(.3,1.5,.5,1)";
 
-const EFFECTS: Record<Effect, { motion: Keyframe[] | null; duration: number }> =
-  {
-    settle: {
-      motion: [
-        { translate: "0 18px", rotate: "1.5deg" },
-        { translate: "0 0", rotate: "0deg" },
-      ],
-      duration: 420,
-    },
-    drop: {
-      motion: [
-        { translate: "0 -28px", rotate: "-3deg" },
-        { translate: "0 0", rotate: "0deg" },
-      ],
-      duration: 460,
-    },
-    pop: { motion: [{ scale: "0.85" }, { scale: "1" }], duration: 300 },
-    fade: { motion: null, duration: 400 },
-  };
+interface EffectSpec {
+  /** Added on top of the element's own rotate/translate (tilts are kept). */
+  motion?: Keyframe[];
+  /** Replaces `scale` (no element sets its own). */
+  scale?: Keyframe[];
+  duration: number;
+  easing?: string;
+}
+
+const EFFECTS: Record<Effect, EffectSpec> = {
+  // Paper set down on the page: slides up and straightens into its tilt.
+  settle: {
+    motion: [
+      { translate: "0 18px", rotate: "1.5deg" },
+      { translate: "0 0", rotate: "0deg" },
+    ],
+    duration: 420,
+  },
+  // A label dropped from above.
+  drop: {
+    motion: [
+      { translate: "0 -28px", rotate: "-4deg" },
+      { translate: "0 0", rotate: "0deg" },
+    ],
+    duration: 480,
+  },
+  pop: { scale: [{ scale: "0.85" }, { scale: "1" }], duration: 300 },
+  fade: { duration: 400 },
+  // A rubber stamp: comes down big and lands with a thump.
+  stamp: {
+    scale: [{ scale: "1.8" }, { scale: "1" }],
+    motion: [{ rotate: "8deg" }, { rotate: "0deg" }],
+    duration: 380,
+    easing: STAMP,
+  },
+  // A tape strip pulled across and pressed down.
+  tape: {
+    scale: [{ scale: "0.3 1.1" }, { scale: "1 1" }],
+    duration: 340,
+  },
+  // A divider tab poking up out of the perforation.
+  rise: {
+    motion: [{ translate: "0 22px" }, { translate: "0 0" }],
+    duration: 460,
+  },
+};
 
 function isEffect(value: string | undefined): value is Effect {
   return value !== undefined && value in EFFECTS;
@@ -59,7 +92,7 @@ function play(el: HTMLElement | SVGElement): void {
 
   if (el.hasAttribute("data-draw")) {
     el.animate([{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], {
-      duration: 380,
+      duration: Number(el.dataset["duration"] ?? 520),
       delay,
       easing: EASE,
       fill: "backwards",
@@ -72,11 +105,17 @@ function play(el: HTMLElement | SVGElement): void {
   const timing: KeyframeAnimationOptions = {
     duration: effect.duration,
     delay,
-    easing: EASE,
+    easing: effect.easing ?? EASE,
     fill: "backwards",
   };
-  el.animate([{ opacity: 0 }, { opacity: 1 }], timing);
-  // Added on top of the element's own rotate/translate, so tilts are kept.
+  // Only a start frame: it fades up to the element's own opacity (stamps
+  // and faded ink sit below 1).
+  el.animate([{ opacity: 0, offset: 0 }], {
+    ...timing,
+    easing: EASE,
+    duration: Math.min(effect.duration, 260),
+  });
+  if (effect.scale) el.animate(effect.scale, timing);
   if (effect.motion) el.animate(effect.motion, { ...timing, composite: "add" });
 }
 

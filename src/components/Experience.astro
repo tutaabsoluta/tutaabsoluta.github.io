@@ -1,121 +1,373 @@
 ---
 import { content, ui } from "../data/content";
-import SectionTag from "./SectionTag.astro";
-import Sticker from "./Sticker.astro";
-import WorkTile from "./WorkTile.astro";
+import PageBreak from "./PageBreak.astro";
+import Tape from "./Tape.astro";
 
 const { experience } = content;
+const total = experience.tiles.length;
+/** Every card sits at its own angle, like cards pinned by hand. */
+const tilts = [-1.4, 0.9, -0.5, 1.6, 0.6, -1.1, 1.2, -0.8];
 ---
 
-<section id="experience" class="experience" aria-labelledby="h-exp">
-  <div class="experience__head">
-    <div class="section-head__title">
-      <SectionTag label={ui.tags.experience} bg="var(--muted-blue)" />
-      <h2 id="h-exp" class="display-h2 experience__title" data-fx="settle">
+<section id="experience" class="section" aria-labelledby="h-exp">
+  <PageBreak label={ui.tabs.experience} x={22} bg="var(--highlighter)" />
+  <div class="exp__head">
+    <div class="section-head exp__title">
+      <p class="mono-kicker">{ui.experience.kicker}</p>
+      <h2 id="h-exp" class="display-h2" data-fx="settle">
         {ui.experience.title}
       </h2>
     </div>
-    <div class="employer" data-fx="settle" data-delay="120">
-      <Sticker
-        label={ui.experience.now}
-        bg="var(--dusty-green)"
-        place="right:-12px;top:-16px;rotate:6deg;padding:6px 12px"
-      />
-      <span class="employer__name">{experience.company}</span>
-      <span class="employer__meta">
-        {experience.role} · {experience.dates} · {experience.duration}
-      </span>
+
+    <div class="luggage grain" data-fx="drop" data-delay="160">
+      <span class="luggage__hole" aria-hidden="true"></span>
+      <p class="luggage__company">{experience.company}</p>
+      <p class="luggage__meta">
+        {experience.role}
+        <br />
+        {experience.dates} ({experience.duration})
+      </p>
     </div>
   </div>
 
-  <p class="log-hint kalam-note" aria-hidden="true" data-fx="fade">
-    {ui.experience.hint}
-  </p>
-  <ul class="log" data-fx="settle">
-    {experience.tiles.map((tile) => (
-      <WorkTile tile={tile} />
-    ))}
+  <ul class="cards">
+    {experience.tiles.map((t, i) => {
+      const originalId = `work-${t.id}-original`;
+      return (
+        <li
+          id={`work-${t.id}`}
+          class="card"
+          data-fx="settle"
+          data-delay={(i % 3) * 90}
+          data-narrow="(max-width: 699.98px)"
+          data-delay-narrow="0"
+          style={`--tilt:${tilts[i % tilts.length]}deg`}
+        >
+          {i % 3 === 0 && (
+            <Tape place="right:18px;top:-12px;width:76px;height:24px;rotate:-6deg" />
+          )}
+          <p class="card__n">{ui.experience.card(i + 1, total)}</p>
+          <h3 class="card__title">
+            {t.correction && (
+              <>
+                <s class="card__strike" aria-hidden="true">
+                  {t.correction}
+                </s>{" "}
+              </>
+            )}
+            <span class="card__mark">{t.title}</span>
+          </h3>
+          <p class="card__detail">{t.detail}</p>
+          <a class="card__back" href="#how" hidden data-back>
+            <span aria-hidden="true">← </span>
+            {ui.experience.backToHow}
+          </a>
+          <button
+            type="button"
+            class="card__toggle"
+            aria-expanded="false"
+            aria-controls={originalId}
+            aria-label={`${ui.experience.showFull} ${t.title}`}
+            data-flip
+            data-label-show={`${ui.experience.showFull} ${t.title}`}
+            data-label-hide={`${ui.experience.hideFull} ${t.title}`}
+          >
+            <span class="card__sign" aria-hidden="true">
+              +
+            </span>
+            <span class="card__more" aria-hidden="true">
+              {ui.experience.full}
+            </span>
+            <span class="card__less" aria-hidden="true">
+              {ui.experience.fold}
+            </span>
+          </button>
+          <p id={originalId} class="card__original" hidden>
+            {t.original}
+          </p>
+        </li>
+      );
+    })}
   </ul>
 
   <p class="tools" data-fx="fade">
-    <b>{ui.experience.toolsUsed}</b>
-    <span>{experience.toolsIndex.join(" · ")}</span>
+    <span class="tools__label">{ui.experience.toolsUsed}</span>{" "}
+    {experience.toolsIndex.join(", ")}
   </p>
 </section>
 
 <style>
-  .experience {
-    max-width: var(--max-width);
-    margin: 0 auto;
-    padding: var(--section-space) var(--block-pad-x);
+  .exp__head {
     display: flex;
-    flex-direction: column;
-    gap: clamp(28px, 4vw, 40px);
-  }
-
-  .experience__head {
-    display: flex;
-    gap: 24px 40px;
-    align-items: flex-end;
     flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px 40px;
+    margin-bottom: clamp(32px, 5vw, 56px);
   }
 
-  .experience__title {
-    max-width: 9ch;
+  .exp__title {
+    margin-bottom: 0;
   }
 
-  .employer {
+  /* A luggage tag tied on with string: swings when you touch it. */
+  .luggage {
     position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    margin-bottom: 6px;
-    padding: 20px 24px;
-    background: var(--paper);
-    border: var(--border);
-    border-radius: var(--radius-card-sm);
-    box-shadow: 7px 7px 0 var(--muted-blue);
-    rotate: -1deg;
+    padding: 16px 22px 16px 40px;
+    background-color: var(--label);
+    clip-path: polygon(18px 0, 100% 0, 100% 100%, 18px 100%, 0 50%);
+    rotate: 2deg;
+    transform-origin: 14px 50%;
   }
 
-  .employer__name {
-    font: 800 clamp(26px, 2.6vw, 32px) / 1 var(--font-display);
+  @media (hover: hover) {
+    .luggage:hover {
+      animation: swing 0.9s var(--ease-settle);
+    }
   }
 
-  .employer__meta {
-    font: 17px/1.35 var(--font-body);
+  .luggage:active {
+    animation: swing 0.9s var(--ease-settle);
   }
 
-  /* Tells sighted visitors what the +/− does (the buttons have aria labels). */
-  .log-hint {
-    align-self: flex-end;
-    margin: 0 8px calc(clamp(28px, 4vw, 40px) * -1 + 6px);
-    font-size: 20px;
+  @keyframes swing {
+    20% {
+      rotate: -5deg;
+    }
+    45% {
+      rotate: 5deg;
+    }
+    70% {
+      rotate: 0.5deg;
+    }
+    85% {
+      rotate: 2.8deg;
+    }
   }
 
-  /* One sheet of ruled lines, unlike the card grids around it. */
-  .log {
+  .luggage__hole {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    width: 10px;
+    height: 10px;
+    margin-top: -5px;
+    border-radius: 50%;
+    background: var(--page);
+    box-shadow: inset 0 0 0 2px var(--pencil);
+  }
+
+  .luggage__company {
+    font: 400 24px/1.1 var(--font-hand);
+    text-transform: lowercase;
+  }
+
+  .luggage__meta {
+    margin-top: 6px;
+    font: 400 13px/1.4 var(--font-mono);
+  }
+
+  /* Index cards: a margin stripe near the top and ruled lines below. */
+  .cards {
     list-style: none;
     margin: 0;
     padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+    gap: 36px 28px;
+    align-items: start;
+  }
+
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px 18px 12px;
+    background-color: var(--paper);
+    background-image:
+      linear-gradient(
+        transparent 0 46px,
+        var(--margin-line) 46px 48px,
+        transparent 48px
+      ),
+      repeating-linear-gradient(transparent 0 27px, var(--rule-line) 27px 28px);
+    box-shadow: var(--lift);
+    rotate: var(--tilt);
+    transition:
+      rotate 0.25s var(--ease-settle),
+      translate 0.25s var(--ease-settle),
+      box-shadow 0.25s var(--ease-settle),
+      outline-color 0.2s;
+    outline: 3px dashed transparent;
+    outline-offset: 6px;
+  }
+
+  @media (hover: hover) {
+    .card:hover {
+      rotate: 0deg;
+      translate: 0 -4px;
+      box-shadow: var(--lift-hover);
+    }
+  }
+
+  .card__n {
+    height: 22px;
+    font: 400 12px/1 var(--font-mono);
+    color: var(--pencil);
+  }
+
+  .card__title {
+    margin-top: 8px;
+    font: 800 21px/1.2 var(--font-sans);
+    letter-spacing: -0.02em;
+  }
+
+  .card__mark {
+    padding: 0 2px;
+    background: linear-gradient(var(--highlighter), var(--highlighter)) left
+      bottom / 0% 100% no-repeat;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    transition: background-size 0.3s var(--ease-settle);
+  }
+
+  /* A pen correction: the word is struck out after the card lands. */
+  .card__strike {
+    position: relative;
+    display: inline-block;
+    font: 400 21px/1 var(--font-hand);
+    color: var(--pen);
+    text-decoration: none;
+  }
+
+  .card__strike::after {
+    content: "";
+    position: absolute;
+    left: -3px;
+    right: -3px;
+    top: 52%;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--pen);
+    rotate: -6deg;
+    transform-origin: left center;
+  }
+
+  .fx [data-fx-done] .card__strike::after {
+    animation: strike 0.35s var(--ease-settle) 0.65s backwards;
+  }
+
+  @keyframes strike {
+    from {
+      scale: 0 1;
+    }
+  }
+
+  .card__detail {
+    font: 400 14px/2 var(--font-mono);
+  }
+
+  .card__toggle {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    margin-top: auto;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    font: 400 17px/1 var(--font-hand);
+    color: var(--pen);
+  }
+
+  .card__sign {
+    display: inline-block;
+    font-size: 24px;
+    transition:
+      rotate 0.28s var(--ease-settle),
+      scale 0.12s var(--ease-settle);
+  }
+
+  .card__toggle:active .card__sign {
+    scale: 0.8;
+  }
+
+  .card__toggle[aria-expanded="true"] .card__sign {
+    rotate: 135deg;
+  }
+
+  .card__less,
+  .card__toggle[aria-expanded="true"] .card__more {
+    display: none;
+  }
+
+  .card__toggle[aria-expanded="true"] .card__less {
+    display: inline;
+  }
+
+  @media (hover: hover) {
+    .card__toggle:hover .card__more,
+    .card__toggle:hover .card__less {
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+  }
+
+  .card__original {
+    padding: 6px 0 8px;
+    font: 400 16px/1.55 var(--font-sans);
     background: var(--paper);
-    border: var(--border);
-    border-radius: var(--radius-card);
-    box-shadow: 8px 8px 0 var(--muted-blue);
-    overflow: hidden;
+    animation: card-text-in 0.32s var(--ease-settle);
+  }
+
+  @keyframes card-text-in {
+    from {
+      opacity: 0;
+      translate: 0 6px;
+    }
+  }
+
+  /* Shown after a jump from How I work; goes back to the stage. */
+  .card__back {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font: 400 18px/1 var(--font-hand);
+    color: var(--pen);
+    text-decoration: none;
+    rotate: -1.5deg;
+    animation: card-text-in 0.32s var(--ease-settle) 0.2s backwards;
+  }
+
+  .card__back:hover {
+    color: var(--pen);
+    text-decoration: underline;
+  }
+
+  /* A jump from How I work landed here: straighten, circle it in pen and
+     run the highlighter over the title. */
+  .card[data-flash] {
+    rotate: 0deg;
+    outline-color: var(--pen);
+  }
+
+  .card[data-flash] .card__mark {
+    background-size: 100% 100%;
+    transition-duration: 0.6s;
   }
 
   .tools {
-    display: flex;
-    gap: 8px 12px;
-    align-items: baseline;
-    flex-wrap: wrap;
-    border-top: 2px dashed var(--graphite);
-    padding-top: 16px;
-    font: 16px/1.5 var(--font-body);
+    margin-top: 40px;
+    max-width: 80ch;
+    font: 400 14px/1.8 var(--font-mono);
+    text-transform: lowercase;
   }
 
-  .tools b {
-    font: 800 16px/1 var(--font-display);
+  .tools__label {
+    font: 400 18px/1 var(--font-hand);
   }
 </style>

@@ -24,12 +24,10 @@ test.describe("With reduced motion", () => {
     const row = portfolio.log.row("framework");
     await row.toggle.click();
     const timing = await page.evaluate(() => {
-      const sign = document.querySelector(".entry__sign");
+      const sign = document.querySelector(".card__sign");
       const text = document.querySelector("#work-framework-original");
       return {
-        transition: sign
-          ? getComputedStyle(sign, "::after").transitionDuration
-          : "",
+        transition: sign ? getComputedStyle(sign).transitionDuration : "",
         animation: text ? getComputedStyle(text).animationName : "",
       };
     });

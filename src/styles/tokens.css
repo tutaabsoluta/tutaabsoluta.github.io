@@ -1,46 +1,48 @@
 :root {
-  /* Colour */
-  --cream: #f5efe4;
-  --paper: #fbf8f2;
-  --graphite: #2a2a2e;
-  --muted-blue: #8fa8c8;
-  --dusty-green: #9db59a;
-  --soft-peach: #f2b99a;
-  --lavender: #b9aed6;
-  --warm-beige: #e3d3bc;
-  --ink-blue: #3e5a86;
-  --text-body: #3a3732;
-  --text-muted: #4a4640;
-  --text-subtle: #5a5650;
-  --block-lavender: #e4ddee;
-  --block-sage: #dce4da;
-  --block-peach: #f7dccb;
-  --tint-blue: #d9e2ee;
-  --signal-red: #d46a5a;
+  /* Colour: a photocopied engineering notebook */
+  --page: #eeedea;
+  --paper: #ffffff;
+  --sheet-1: #f8f8f6;
+  --sheet-2: #f3f3f0;
+  --ink: #1c1d20;
+  --pencil: #55575c;
+  --pen: #2747c9;
+  --highlighter: #d6ecd9;
+  --label: #d9dee8;
+  --tape: rgb(196 201 212 / 0.7);
+  --tape-light: rgb(250 250 248 / 0.6);
+  --rule-line: #c9d3de;
+  --margin-line: #a9b8ec;
+  --perforation: #a3a5aa;
+  --hole: #e2e1dc;
+  /* Test status only (footer label dot, receipt stamp, 404). */
+  --green-pen: #2f8a4c;
+  --amber: #d99a1e;
+  --red-pen: #b8322a;
+
+  /* Photocopy grain, layered over paper and labels. */
+  --grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.1 0 0 0 0 0.1 0 0 0 .14 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
 
   /* Type */
-  --font-display: "Bricolage Grotesque", "Arial Narrow", sans-serif;
-  --font-body: "Atkinson Hyperlegible", system-ui, sans-serif;
-  --font-note: "Kalam", cursive;
-  /* Receipt only: system monospace, nothing to load. */
-  --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo,
+    Consolas, monospace;
+  --font-hand: "Permanent Marker", "Comic Sans MS", cursive;
 
-  /* Shape */
-  --border: 2.5px solid var(--graphite);
-  --radius-card: 18px;
-  --radius-card-sm: 16px;
-  --radius-block: clamp(16px, 2vw, 24px);
-  --radius-button: 12px;
-  --radius-button-lg: 14px;
-  --radius-pill: 999px;
+  /* Shadows: paper lifted off the page, never blurred much */
+  --lift-sm: 1px 2px 0 rgb(26 26 26 / 0.16);
+  --lift: 1px 2px 0 rgb(26 26 26 / 0.16), 0 10px 18px -14px rgb(26 26 26 / 0.45);
+  --lift-lg: 1px 2px 0 rgb(26 26 26 / 0.2), 0 14px 24px -18px rgb(26 26 26 / 0.5);
+  --lift-hover: 2px 4px 0 rgb(26 26 26 / 0.16),
+    0 22px 30px -18px rgb(26 26 26 / 0.45);
 
   /* Layout */
-  --max-width: 1280px;
-  --gutter: clamp(20px, 4vw, 48px);
-  --block-inset: clamp(12px, 2vw, 24px);
-  --block-pad-x: clamp(20px, 4vw, 56px);
+  --max-width: 1200px;
+  --gutter: clamp(16px, 3vw, 32px);
   --section-space: clamp(64px, 9vw, 120px);
+  --margin-x: max(6px, calc(50% - 614px));
 
   /* Motion */
   --ease-settle: cubic-bezier(0.2, 0.8, 0.25, 1);
+  --ease-stamp: cubic-bezier(0.3, 1.5, 0.5, 1);
 }

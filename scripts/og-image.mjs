@@ -4,7 +4,7 @@
  * pipeline after ci-report.mjs, so the card shows this deploy's real test
  * count. The built site is served straight from dist/, no server needed.
  * It also renders favicon.svg to dist/apple-touch-icon.png (180×180, on the
- * page's cream, since iOS doesn't do transparency), so no image lives in git.
+ * page colour, since iOS doesn't do transparency), so no image lives in git.
  *
  * Usage (after build): node scripts/og-image.mjs
  */
@@ -50,7 +50,7 @@ await page.screenshot({ path: join(DIST, "og.png") });
 
 await page.setViewportSize({ width: 180, height: 180 });
 await page.setContent(
-  `<body style="margin:0;height:100vh;display:grid;place-items:center;background:#f5efe4">
+  `<body style="margin:0;height:100vh;display:grid;place-items:center;background:#eeedea">
     <img src="${ORIGIN}/favicon.svg" width="140" height="140" alt="">
   </body>`,
 );

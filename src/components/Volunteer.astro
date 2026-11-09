@@ -1,251 +1,159 @@
 ---
-import { content, tintVar } from "../data/content";
-import PrintedShape from "./PrintedShape.astro";
+/**
+ * The volunteer flyer, taped to the page. Its call to action points down to
+ * Contact's tear-off tabs (one of them drafts a volunteer project email).
+ */
+import { content, ui } from "../data/content";
+import PageBreak from "./PageBreak.astro";
+import Tape from "./Tape.astro";
 
 const { volunteer } = content;
 
-/** Each "Who" chip sits at its own slight tilt, like the stickers. */
-const chipTilts = ["-1deg", "1deg", "-0.5deg"];
-
-// Split a trailing "→" off the CTA label so it can nudge on hover.
-const ctaMatch = /^(.*?)\s*→$/.exec(volunteer.cta.label);
-const ctaText = ctaMatch?.[1] ?? volunteer.cta.label;
-const ctaArrow = ctaMatch !== null;
+/** Hand-drawn ovals around the "who" words, each one a little different. */
+const ovals = [
+  { radius: "50% 46% 52% 44% / 60% 50% 56% 48%", tilt: -2 },
+  { radius: "46% 54% 44% 52% / 52% 60% 46% 56%", tilt: 1.5 },
+  { radius: "52% 44% 56% 48% / 48% 56% 50% 60%", tilt: -1 },
+];
 ---
 
-<section id="volunteer" class="volunteer" aria-labelledby="h-vol">
-  <div class="volunteer__card" data-fx="settle">
-    <span class="sticker volunteer__sticker" data-fx="pop" data-delay="160">
-      {volunteer.sticker}
-    </span>
+<section id="volunteer" class="section" aria-labelledby="h-vol">
+  <PageBreak label={ui.tabs.volunteer} x={58} bg="var(--label)" />
 
-    <div class="volunteer__pin" aria-hidden="true">
-      <PrintedShape fill="var(--soft-peach)" radius="50%" offset={4} size={52}>
-        <span class="volunteer__pin-dot"></span>
-      </PrintedShape>
-    </div>
+  <div class="flyer" data-fx="settle">
+    <Tape
+      delay={300}
+      place="left:-14px;top:-10px;width:90px;height:26px;rotate:-32deg"
+    />
+    <Tape
+      delay={420}
+      place="right:-14px;top:-10px;width:90px;height:26px;rotate:32deg;transform-origin:right center"
+    />
 
-    <div class="volunteer__intro">
-      <h2 id="h-vol" class="volunteer__title">
+    <div class="flyer__body grain">
+      <p class="flyer__kicker">— {volunteer.kicker} —</p>
+      <h2 id="h-vol" class="flyer__title">
         {volunteer.title}
       </h2>
-      <p class="volunteer__body">{volunteer.body}</p>
-      <span class="kalam-note volunteer__note" aria-hidden="true">
-        {volunteer.note}
-      </span>
-    </div>
-
-    <div class="volunteer__details">
-      <div class="volunteer__group">
-        <h3 class="volunteer__label">{volunteer.whoLabel}</h3>
-        <ul class="volunteer__who">
-          {volunteer.who.map((w, i) => (
+      <p class="flyer__text">{volunteer.body}</p>
+      <ul class="flyer__who">
+        {volunteer.who.map((w, i) => {
+          const o = ovals[i % ovals.length];
+          return (
             <li
-              style={`--chip-bg:${tintVar[w.tone]};--chip-tilt:${chipTilts[i % chipTilts.length]}`}
+              data-fx="pop"
+              data-delay={300 + i * 90}
+              style={`border-radius:${o?.radius};rotate:${o?.tilt}deg`}
             >
-              {w.label}
+              {w}
             </li>
-          ))}
-        </ul>
-      </div>
-
-      <div class="volunteer__group">
-        <h3 class="volunteer__label">{volunteer.helpLabel}</h3>
-        <ul class="volunteer__help">
+          );
+        })}
+      </ul>
+      <div class="flyer__help">
+        <h3 class="flyer__label">{volunteer.helpLabel}</h3>
+        <ul>
           {volunteer.help.map((h) => (
-            <li>
-              <span class="volunteer__glyph" aria-hidden="true">
-                {h.glyph}
-              </span>
-              {h.text}
-            </li>
+            <li>{h}</li>
           ))}
         </ul>
       </div>
-
-      <a class="volunteer__cta" href={volunteer.cta.href}>
-        {ctaText}
-        {ctaArrow && <span class="volunteer__cta-arrow">→</span>}
+      <a class="flyer__cta pen-note swipe" href="#tabs">
+        {ui.volunteer.cta}
       </a>
     </div>
   </div>
 </section>
 
 <style>
-  /* Bare page (like 03); no bottom padding, Contact supplies its own top. */
-  .volunteer {
-    max-width: var(--max-width);
-    margin: 0 auto;
-    padding: var(--section-space) var(--block-pad-x) 0;
-  }
-
-  /* A pinned notice: dashed border sets it apart from the solid cards. */
-  .volunteer__card {
+  .flyer {
     position: relative;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    gap: 32px 56px;
-    padding: clamp(28px, 4vw, 48px);
-    background: var(--paper);
-    border: 2.5px dashed var(--graphite);
-    border-radius: 22px;
-    rotate: -0.5deg;
+    max-width: 760px;
+    margin: 0 auto;
+    rotate: 1deg;
   }
 
-  .volunteer__sticker {
-    left: clamp(20px, 4vw, 48px);
-    top: -18px;
-    padding: 8px 14px;
-    font-size: 14px;
-    background: var(--dusty-green);
-    rotate: -3deg;
-  }
-
-  .volunteer__pin {
-    position: absolute;
-    right: clamp(20px, 4vw, 48px);
-    top: -26px;
-  }
-
-  .volunteer__pin-dot {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 10px;
-    height: 10px;
-    margin: -5px 0 0 -5px;
-    border-radius: 50%;
-    background: var(--graphite);
-  }
-
-  .volunteer__intro,
-  .volunteer__details {
-    flex: 1 1 380px;
-    min-width: 0;
+  .flyer__body {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    padding: clamp(28px, 4vw, 48px) clamp(20px, 4vw, 48px) 28px;
+    background-color: var(--paper);
+    box-shadow: var(--lift-sm);
+    text-align: center;
   }
 
-  .volunteer__intro {
-    gap: 16px;
-  }
-
-  .volunteer__details {
-    gap: 22px;
-  }
-
-  .volunteer__title {
-    max-width: 11ch;
-    font: 800 clamp(44px, 6vw, 76px) / 0.88 var(--font-display);
-    font-stretch: 78%;
-    letter-spacing: -0.03em;
-  }
-
-  .volunteer__body {
-    max-width: 40ch;
-    font: clamp(18px, 1.7vw, 20px) / 1.5 var(--font-body);
-  }
-
-  .volunteer__note {
-    align-self: flex-start;
-    font-size: 22px;
-    line-height: 1;
-  }
-
-  .volunteer__group {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .volunteer__label {
-    font: 700 14px/1 var(--font-body);
-    letter-spacing: 0.06em;
+  .flyer__kicker {
+    font: 700 14px/1 var(--font-mono);
+    letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--text-muted);
   }
 
-  .volunteer__who,
-  .volunteer__help {
+  .flyer__title {
+    max-width: 12ch;
+    font: 400 clamp(44px, 7vw, 84px) / 0.95 var(--font-hand);
+    text-transform: uppercase;
+  }
+
+  .flyer__text {
+    max-width: 40ch;
+    font: 400 clamp(18px, 1.9vw, 21px) / 1.5 var(--font-sans);
+  }
+
+  .flyer__who {
     list-style: none;
     margin: 0;
     padding: 0;
     display: flex;
-  }
-
-  .volunteer__who {
     flex-wrap: wrap;
-    gap: 10px;
+    justify-content: center;
+    gap: 8px 18px;
+    font: 800 18px/1.3 var(--font-sans);
   }
 
-  .volunteer__who li {
-    padding: 10px 14px;
-    background: var(--chip-bg);
-    border: var(--border);
-    border-radius: var(--radius-button);
-    font: 700 16px/1.2 var(--font-body);
-    rotate: var(--chip-tilt);
+  .flyer__who li {
+    padding: 8px 16px;
+    border: 2.5px solid var(--ink);
   }
 
-  .volunteer__help {
+  .flyer__help {
+    align-self: stretch;
+    max-width: 520px;
+    margin: 6px auto 0;
+    text-align: left;
+  }
+
+  .flyer__help ul {
+    display: flex;
     flex-direction: column;
-    gap: 8px;
-    font: 17px/1.4 var(--font-body);
+    gap: 4px;
+    margin: 8px 0 0;
+    padding-left: 22px;
+    font: 400 18px/1.45 var(--font-sans);
   }
 
-  .volunteer__help li {
-    display: flex;
-    gap: 10px;
-    align-items: baseline;
+  .flyer__label {
+    font: 700 13px/1 var(--font-mono);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
   }
 
-  .volunteer__glyph {
-    flex: none;
-    font: 800 18px/1 var(--font-display);
-  }
-
-  .volunteer__cta {
-    align-self: flex-start;
-    display: flex;
+  .flyer__cta {
+    display: inline-flex;
     align-items: center;
-    gap: 10px;
-    min-height: 52px;
-    padding: 0 20px;
-    background: var(--graphite);
-    color: var(--cream);
-    border: var(--border);
-    border-radius: var(--radius-button-lg);
-    box-shadow: 5px 5px 0 var(--dusty-green);
-    font: 700 17px/1.2 var(--font-body);
+    min-height: 44px;
+    margin-top: 4px;
+    padding: 0 6px;
+    rotate: -1.5deg;
     text-decoration: none;
-    transition:
-      transform 0.12s var(--ease-settle),
-      box-shadow 0.12s var(--ease-settle);
   }
 
-  .volunteer__cta:hover {
-    color: var(--cream);
+  .flyer__cta:hover {
+    color: var(--pen);
   }
 
-  @media (hover: hover) {
-    .volunteer__cta:hover {
-      transform: translate(-2px, -2px);
-      box-shadow: 7px 7px 0 var(--dusty-green);
-    }
-
-    .volunteer__cta:hover .volunteer__cta-arrow {
-      translate: 3px 0;
-    }
-  }
-
-  .volunteer__cta:active {
-    transform: translate(5px, 5px);
-    box-shadow: 0 0 0 var(--dusty-green);
-  }
-
-  .volunteer__cta-arrow {
-    display: inline-block;
-    transition: translate 0.2s var(--ease-settle);
+  .flyer__cta:active {
+    translate: 0 2px;
   }
 </style>

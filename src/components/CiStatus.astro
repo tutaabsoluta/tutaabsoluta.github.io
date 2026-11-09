@@ -64,12 +64,12 @@ import { ui } from "../data/content";
 </dialog>
 
 <style>
-  /* Footer: whisper + pill */
+  /* Footer: a pen whisper + a little taped status label */
   .ci {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 6px 10px;
+    gap: 6px 12px;
     animation: ci-pop 0.3s var(--ease-settle);
   }
 
@@ -81,8 +81,8 @@ import { ui } from "../data/content";
   }
 
   .ci__note {
-    font: 700 18px/1 var(--font-note);
-    color: var(--text-muted);
+    font: 400 16px/1 var(--font-hand);
+    color: var(--pen);
     white-space: nowrap;
     rotate: -3deg;
   }
@@ -94,12 +94,11 @@ import { ui } from "../data/content";
     gap: 8px;
     min-height: 34px;
     padding: 0 12px;
-    background: var(--paper);
-    border: 2px solid var(--graphite);
-    border-radius: var(--radius-pill);
-    box-shadow: 3px 3px 0 var(--dot);
-    font: 700 13px/1 var(--font-body);
-    color: var(--graphite);
+    background: var(--paper) var(--grain);
+    border: 1.5px solid var(--ink);
+    box-shadow: 2px 3px 0 rgb(26 26 26 / 0.18);
+    font: 700 12px/1 var(--font-mono);
+    color: var(--ink);
     white-space: nowrap;
     cursor: pointer;
     rotate: -1.5deg;
@@ -107,10 +106,10 @@ import { ui } from "../data/content";
       rotate 0.2s var(--ease-settle),
       translate 0.12s var(--ease-settle),
       box-shadow 0.12s var(--ease-settle);
-    --dot: var(--dusty-green);
+    --dot: var(--green-pen);
   }
 
-  /* 44px hit area without a bigger pill. */
+  /* 44px hit area without a bigger label. */
   .ci__pill::before {
     content: "";
     position: absolute;
@@ -118,48 +117,49 @@ import { ui } from "../data/content";
   }
 
   .ci__pill[data-state="running"] {
-    --dot: var(--soft-peach);
+    --dot: var(--amber);
   }
 
   .ci__pill[data-state="failed"] {
-    --dot: var(--signal-red);
+    --dot: var(--red-pen);
   }
 
   @media (hover: hover) {
     .ci__pill:hover {
       rotate: 0deg;
       translate: 0 -2px;
+      box-shadow: 2px 5px 0 rgb(26 26 26 / 0.18);
     }
   }
 
   .ci__pill:active {
-    translate: 3px 3px;
-    box-shadow: 0 0 0 var(--dot);
+    translate: 2px 3px;
+    box-shadow: 0 0 0 rgb(26 26 26 / 0.18);
   }
 
   .ci__dot {
     width: 10px;
     height: 10px;
-    border: 1.5px solid var(--graphite);
     border-radius: 50%;
     background: var(--dot);
   }
 
-  /* Receipt */
+  /* Receipt: a slip of thermal paper torn off the roll */
   .receipt {
     width: min(400px, calc(100vw - 32px));
     max-height: min(86vh, 780px);
     padding: 0;
     border: 0;
     background: none;
-    color: var(--graphite);
+    color: var(--ink);
     overflow: visible;
+    rotate: -1deg;
     /* Follows the torn paper edges, unlike box-shadow. */
-    filter: drop-shadow(6px 6px 0 var(--lavender));
+    filter: drop-shadow(2px 4px 0 rgb(26 26 26 / 0.22));
   }
 
   .receipt::backdrop {
-    background: rgb(42 42 46 / 0.45);
+    background: rgb(28 29 32 / 0.5);
   }
 
   .receipt__paper {
@@ -168,7 +168,7 @@ import { ui } from "../data/content";
     max-height: inherit;
     overflow-y: auto;
     padding: 30px 24px 38px;
-    background: var(--paper);
+    background: var(--paper) var(--grain);
     font: 13px/1.45 var(--font-mono);
     /* Torn edges, top and bottom. */
     mask:
@@ -196,37 +196,45 @@ import { ui } from "../data/content";
     height: 44px;
     border: 0;
     background: none;
-    font: 700 24px/1 var(--font-body);
+    font: 400 26px/1 var(--font-hand);
+    color: var(--pen);
     cursor: pointer;
+    transition: rotate 0.2s var(--ease-settle);
+  }
+
+  @media (hover: hover) {
+    .receipt__close:hover {
+      rotate: 90deg;
+    }
   }
 
   .receipt__kicker {
     text-align: center;
     font-size: 11px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--text-subtle);
+    letter-spacing: 0.08em;
+    color: var(--pencil);
   }
 
   .receipt__title {
-    margin-top: 6px;
+    margin-top: 8px;
     text-align: center;
-    font: 800 38px/1 var(--font-display);
-    font-stretch: 80%;
+    font: 800 40px/1 var(--font-sans);
+    letter-spacing: -0.05em;
+    text-transform: lowercase;
   }
 
   .receipt__meta {
     margin-top: 6px;
     text-align: center;
     font-size: 12px;
-    color: var(--text-muted);
+    color: var(--pencil);
   }
 
   .receipt__replay {
     margin: 12px auto 4px;
     width: fit-content;
-    font: 700 17px/1.1 var(--font-note);
-    color: var(--ink-blue);
+    font: 400 16px/1.1 var(--font-hand);
+    color: var(--pen);
     rotate: -2deg;
   }
 
@@ -240,7 +248,7 @@ import { ui } from "../data/content";
   .receipt__lines :global(.receipt__group) {
     margin-top: 14px;
     padding-bottom: 4px;
-    border-bottom: 1.5px dashed var(--graphite);
+    border-bottom: 1.5px dashed var(--pencil);
     font-weight: 700;
     font-size: 11px;
     letter-spacing: 0.08em;
@@ -254,14 +262,19 @@ import { ui } from "../data/content";
     padding: 4px 0;
   }
 
+  .receipt__lines :global(.receipt__mark) {
+    color: var(--pen);
+    font-weight: 700;
+  }
+
   .receipt__lines :global(.receipt__time) {
-    color: var(--text-subtle);
+    color: var(--pencil);
   }
 
   .receipt__totals {
     margin-top: 16px;
     padding-top: 10px;
-    border-top: 3px double var(--graphite);
+    border-top: 3px double var(--ink);
     font-weight: 700;
     text-align: center;
   }
@@ -270,7 +283,7 @@ import { ui } from "../data/content";
     margin-top: 4px;
     text-align: center;
     font-size: 11px;
-    color: var(--text-subtle);
+    color: var(--pencil);
   }
 
   .receipt__end {
@@ -281,51 +294,42 @@ import { ui } from "../data/content";
     margin-top: 22px;
   }
 
+  /* The same rubber stamp as WORK IN PROGRESS on the project sheets. */
   .receipt__stamp {
-    position: relative;
-    isolation: isolate;
     padding: 8px 16px;
-    border: 3px solid var(--graphite);
-    border-radius: 10px;
-    font: 800 28px/1 var(--font-display);
-    letter-spacing: 0.08em;
+    border: 4px double var(--pen);
+    color: var(--pen);
+    font: 700 28px/1 var(--font-mono);
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    rotate: -8deg;
+    rotate: -9deg;
   }
 
-  /* The offset "printed" fill, as on every other shape on the site. */
-  .receipt__stamp::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    border-radius: inherit;
-    background: var(--dusty-green);
-    translate: 5px 5px;
-  }
-
-  .receipt__stamp[data-state="failed"]::before {
-    background: var(--signal-red);
+  .receipt__stamp[data-state="failed"] {
+    border-color: var(--red-pen);
+    color: var(--red-pen);
   }
 
   /* Latest run failed: an honest, slightly sheepish note before the stamp. */
   .receipt__oops {
     margin-top: 16px;
     padding: 10px 12px;
-    border: 2px dashed var(--signal-red);
-    border-radius: 10px;
-    font: 700 16px/1.3 var(--font-note);
+    border: 2px dashed var(--red-pen);
+    font: 400 15px/1.35 var(--font-hand);
     rotate: -1deg;
   }
 
   .receipt__oops a {
     display: inline-block;
     margin-top: 4px;
-    font: 700 13px/1 var(--font-body);
+    font: 700 13px/1 var(--font-mono);
   }
 
   .receipt__link {
-    font: 700 14px/1 var(--font-body);
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font: 700 14px/1 var(--font-mono);
   }
 
   /* Printing: each part appears in order (--i is set by the script). */
@@ -346,7 +350,7 @@ import { ui } from "../data/content";
   }
 
   .receipt__stamp {
-    animation: receipt-stamp 0.36s cubic-bezier(0.3, 1.5, 0.5, 1) backwards;
+    animation: receipt-stamp 0.38s var(--ease-stamp) backwards;
     animation-delay: calc(550ms + var(--i, 0) * 85ms);
   }
 
