@@ -7,7 +7,10 @@ const items = [...ui.nav, ui.navContact];
 
 <nav id="mobile-menu" class="mobile-menu" aria-label="Main" hidden>
   <div class="mobile-menu__sheet grain">
-    <Tape still place="right:28px;top:-12px;width:84px;height:24px;rotate:6deg" />
+    <Tape
+      still
+      place="right:28px;top:-12px;width:84px;height:24px;rotate:6deg"
+    />
     <ul>
       {items.map((item, i) => (
         <li>
@@ -16,7 +19,9 @@ const items = [...ui.nav, ui.navContact];
               {String(i + 1).padStart(2, "0")}
             </span>
             <span class="mobile-menu__label">{item.label}</span>
-            <span class="mobile-menu__arrow" aria-hidden="true">→</span>
+            <span class="mobile-menu__arrow" aria-hidden="true">
+              →
+            </span>
           </a>
         </li>
       ))}

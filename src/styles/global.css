@@ -34,6 +34,24 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Wide screens have room left of the margin line for a spiral binding:
+   punched holes with the wire coil looping through them. */
+@media (min-width: 1360px) {
+  body {
+    background:
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='44' height='34'><circle cx='32' cy='17' r='5.5' fill='%23E2E1DC' stroke='%23A3A5AA' stroke-width='1.5'/><path d='M33 13 C 24 5, 6 6, 3 16 C 1 23, 8 26, 14 24' fill='none' stroke='%236E7076' stroke-width='2.6' stroke-linecap='round'/></svg>")
+        calc(var(--margin-x) - 50px) 0 / 44px 34px repeat-y,
+      linear-gradient(var(--margin-line), var(--margin-line)) var(--margin-x) 0 /
+        2px 100% no-repeat,
+      repeating-linear-gradient(
+        transparent 0 35px,
+        rgb(169 184 236 / 0.2) 35px 36px
+      ),
+      var(--grain),
+      var(--page);
+  }
+}
+
 h1,
 h2,
 h3,
@@ -151,6 +169,7 @@ summary::-webkit-details-marker {
 }
 
 .section {
+  position: relative;
   max-width: var(--max-width);
   margin: 0 auto;
   padding: 0 var(--gutter) var(--section-space);
@@ -162,6 +181,20 @@ summary::-webkit-details-marker {
   align-items: baseline;
   gap: 8px 24px;
   margin-bottom: clamp(32px, 5vw, 56px);
+}
+
+/* A random note scribbled in pencil in a margin (decorative). */
+.scribble {
+  position: absolute;
+  font: 400 15px/1.25 var(--font-hand);
+  color: var(--pencil);
+  pointer-events: none;
+}
+
+@media (max-width: 999.98px) {
+  .scribble--wide {
+    display: none;
+  }
 }
 
 /* Paper textures */

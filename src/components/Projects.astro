@@ -1,5 +1,7 @@
 ---
 import { content, isUrl, linkAttrs, ui } from "../data/content";
+import Crumbs from "./Crumbs.astro";
+import FleeBug from "./FleeBug.astro";
 import PageBreak from "./PageBreak.astro";
 import Stamp from "./Stamp.astro";
 import Tape from "./Tape.astro";
@@ -12,13 +14,34 @@ const sheets = [
 ---
 
 <section id="build" class="section" aria-labelledby="h-build">
-  <PageBreak label={ui.tabs.build} x={4} bg="var(--label)" />
+  <PageBreak
+    page={ui.pages.build}
+    label={ui.tabs.build}
+    x={4}
+    bg="var(--label)"
+  />
   <div class="section-head">
     <p class="mono-kicker">{ui.build.kicker}</p>
-    <h2 id="h-build" class="display-h2" data-fx="settle">{ui.build.title}</h2>
+    <h2 id="h-build" class="display-h2" data-fx="settle">
+      {ui.build.title}
+    </h2>
     <p class="pen-note build__note" data-fx="fade" data-delay="240">
+      <span class="build__erased" aria-hidden="true">
+        {ui.build.erased}
+      </span>
       {ui.build.note}
     </p>
+    <Crumbs place="position:relative;align-self:center;margin-left:-8px;width:60px;height:34px" />
+    <div class="postit" aria-hidden="true" data-fx="drop" data-delay="380">
+      <div class="postit__paper grain">
+        <p class="postit__title">{ui.build.todo.title}</p>
+        <ul>
+          {ui.build.todo.items.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
   </div>
 
   <div class="build__sheets">
@@ -89,11 +112,7 @@ const sheets = [
           <p class="sheet__repo">
             {ui.build.repo}{" "}
             {isUrl(p.repository) ? (
-              <a
-                class="swipe"
-                href={p.repository}
-                {...linkAttrs(p.repository)}
-              >
+              <a class="swipe" href={p.repository} {...linkAttrs(p.repository)}>
                 {p.repository}
               </a>
             ) : (
@@ -104,11 +123,115 @@ const sheets = [
       );
     })}
   </div>
+
+  <FleeBug />
 </section>
 
 <style>
+  /* A sticky note with the projects' honest TODO list (decorative: the
+     status is already said in "(both still unfinished)"). Its corner peels
+     up when you touch it. */
+  @property --peel {
+    syntax: "<length>";
+    inherits: true;
+    initial-value: 12px;
+  }
+
+  .postit {
+    --peel: 12px;
+    margin-left: auto;
+    align-self: center;
+    rotate: 4deg;
+    filter: drop-shadow(1px 3px 2px rgb(26 26 26 / 0.22));
+    transition:
+      --peel 0.3s var(--ease-settle),
+      rotate 0.3s var(--ease-settle);
+  }
+
+  @media (hover: hover) {
+    .postit:hover {
+      --peel: 30px;
+      rotate: 2deg;
+    }
+  }
+
+  .postit:active {
+    --peel: 30px;
+  }
+
+  .postit__paper {
+    position: relative;
+    display: block;
+    padding: 16px 18px 20px;
+    background-color: var(--highlighter);
+    font: 400 16px/1.3 var(--font-hand);
+    clip-path: polygon(
+      0 0,
+      100% 0,
+      100% calc(100% - var(--peel)),
+      calc(100% - var(--peel)) 100%,
+      0 100%
+    );
+  }
+
+  .postit__title {
+    margin-bottom: 4px;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .postit__paper ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .postit__paper li::before {
+    content: "\2610  ";
+  }
+
+  /* The folded-up flap. */
+  .postit__paper::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: var(--peel);
+    height: var(--peel);
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--highlighter), var(--ink) 12%),
+      color-mix(in srgb, var(--highlighter), var(--paper) 55%)
+    );
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+  }
+
+  @media (max-width: 699.98px) {
+    .postit {
+      margin: 8px 0 0;
+    }
+  }
+
   .build__note {
+    position: relative;
     rotate: -3deg;
+  }
+
+  /* An earlier, too-optimistic note, rubbed out (not quite all the way). */
+  .build__erased {
+    position: absolute;
+    left: 14px;
+    top: -26px;
+    padding: 0 6px;
+    font: 400 18px/1 var(--font-hand);
+    color: color-mix(in srgb, var(--pencil) 45%, transparent);
+    background: radial-gradient(
+      ellipse at center,
+      rgb(26 26 26 / 0.08),
+      transparent 72%
+    );
+    white-space: nowrap;
+    rotate: 2deg;
   }
 
   .build__sheets {

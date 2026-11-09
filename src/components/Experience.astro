@@ -1,5 +1,6 @@
 ---
 import { content, ui } from "../data/content";
+import Doodle from "./Doodle.astro";
 import PageBreak from "./PageBreak.astro";
 import Tape from "./Tape.astro";
 
@@ -10,7 +11,12 @@ const tilts = [-1.4, 0.9, -0.5, 1.6, 0.6, -1.1, 1.2, -0.8];
 ---
 
 <section id="experience" class="section" aria-labelledby="h-exp">
-  <PageBreak label={ui.tabs.experience} x={22} bg="var(--highlighter)" />
+  <PageBreak
+    page={ui.pages.experience}
+    label={ui.tabs.experience}
+    x={22}
+    bg="var(--highlighter)"
+  />
   <div class="exp__head">
     <div class="section-head exp__title">
       <p class="mono-kicker">{ui.experience.kicker}</p>
@@ -94,6 +100,24 @@ const tilts = [-1.4, 0.9, -0.5, 1.6, 0.6, -1.1, 1.2, -0.8];
     <span class="tools__label">{ui.experience.toolsUsed}</span>{" "}
     {experience.toolsIndex.join(", ")}
   </p>
+
+  <span
+    class="scribble scribble--wide"
+    aria-hidden="true"
+    style="right:calc(var(--gutter) + 64px);bottom:calc(var(--section-space) - 6px);rotate:-3deg;text-align:right"
+  >
+    {ui.experience.scribble[0]}
+    <br />
+    {ui.experience.scribble[1]}
+  </span>
+  <Doodle
+    kind="checklist"
+    pencil
+    wide
+    size={46}
+    delay={200}
+    place="right:var(--gutter);bottom:calc(var(--section-space) - 10px);rotate:6deg"
+  />
 </section>
 
 <style>
@@ -208,7 +232,30 @@ const tilts = [-1.4, 0.9, -0.5, 1.6, 0.6, -1.1, 1.2, -0.8];
       rotate: 0deg;
       translate: 0 -4px;
       box-shadow: var(--lift-hover);
+      --ear: 26px;
     }
+  }
+
+  /* A dog-eared corner from being handled; it folds further on hover. */
+  .card {
+    --ear: 14px;
+  }
+
+  .card::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: var(--ear);
+    height: var(--ear);
+    background: linear-gradient(
+      315deg,
+      var(--page) 0 50%,
+      var(--sheet-2) 50% 100%
+    );
+    transition:
+      width 0.25s var(--ease-settle),
+      height 0.25s var(--ease-settle);
   }
 
   .card__n {

@@ -1,0 +1,89 @@
+---
+/**
+ * A pen doodle in a corner, like the ones in a school notebook. It draws
+ * itself on reveal, and the `#hand-drawn` filter (index.astro) makes the
+ * line wobble so it never looks machine-perfect. Decorative. `wide` hides
+ * it below 900px. `size` is the height; wide doodles keep their ratio.
+ */
+type Kind = "bike" | "checklist" | "thumbs";
+
+interface Props {
+  kind: Kind;
+  /** Inline position/size/tilt, e.g. "right:24px;bottom:30px;rotate:-8deg". */
+  place: string;
+  size?: number;
+  delay?: number;
+  pencil?: boolean;
+  wide?: boolean;
+}
+
+const {
+  kind,
+  place,
+  size = 56,
+  delay = 0,
+  pencil = false,
+  wide = false,
+} = Astro.props;
+
+const paths: Record<Kind, string> = {
+  // Weekend mode: the bike.
+  bike: "M24 40 a10 10 0 1 0 -20 0 a10 10 0 1 0 20 0 M56 40 a10 10 0 1 0 -20 0 a10 10 0 1 0 20 0 M14 40 L24 24 L42 24 L46 40 M24 24 L30 40 L42 24 M14 40 L30 40 M20 19 L28 19 M24 24 L24 19 M42 24 L40 15 L47 13 M30 40 L33 45",
+  // Test first: a little checklist, first box ticked.
+  checklist:
+    "M6 8 L16 8 L16 18 L6 18 Z M6 25 L16 25 L16 35 L6 35 Z M6 42 L16 42 L16 52 L6 52 Z M8 12 L11 16 L19 4 M22 13 L52 13 M22 30 L47 30 M22 47 L43 47",
+  // An anime-style grin with a thumbs up.
+  thumbs:
+    "M26 8 C 38 8, 46 17, 46 28 C 46 40, 38 48, 26 48 C 14 48, 6 40, 6 28 C 6 17, 14 8, 26 8 Z M13 27 L17 22 L21 27 M31 27 L35 22 L39 27 M16 34 C 19 42, 33 42, 36 34 Z M9 33 L12 32 M40 32 L43 33 M56 4 L56 12 M52 8 L60 8 M50 34 L63 34 L63 47 L50 47 Z M53 34 L53 24 C 53 20, 58 20, 58 24 L58 34 M50 38 L63 38 M50 42 L63 42",
+};
+
+/** Most doodles are square; the thumbs-up is a bit wider. */
+const widths: Partial<Record<Kind, number>> = { thumbs: 70 };
+const vw = widths[kind] ?? 60;
+
+const narrow = wide ? "(max-width: 899.98px)" : undefined;
+---
+
+<svg
+  class:list={["doodle", { "doodle--pencil": pencil, "doodle--wide": wide }]}
+  aria-hidden="true"
+  viewBox={`0 -2 ${vw} 62`}
+  width={Math.round((size * vw) / 60)}
+  height={size}
+  style={place}
+>
+  <path
+    data-draw
+    data-delay={delay}
+    data-duration="900"
+    data-narrow={narrow}
+    data-fx-narrow={wide ? "none" : undefined}
+    pathLength="1"
+    d={paths[kind]}
+  ></path>
+</svg>
+
+<style>
+  .doodle {
+    position: absolute;
+    overflow: visible;
+    filter: url(#hand-drawn);
+    fill: none;
+    stroke: var(--pen);
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    pointer-events: none;
+  }
+
+  .doodle--pencil {
+    stroke: var(--pencil);
+    stroke-width: 1.8;
+  }
+
+  @media (max-width: 899.98px) {
+    .doodle--wide {
+      display: none;
+    }
+  }
+</style>

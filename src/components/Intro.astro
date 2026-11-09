@@ -8,9 +8,13 @@ const [before = "", after = ""] = person.summary.split(person.highlight);
 ---
 
 <section id="intro" class="section intro" aria-labelledby="h-intro">
-  <p class="mono-kicker intro__kicker" data-fx="fade">{ui.intro.kicker}</p>
+  <p class="mono-kicker intro__kicker" data-fx="fade">
+    {ui.intro.kicker}
+  </p>
   <h1 id="h-intro" class="intro__name">
-    <span class="intro__line" data-fx="settle" data-delay="40">{first}</span>
+    <span class="intro__line" data-fx="settle" data-delay="40">
+      {first}
+    </span>
     <br />
     <span class="intro__line" data-fx="settle" data-delay="120">
       {rest.join(" ")}
@@ -26,7 +30,8 @@ const [before = "", after = ""] = person.summary.split(person.highlight);
         data-delay="520"
         data-duration="700"
         pathLength="1"
-        d="M4 18 C 80 8, 150 26, 230 14 S 360 6, 396 16"></path>
+        d="M4 18 C 80 8, 150 26, 230 14 S 360 6, 396 16"
+      ></path>
     </svg>
   </h1>
 
@@ -42,18 +47,24 @@ const [before = "", after = ""] = person.summary.split(person.highlight);
         <br />
         {person.label[1]}
       </p>
-      <p class="intro__meta">{person.location} · {person.tenure}</p>
+      <p class="intro__meta">
+        {person.location} · {person.tenure}
+      </p>
     </div>
 
     <div class="intro__text">
       <p class="intro__summary" data-fx="settle" data-delay="340">
-        {before}<mark>{person.highlight}</mark>{after}
+        {before}
+        <mark>{person.highlight}</mark>
+        {after}
       </p>
       <ul class="intro__links" data-fx="settle" data-delay="420">
         {links.map((l) => (
           <li>
             <a class="intro__link swipe" href={l.href} {...linkAttrs(l.href)}>
-              <span class="intro__arrow" aria-hidden="true">→</span>
+              <span class="intro__arrow" aria-hidden="true">
+                →
+              </span>
               <span class="intro__kind">{l.kind}</span>
               <span class="intro__handle">{l.label}</span>
             </a>
@@ -63,8 +74,15 @@ const [before = "", after = ""] = person.summary.split(person.highlight);
     </div>
   </div>
 
-  <p class="intro__note pen-note" aria-hidden="true" data-fx="fade" data-delay="900">
+  <p
+    class="intro__note pen-note"
+    aria-hidden="true"
+    data-fx="fade"
+    data-delay="900"
+  >
     {ui.intro.note[0]}
+    <br />
+    <s class="intro__struck">{ui.intro.struck}</s>
     <br />
     {ui.intro.note[1]}
   </p>
@@ -241,6 +259,36 @@ const [before = "", after = ""] = person.summary.split(person.highlight);
     font-size: clamp(18px, 1.8vw, 22px);
     text-align: right;
     rotate: 6deg;
+  }
+
+  /* A pen correction, struck out a beat after the note appears. */
+  .intro__struck {
+    position: relative;
+    display: inline-block;
+    text-decoration: none;
+  }
+
+  .intro__struck::after {
+    content: "";
+    position: absolute;
+    left: -4px;
+    right: -4px;
+    top: 50%;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--pen);
+    rotate: -5deg;
+    transform-origin: left center;
+  }
+
+  .fx .intro__note[data-fx-done] .intro__struck::after {
+    animation: struck 0.35s var(--ease-settle) 1.5s backwards;
+  }
+
+  @keyframes struck {
+    from {
+      scale: 0 1;
+    }
   }
 
   /* On phones the note would sit on the name; it moves under the links. */

@@ -1,0 +1,201 @@
+---
+/**
+ * Part 2 of the bug hunt (volunteer page): the stick figure finally
+ * catches the bug that ran away in 02. Each click is a sword swing; the
+ * bug takes visible damage over five hits and ends up legs-up with X eyes.
+ * Behaviour: scripts/bug-hunt.ts (adds `hit-1` … `hit-5` to the svg).
+ * A real button, so it works from the keyboard too. Desktop only (≥900px).
+ */
+import { ui } from "../data/content";
+---
+
+<div class="fight">
+  <button
+    type="button"
+    class="fight__button"
+    aria-label={ui.bug.hitLabel}
+    data-fight
+  >
+    <svg
+      class="fight__scene"
+      viewBox="0 -4 120 66"
+      width="216"
+      height="119"
+      aria-hidden="true"
+      data-fight-scene
+    >
+      <!-- Me -->
+      <path d="M22 6 C 26 6, 28 9, 28 12 C 28 16, 25 18, 22 18 C 18 18, 16 15, 16 12 C 16 9, 18 6, 22 6 M22 18 L22 38 M22 38 L13 54 M22 38 L32 53 M22 24 L11 31"></path>
+      <g class="fight__arm" data-fight-arm>
+        <path d="M22 24 L35 20 M35 20 L63 9 M32 15 L37 25"></path>
+      </g>
+
+      <!-- The bug -->
+      <g class="fight__bug" data-fight-bug>
+        <path d="M90 26 C 100 26, 104 34, 103 42 C 102 50, 96 54, 90 54 C 84 54, 77 50, 77 42 C 76 34, 81 26, 90 26 Z M90 15 C 94 15, 96 18, 96 21 C 96 25, 93 27, 90 27 C 87 27, 84 25, 84 21 C 84 18, 86 15, 90 15 M87 16 L82 8 M78 34 L68 30 M77 42 L66 43 M103 42 L114 43"></path>
+        <path class="part-antenna" d="M93 16 L98 8"></path>
+        <path class="part-leg-r1" d="M102 34 L112 30"></path>
+        <path class="part-leg-l3" d="M79 49 L70 55"></path>
+        <path class="part-leg-r3" d="M101 49 L110 55"></path>
+        <!-- Angry eyes -->
+        <path class="part-brows" d="M85 19 L89 21 M95 19 L91 21"></path>
+        <circle class="part-eye-l dot" cx="87.5" cy="23" r="1.3"></circle>
+        <circle class="part-eye-r dot" cx="92.5" cy="23" r="1.3"></circle>
+        <!-- Damage, one layer per hit -->
+        <path
+          class="dmg dmg-1"
+          d="M85.5 23 L89.5 23 M96 30 L92 35 L96 39"
+        ></path>
+        <path class="dmg dmg-2" d="M86 17.5 L94 24.5 M94 17.5 L86 24.5"></path>
+        <path
+          class="dmg dmg-3"
+          d="M98 12 L101 15 M101 12 L98 15 M80 6 L83 9 M83 6 L80 9 M93 16 L96 11 L101 12"
+        ></path>
+        <path
+          class="dmg dmg-4"
+          d="M84 44 L88 47 L85 51 M106 21 C 108 24, 108 26, 106 26 C 104 26, 104 24, 106 21"
+        ></path>
+        <path
+          class="dmg dmg-5"
+          d="M85 20 L89 24 M89 20 L85 24 M91 20 L95 24 M95 20 L91 24"
+        ></path>
+      </g>
+
+      <text class="fight__pow" x="58" y="2" data-fight-pow>
+        {ui.bug.pow}
+      </text>
+    </svg>
+  </button>
+  <span class="scribble fight__note" aria-live="polite" data-fight-note>
+    {ui.bug.fight[0]}
+  </span>
+</div>
+
+<style>
+  .fight {
+    position: absolute;
+    left: 2%;
+    top: 160px;
+    width: 216px;
+  }
+
+  .fight__button {
+    display: block;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: crosshair;
+  }
+
+  .fight__scene {
+    display: block;
+    overflow: visible;
+    fill: none;
+    stroke: var(--pen);
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: url(#hand-drawn);
+    rotate: -6deg;
+  }
+
+  .fight__scene .dot {
+    fill: var(--pen);
+    stroke: none;
+  }
+
+  .fight__arm {
+    transform-box: view-box;
+    transform-origin: 22px 24px;
+  }
+
+  .fight__bug {
+    transform-box: view-box;
+    transform-origin: 90px 36px;
+    transition: rotate 0.5s var(--ease-stamp);
+  }
+
+  /* Damage piles up: each hit shows its layer and knocks a part off. */
+  .dmg {
+    opacity: 0;
+  }
+
+  .hit-1 .dmg-1,
+  .hit-2 .dmg-2,
+  .hit-3 .dmg-3,
+  .hit-4 .dmg-4,
+  .hit-5 .dmg-5 {
+    opacity: 1;
+  }
+
+  .hit-1 .part-eye-l,
+  .hit-2 .part-leg-r1,
+  .hit-3 .part-antenna,
+  .hit-4 .part-leg-l3,
+  .hit-4 .part-leg-r3,
+  .hit-5 .part-brows,
+  .hit-5 .part-eye-r,
+  .hit-5 .dmg-1 {
+    opacity: 0;
+  }
+
+  /* Knocked out: legs up. And I get to raise the sword. */
+  .hit-5 .fight__bug {
+    rotate: 180deg;
+  }
+
+  .hit-5 .fight__arm {
+    rotate: -28deg;
+  }
+
+  .fight__pow {
+    font: 400 11px/1 var(--font-hand);
+    fill: var(--pen);
+    stroke: none;
+    opacity: 0;
+  }
+
+  .fight__pow[data-pop] {
+    animation: pow 0.45s var(--ease-stamp);
+  }
+
+  @keyframes pow {
+    0% {
+      opacity: 0;
+      scale: 0.4;
+    }
+    30% {
+      opacity: 1;
+      scale: 1.15;
+    }
+    100% {
+      opacity: 0;
+      scale: 1;
+    }
+  }
+
+  .fight__note {
+    position: static;
+    display: block;
+    margin-top: 6px;
+    max-width: 190px;
+    rotate: -4deg;
+  }
+
+  .fight__note[data-changed] {
+    animation: note-swap 0.3s var(--ease-settle);
+  }
+
+  @keyframes note-swap {
+    from {
+      opacity: 0;
+      translate: 0 -6px;
+    }
+  }
+
+  @media (max-width: 899.98px) {
+    .fight {
+      display: none;
+    }
+  }
+</style>

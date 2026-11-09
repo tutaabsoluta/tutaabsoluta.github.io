@@ -1,5 +1,6 @@
 ---
 import { content, ui } from "../data/content";
+import Crumbs from "./Crumbs.astro";
 import PageBreak from "./PageBreak.astro";
 import Tape from "./Tape.astro";
 
@@ -13,10 +14,12 @@ const circles = [
 ---
 
 <section id="how" class="section" aria-labelledby="h-how">
-  <PageBreak label={ui.tabs.how} x={40} bg="var(--paper)" />
+  <PageBreak page={ui.pages.how} label={ui.tabs.how} x={40} bg="var(--paper)" />
   <div class="section-head">
     <p class="mono-kicker">{ui.how.kicker}</p>
-    <h2 id="h-how" class="display-h2" data-fx="settle">{ui.how.title}</h2>
+    <h2 id="h-how" class="display-h2" data-fx="settle">
+      {ui.how.title}
+    </h2>
   </div>
 
   <div class="notebook grain" data-fx="settle">
@@ -24,10 +27,63 @@ const circles = [
       delay={260}
       place="left:50%;top:-14px;width:130px;height:30px;margin-left:-65px;rotate:-2deg"
     />
+    <svg
+      class="coffee"
+      aria-hidden="true"
+      viewBox="0 0 160 160"
+      data-fx="fade"
+      data-delay="500"
+    >
+      <circle
+        cx="80"
+        cy="80"
+        r="62"
+        stroke-width="7"
+        stroke-dasharray="180 6 90 4 60 10 40"
+      ></circle>
+      <circle
+        cx="81"
+        cy="78"
+        r="55"
+        stroke-width="2"
+        stroke-dasharray="120 30 60 40"
+      ></circle>
+      <path
+        d="M128 118 c 8 6, 14 10, 12 18 c -2 6, -10 4, -9 -3"
+        stroke-width="5"
+      ></path>
+    </svg>
     <p class="notebook__intro">{howIWork.intro}</p>
+    <p
+      class="notebook__hint pen-note"
+      aria-hidden="true"
+      data-fx="fade"
+      data-delay="700"
+      data-narrow="(max-width: 1099.98px)"
+      data-fx-narrow="none"
+    >
+      {ui.how.hint[0]}
+      <br />
+      {ui.how.hint[1]}
+      <svg viewBox="0 0 60 70" fill="none">
+        <path
+          data-draw
+          data-delay="900"
+          data-narrow="(max-width: 1099.98px)"
+          data-fx-narrow="none"
+          pathLength="1"
+          d="M10 4 C 40 10, 50 30, 40 60"
+        ></path>
+        <path d="M31 52 L40 62 L48 50"></path>
+      </svg>
+    </p>
     <ol class="steps">
       {howIWork.stages.map((s, i) => (
-        <li id={`stage-${s.n}`} class="step" style={`--tilt:${i % 2 ? 4 : -5}deg`}>
+        <li
+          id={`stage-${s.n}`}
+          class="step"
+          style={`--tilt:${i % 2 ? 4 : -5}deg`}
+        >
           <span class="step__n">
             <svg class="step__circle" aria-hidden="true" viewBox="0 0 44 40">
               <path
@@ -61,6 +117,7 @@ const circles = [
       ))}
     </ol>
   </div>
+  <Crumbs wide place="right:calc(var(--gutter) + 10px);bottom:60px" />
 </section>
 
 <style>
@@ -82,6 +139,63 @@ const circles = [
       1px 2px 0 rgb(26 26 26 / 0.16),
       0 18px 30px -22px rgb(26 26 26 / 0.5);
     rotate: -0.6deg;
+  }
+
+  /* Torn out of a spiral notebook: the ring holes along the top edge. */
+  .notebook::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 16px;
+    background: radial-gradient(
+        circle at 50% 70%,
+        var(--page) 0 4.5px,
+        transparent 5px
+      )
+      6px 0 / 26px 16px repeat-x;
+  }
+
+  .coffee {
+    position: absolute;
+    left: -46px;
+    bottom: -52px;
+    width: 160px;
+    height: 160px;
+    z-index: 2;
+    fill: none;
+    stroke: var(--coffee);
+    stroke-linecap: round;
+    mix-blend-mode: multiply;
+    rotate: 20deg;
+    pointer-events: none;
+  }
+
+  /* A pen note pointing at the "↳" links (desktop, where they line up). */
+  .notebook__hint {
+    position: absolute;
+    right: clamp(24px, 6vw, 72px);
+    top: 34px;
+    font-size: 18px;
+    rotate: 3deg;
+    text-align: right;
+  }
+
+  .notebook__hint svg {
+    width: 44px;
+    height: 52px;
+    margin: 2px 6px 0 auto;
+    stroke: var(--pen);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  @media (max-width: 1099.98px) {
+    .notebook__hint {
+      display: none;
+    }
   }
 
   .notebook__intro {

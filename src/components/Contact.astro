@@ -1,6 +1,7 @@
 ---
 import { content, linkAttrs, linkByKind, ui } from "../data/content";
 import CiStatus from "./CiStatus.astro";
+import Doodle from "./Doodle.astro";
 import PageBreak from "./PageBreak.astro";
 import TearTabs from "./TearTabs.astro";
 
@@ -25,10 +26,15 @@ const zigzag = (() => {
 ---
 
 <section id="contact" class="section contact" aria-labelledby="h-contact">
-  <PageBreak label={ui.tabs.contact} x={76} bg="var(--highlighter)" />
+  <PageBreak
+    page={ui.pages.contact}
+    label={ui.tabs.contact}
+    x={76}
+    bg="var(--highlighter)"
+  />
 
   <div class="contact__row">
-    <div>
+    <div class="contact__words">
       <p class="mono-kicker contact__kicker">{ui.contact.kicker}</p>
       <h2 id="h-contact" class="contact__title" data-fx="settle">
         {words.map((word, i) => (
@@ -42,33 +48,50 @@ const zigzag = (() => {
       <p class="contact__line">{contact.line}</p>
     </div>
 
-    <div
-      class="slip grain"
-      data-fx="settle"
-      data-delay="140"
-      style={`clip-path:${zigzag}`}
-    >
-      <p class="slip__note">{contact.note}</p>
-      <ul class="slip__links">
-        {links.map((l, i) => (
-          <li>
-            <a
-              class="slip__link swipe"
-              href={l.href}
-              {...linkAttrs(l.href)}
-              data-fx="fade"
-              data-delay={280 + i * 90}
-            >
-              <b class="slip__kind">{l.kind}</b>
-              <span class="slip__label">
-                {l.label} <span class="slip__arrow">→</span>
-              </span>
-            </a>
-          </li>
-        ))}
-      </ul>
+    <div class="slip-wrap" data-fx="settle" data-delay="140">
+      <svg class="paperclip" aria-hidden="true" viewBox="0 0 26 70" fill="none">
+        <path d="M9 22 V54 a6 6 0 0 0 12 0 V14 a9 9 0 0 0 -18 0 V50"></path>
+      </svg>
+      <div class="slip grain" style={`clip-path:${zigzag}`}>
+        <p class="slip__note">{contact.note}</p>
+        <ul class="slip__links">
+          {links.map((l, i) => (
+            <li>
+              <a
+                class="slip__link swipe"
+                href={l.href}
+                {...linkAttrs(l.href)}
+                data-fx="fade"
+                data-delay={280 + i * 90}
+              >
+                <b class="slip__kind">{l.kind}</b>
+                <span class="slip__label">
+                  {l.label} <span class="slip__arrow">→</span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   </div>
+
+  <Doodle
+    kind="bike"
+    wide
+    size={50}
+    delay={300}
+    place="right:calc(var(--gutter) + 6px);top:118px;rotate:-6deg"
+  />
+  <span
+    class="scribble scribble--wide"
+    aria-hidden="true"
+    style="right:calc(var(--gutter) + 70px);top:128px;rotate:-4deg;text-align:right"
+  >
+    {ui.contact.bikeNote[0]}
+    <br />
+    {ui.contact.bikeNote[1]}
+  </span>
 
   <TearTabs />
 
@@ -92,6 +115,10 @@ const zigzag = (() => {
     justify-content: space-between;
     align-items: flex-end;
     gap: 40px;
+  }
+
+  .contact__words {
+    position: relative;
   }
 
   .contact__kicker {
@@ -127,20 +154,38 @@ const zigzag = (() => {
     text-transform: lowercase;
   }
 
-  .slip {
+  .slip-wrap {
+    position: relative;
     flex: 0 1 440px;
     min-width: min(100%, 300px);
-    padding: 22px 24px;
-    background-color: var(--paper);
-    box-shadow: var(--lift-sm);
     rotate: -1.2deg;
     transition: rotate 0.25s var(--ease-settle);
   }
 
   @media (hover: hover) {
-    .slip:hover {
+    .slip-wrap:hover {
       rotate: -0.4deg;
     }
+  }
+
+  .slip {
+    padding: 22px 24px;
+    background-color: var(--paper);
+    box-shadow: var(--lift-sm);
+  }
+
+  /* A paperclip holding the slip (outside it, so the zig-zag doesn't cut it). */
+  .paperclip {
+    position: absolute;
+    z-index: 2;
+    left: 34px;
+    top: -30px;
+    width: 26px;
+    height: 70px;
+    stroke: var(--pencil);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    rotate: 8deg;
   }
 
   .slip__note {

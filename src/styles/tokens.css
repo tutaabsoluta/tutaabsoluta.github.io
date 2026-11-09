@@ -15,6 +15,11 @@
   --margin-line: #a9b8ec;
   --perforation: #a3a5aa;
   --hole: #e2e1dc;
+  /* Eraser crumbs. */
+  --crumb: #e2d4d1;
+  --crumb-edge: #bfaeaa;
+  /* The one coffee stain (04). */
+  --coffee: rgb(140 95 50 / 0.18);
   /* Test status only (footer label dot, receipt stamp, 404). */
   --green-pen: #2f8a4c;
   --amber: #d99a1e;

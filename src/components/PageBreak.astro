@@ -1,33 +1,43 @@
 ---
 /**
  * The top of every section after the intro: a hand-labelled divider tab
- * poking up from a perforated, hole-punched line, like a notebook divider.
- * Decorative (the section's h2 carries the name).
+ * poking up from a perforated line, like a notebook divider,
+ * plus the page's "no. __ · date ____" header. Decorative (the section's h2
+ * carries the name).
  */
+import { ui } from "../data/content";
+
 interface Props {
   label: string;
   /** Left position of the tab, as a percentage of the row. */
   x: number;
   /** Tab colour (CSS value). */
   bg: string;
+  /** Notebook page number. */
+  page: string;
 }
 
-const { label, x, bg } = Astro.props;
+const { label, x, bg, page } = Astro.props;
+// The page header sits on the side the tab isn't.
+const metaSide = x > 50 ? "left" : "right";
 ---
 
 <div class="page-break" aria-hidden="true">
   <span class="page-break__tab" data-fx="rise" style={`--x:${x}%;--tab:${bg}`}>
     {label}
   </span>
+  <span class={`page-break__meta page-break__meta--${metaSide}`}>
+    {ui.pageNo(page)} · {ui.pageDate}
+    <span class="page-break__blank"></span>
+  </span>
   <span class="page-break__perforation"></span>
-  <span class="page-break__holes"></span>
 </div>
 
 <style>
   .page-break {
     position: relative;
-    height: 64px;
-    margin: 0 0 clamp(24px, 4vw, 40px);
+    height: 34px;
+    margin: 0 0 clamp(36px, 5vw, 56px);
   }
 
   .page-break__tab {
@@ -47,26 +57,40 @@ const { label, x, bg } = Astro.props;
     clip-path: polygon(7% 0, 93% 0, 100% 100%, 0 100%);
   }
 
+  .page-break__meta {
+    position: absolute;
+    top: 6px;
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    font: 400 12px/1 var(--font-mono);
+    color: var(--pencil);
+  }
+
+  .page-break__meta--left {
+    left: 0;
+  }
+
+  .page-break__meta--right {
+    right: 0;
+  }
+
+  .page-break__blank {
+    width: 72px;
+    border-bottom: 1px solid var(--pencil);
+  }
+
+  @media (max-width: 899.98px) {
+    .page-break__meta {
+      display: none;
+    }
+  }
+
   .page-break__perforation {
     position: absolute;
     left: 0;
     right: 0;
     top: 31px;
     border-top: 2px dashed var(--perforation);
-  }
-
-  .page-break__holes {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 40px;
-    height: 22px;
-    background: radial-gradient(
-        circle,
-        var(--hole) 0 5px,
-        var(--perforation) 5px 6.5px,
-        transparent 7px
-      )
-      0 50% / 36px 22px repeat-x;
   }
 </style>

@@ -1,11 +1,13 @@
 ---
 /**
- * The volunteer flyer, taped to the page. Its call to action points down to
- * Contact's tear-off tabs (one of them drafts a volunteer project email).
+ * The volunteer flyer, stapled over an older one on the board. A photocopy:
+ * black title band, a FREE! starburst, uneven toner, a curling corner. Its
+ * call to action points down to Contact's tear-off tabs.
  */
 import { content, ui } from "../data/content";
+import BugFight from "./BugFight.astro";
+import Doodle from "./Doodle.astro";
 import PageBreak from "./PageBreak.astro";
-import Tape from "./Tape.astro";
 
 const { volunteer } = content;
 
@@ -18,17 +20,35 @@ const ovals = [
 ---
 
 <section id="volunteer" class="section" aria-labelledby="h-vol">
-  <PageBreak label={ui.tabs.volunteer} x={58} bg="var(--label)" />
+  <PageBreak
+    page={ui.pages.volunteer}
+    label={ui.tabs.volunteer}
+    x={58}
+    bg="var(--label)"
+  />
 
   <div class="flyer" data-fx="settle">
-    <Tape
-      delay={300}
-      place="left:-14px;top:-10px;width:90px;height:26px;rotate:-32deg"
-    />
-    <Tape
-      delay={420}
-      place="right:-14px;top:-10px;width:90px;height:26px;rotate:32deg;transform-origin:right center"
-    />
+    <!-- Someone else's flyer underneath: all but one tab already taken. -->
+    <div class="flyer__old grain" aria-hidden="true">
+      <span class="flyer__old-title">{ui.volunteer.oldFlyer}</span>
+      <span class="flyer__old-tabs">
+        <span></span>
+        <span></span>
+        <span class="flyer__old-tab">;</span>
+        <span></span>
+        <span></span>
+      </span>
+    </div>
+    <span class="staple staple--left" aria-hidden="true"></span>
+    <span class="staple staple--right" aria-hidden="true"></span>
+    <span
+      class="flyer__badge"
+      aria-hidden="true"
+      data-fx="stamp"
+      data-delay="520"
+    >
+      {ui.volunteer.badge}
+    </span>
 
     <div class="flyer__body grain">
       <p class="flyer__kicker">— {volunteer.kicker} —</p>
@@ -63,6 +83,21 @@ const ovals = [
       </a>
     </div>
   </div>
+  <BugFight />
+  <span
+    class="scribble scribble--wide"
+    aria-hidden="true"
+    style="right:4%;bottom:calc(var(--section-space) + 120px);rotate:5deg;max-width:150px"
+  >
+    {ui.volunteer.scribble}
+  </span>
+  <Doodle
+    kind="thumbs"
+    wide
+    size={66}
+    delay={200}
+    place="right:calc(4% + 30px);bottom:calc(var(--section-space) + 170px);rotate:6deg"
+  />
 </section>
 
 <style>
@@ -73,15 +108,165 @@ const ovals = [
     rotate: 1deg;
   }
 
+  /* The older flyer underneath, peeking out at the bottom left. */
+  .flyer__old {
+    position: absolute;
+    inset: 40px 30px -46px -38px;
+    background-color: var(--sheet-2);
+    box-shadow: var(--lift-sm);
+    rotate: -5deg;
+    overflow: hidden;
+  }
+
+  .flyer__old-title {
+    position: absolute;
+    left: 14px;
+    top: 30%;
+    font: 400 40px/1 var(--font-hand);
+    color: color-mix(in srgb, var(--ink) 55%, transparent);
+    writing-mode: vertical-rl;
+    rotate: 180deg;
+  }
+
+  /* Its tear-off strip: stubs, and one lonely tab left. */
+  .flyer__old-tabs {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 44px;
+    display: flex;
+    border-top: 1.5px dashed var(--pencil);
+  }
+
+  .flyer__old-tabs span {
+    flex: 1;
+    height: 8px;
+    background: var(--sheet-2);
+    clip-path: polygon(
+      0 0,
+      100% 0,
+      100% 60%,
+      80% 100%,
+      55% 50%,
+      30% 100%,
+      0 60%
+    );
+  }
+
+  .flyer__old-tabs .flyer__old-tab {
+    height: 100%;
+    display: grid;
+    place-items: center;
+    border-inline: 1.5px dashed var(--pencil);
+    font: 700 16px/1 var(--font-mono);
+    clip-path: none;
+  }
+
+  /* Staples holding it to the board. */
+  .staple {
+    position: absolute;
+    z-index: 3;
+    top: 12px;
+    width: 34px;
+    height: 5px;
+    border: 1.5px solid var(--pencil);
+    border-radius: 2px;
+    background: linear-gradient(var(--hole), var(--perforation));
+  }
+
+  .staple--left {
+    left: 22px;
+    rotate: -8deg;
+  }
+
+  .staple--right {
+    right: 22px;
+    rotate: 6deg;
+  }
+
+  /* The FREE! starburst every community flyer has. */
+  .flyer__badge {
+    position: absolute;
+    z-index: 3;
+    right: clamp(-18px, -2vw, 8px);
+    top: clamp(36px, 6vw, 60px);
+    width: clamp(78px, 11vw, 104px);
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    background: var(--highlighter);
+    font: 400 clamp(18px, 2.4vw, 24px) / 1 var(--font-hand);
+    text-transform: uppercase;
+    rotate: 14deg;
+    clip-path: polygon(
+      50% 0,
+      61% 15%,
+      79% 7%,
+      80% 26%,
+      98% 30%,
+      88% 47%,
+      100% 62%,
+      82% 70%,
+      84% 90%,
+      65% 85%,
+      52% 100%,
+      40% 86%,
+      21% 94%,
+      19% 74%,
+      0 68%,
+      11% 51%,
+      2% 33%,
+      20% 27%,
+      20% 8%,
+      38% 14%
+    );
+  }
+
   .flyer__body {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 18px;
     padding: clamp(28px, 4vw, 48px) clamp(20px, 4vw, 48px) 28px;
-    background-color: var(--paper);
-    box-shadow: var(--lift-sm);
+    /* A photocopy: uneven toner, darker at the edges, one faint streak,
+       and a printed frame. */
+    background:
+      linear-gradient(
+        90deg,
+        transparent 71%,
+        rgb(26 26 26 / 0.035) 71% 73.5%,
+        transparent 73.5%
+      ),
+      radial-gradient(
+        ellipse at 50% 45%,
+        transparent 55%,
+        rgb(26 26 26 / 0.07) 100%
+      ),
+      var(--grain), var(--paper);
+    box-shadow:
+      inset 0 0 0 10px var(--paper),
+      inset 0 0 0 12.5px var(--ink),
+      var(--lift);
     text-align: center;
+  }
+
+  /* The bottom corner has started to curl off the board. */
+  .flyer__body::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 46px;
+    height: 46px;
+    background: linear-gradient(
+      315deg,
+      var(--page) 0 50%,
+      var(--sheet-2) 50% 70%,
+      var(--paper) 100%
+    );
+    filter: drop-shadow(-2px -2px 2px rgb(26 26 26 / 0.12));
   }
 
   .flyer__kicker {
@@ -90,7 +275,12 @@ const ovals = [
     text-transform: uppercase;
   }
 
+  /* Printed white on a black band, the way photocopied flyers shout. */
   .flyer__title {
+    padding: 4px 18px 8px;
+    background: var(--ink);
+    color: var(--paper);
+    rotate: -1deg;
     max-width: 12ch;
     font: 400 clamp(44px, 7vw, 84px) / 0.95 var(--font-hand);
     text-transform: uppercase;

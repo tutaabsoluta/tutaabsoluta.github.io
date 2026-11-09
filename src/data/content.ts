@@ -195,14 +195,30 @@ export const ui = {
     volunteer: "+ · Volunteer",
     contact: "05 · Contact",
   },
+  /** Notebook page numbers on the page breaks (the volunteer page is a half). */
+  pages: {
+    build: "02",
+    experience: "03",
+    how: "04",
+    volunteer: "04½",
+    contact: "05",
+  },
+  pageNo: (n: string) => `no. ${n}`,
+  pageDate: "date",
   intro: {
     kicker: "01 — intro",
     note: ["no photo.", "the work is below ↓"],
+    struck: "i'm shy",
   },
   build: {
     kicker: "02 —",
     title: "What I build",
     note: "(both still unfinished)",
+    todo: {
+      title: "todo:",
+      items: ["give them names", "finish them", "show them off here"],
+    },
+    erased: "both done ✓",
     stamp: "Work in progress",
     project: (n: string) => `project ${n} / test automation`,
     started: "started",
@@ -222,10 +238,41 @@ export const ui = {
     hideFull: "Hide full description:",
     toolsUsed: "tools used:",
     backToHow: "back to how i work",
+    scribble: ["note to self:", "write the test first"],
   },
-  how: { kicker: "04 —", title: "How I work", stage: "Stage" },
+  how: {
+    kicker: "04 —",
+    title: "How I work",
+    stage: "Stage",
+    hint: ["tap a ↳ and it opens", "the proof in 03"],
+  },
   volunteer: {
     cta: "tell me about your project — take a tab ↓",
+    badge: "free!",
+    scribble: "small team? no problem",
+    oldFlyer: "LOST ;",
+  },
+  /** The bug hunt: runs away in 02 (FleeBug), gets squashed in volunteer (BugFight). */
+  bug: {
+    flee: [
+      "got one.",
+      "…or not.",
+      "come back here!",
+      "it's fast. like, prod-bug fast.",
+      "it went that way ↓",
+    ],
+    fight: [
+      "found it. click to squash it →",
+      "take that!",
+      "it's tougher than it looks",
+      "one more…",
+      "almost…",
+      "got one. (for real this time)",
+    ],
+    done: "it's squashed. let it rest.",
+    pow: "bonk!",
+    hitLabel: "Hit the bug (a tiny game)",
+    doneLabel: "The bug is squashed",
   },
   contact: {
     kicker: "05 — contact",
@@ -245,6 +292,7 @@ export const ui = {
       ].join("\n"),
     taken: "tab's yours. your email app should open with a draft.",
     noApp: "nothing opened? the address is right above ↑",
+    bikeNote: ["no reply?", "probably out on the bike"],
   },
   footer: {
     madeBy: (name: string, location: string) =>
@@ -299,6 +347,7 @@ export const ui = {
       "cross-links.spec.ts": "How I work → index card",
       "toggles.spec.ts": "Toggles",
       "tear-tabs.spec.ts": "Tear-off tabs",
+      "bug-hunt.spec.ts": "The bug",
       "navigation.spec.ts": "Navigation",
       "motion.spec.ts": "Motion",
       "visual.spec.ts": "Looks",

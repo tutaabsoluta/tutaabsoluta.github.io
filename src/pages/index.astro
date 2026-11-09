@@ -50,13 +50,28 @@ const structuredData = {
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={ogImage} />
-      <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+      <script
+        type="application/ld+json"
+        set:html={JSON.stringify(structuredData)}
+      />
     </BaseHead>
   </head>
   <body>
     <a class="skip-link" href="#main">
       {ui.skipLink}
     </a>
+    <!-- Makes doodle lines wobble like a real pen (Doodle.astro). -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <filter id="hand-drawn">
+        <feTurbulence
+          type="fractalNoise"
+          baseFrequency="0.035"
+          numOctaves="2"
+          seed="7"
+        />
+        <feDisplacementMap in="SourceGraphic" scale="3" />
+      </filter>
+    </svg>
     <SiteHeader />
     <main id="main" tabindex="-1">
       <Intro />
@@ -68,6 +83,7 @@ const structuredData = {
     </main>
 
     <script>
+      import { initBugHunt } from "../scripts/bug-hunt";
       import { initCiStatus } from "../scripts/ci-status";
       import { initInteractions } from "../scripts/interactions";
       import { initReveal } from "../scripts/reveal";
@@ -75,6 +91,7 @@ const structuredData = {
 
       initInteractions();
       initTearTabs();
+      initBugHunt();
       initReveal();
       void initCiStatus();
     </script>

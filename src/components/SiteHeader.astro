@@ -4,7 +4,9 @@ import MobileMenu from "./MobileMenu.astro";
 ---
 
 <header class="site-header">
-  <a class="site-header__brand swipe" href="#intro">{ui.brand}</a>
+  <a class="site-header__brand swipe" href="#intro">
+    {ui.brand}
+  </a>
 
   <nav class="site-header__nav" aria-label="Main">
     <ul>
@@ -18,7 +20,9 @@ import MobileMenu from "./MobileMenu.astro";
       <li>
         <a class="nav-link nav-link--contact swipe" href={ui.navContact.href}>
           {ui.navContact.label}
-          <span class="nav-link__arrow" aria-hidden="true">→</span>
+          <span class="nav-link__arrow" aria-hidden="true">
+            →
+          </span>
         </a>
       </li>
     </ul>
