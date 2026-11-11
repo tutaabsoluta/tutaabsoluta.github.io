@@ -189,9 +189,9 @@ const ovals = [
   .flyer__badge {
     position: absolute;
     z-index: 3;
-    right: clamp(-18px, -2vw, 8px);
+    right: clamp(4px, 1vw, 8px);
     top: clamp(36px, 6vw, 60px);
-    width: clamp(78px, 11vw, 104px);
+    width: clamp(64px, 11vw, 104px);
     aspect-ratio: 1;
     display: grid;
     place-items: center;
@@ -281,8 +281,8 @@ const ovals = [
     background: var(--ink);
     color: var(--paper);
     rotate: -1deg;
-    max-width: 12ch;
-    font: 400 clamp(44px, 7vw, 84px) / 0.95 var(--font-hand);
+    max-width: 100%;
+    font: 400 clamp(32px, 7vw, 84px) / 0.95 var(--font-hand);
     text-transform: uppercase;
   }
 
@@ -345,5 +345,33 @@ const ovals = [
 
   .flyer__cta:active {
     translate: 0 2px;
+  }
+
+  /* Phones: the badge sits in the top corner (clear of the title), the
+     curl and the older flyer shrink, and the CTA keeps clear of the curl. */
+  @media (max-width: 599.98px) {
+    .flyer__badge {
+      top: -18px;
+      right: 2px;
+      font-size: 15px;
+    }
+
+    .flyer__body {
+      padding-bottom: 44px;
+    }
+
+    .flyer__body::after {
+      width: 30px;
+      height: 30px;
+    }
+
+    .flyer__old {
+      inset: 30px 14px -40px -10px;
+      rotate: -3deg;
+    }
+
+    .flyer__old-title {
+      display: none;
+    }
   }
 </style>

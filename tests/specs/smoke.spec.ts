@@ -50,3 +50,19 @@ test("search engines get a robots file, a sitemap and who this page is about", a
   expect(data["@type"]).toBe("Person");
   expect(data.name).toBe(content.person.name);
 });
+
+test("on a phone, nothing sticks out and the page never scrolls sideways", async ({
+  page,
+  portfolio,
+  isMobile,
+}) => {
+  test.skip(!isMobile, "phone layout only");
+  await expect(portfolio.log.section).toBeAttached();
+  const width = page.viewportSize()?.width ?? 0;
+  // A mobile browser widens the layout viewport (and zooms out) when any
+  // element pokes past the edge, so innerWidth would grow beyond the device.
+  expect(await page.evaluate(() => window.innerWidth)).toBe(width);
+  expect(
+    await page.evaluate(() => document.documentElement.scrollWidth),
+  ).toBeLessThanOrEqual(width);
+});

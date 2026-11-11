@@ -31,7 +31,10 @@ const sheets = [
       </span>
       {ui.build.note}
     </p>
-    <Crumbs place="position:relative;align-self:center;margin-left:-8px;width:60px;height:34px" />
+    <Crumbs
+      wide
+      place="position:relative;align-self:center;margin-left:-8px;width:60px;height:34px"
+    />
     <div class="postit" aria-hidden="true" data-fx="drop" data-delay="380">
       <div class="postit__paper grain">
         <p class="postit__title">{ui.build.todo.title}</p>
@@ -208,7 +211,7 @@ const sheets = [
 
   @media (max-width: 699.98px) {
     .postit {
-      margin: 8px 0 0;
+      margin: 34px 0 0;
     }
   }
 
@@ -472,5 +475,13 @@ const sheets = [
 
   .sheet__placeholder {
     color: var(--pencil);
+  }
+
+  @media (max-width: 699.98px) {
+    .build__erased {
+      top: auto;
+      bottom: -24px;
+      left: 40px;
+    }
   }
 </style>

@@ -7,6 +7,9 @@
 }
 
 html {
+  /* Decorations may hang off the page; they must never widen it (phones
+     zoom out and scroll sideways when anything sticks out). */
+  overflow-x: clip;
   scroll-behavior: smooth;
   scroll-padding-top: 24px;
   -webkit-text-size-adjust: 100%;
@@ -41,8 +44,8 @@ body {
     background:
       url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='44' height='34'><circle cx='32' cy='17' r='5.5' fill='%23E2E1DC' stroke='%23A3A5AA' stroke-width='1.5'/><path d='M33 13 C 24 5, 6 6, 3 16 C 1 23, 8 26, 14 24' fill='none' stroke='%236E7076' stroke-width='2.6' stroke-linecap='round'/></svg>")
         calc(var(--margin-x) - 50px) 0 / 44px 34px repeat-y,
-      linear-gradient(var(--margin-line), var(--margin-line)) var(--margin-x) 0 /
-        2px 100% no-repeat,
+      linear-gradient(var(--margin-line), var(--margin-line)) var(--margin-x)
+        0 / 2px 100% no-repeat,
       repeating-linear-gradient(
         transparent 0 35px,
         rgb(169 184 236 / 0.2) 35px 36px

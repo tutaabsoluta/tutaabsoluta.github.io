@@ -42,7 +42,10 @@ const metaSide = x > 50 ? "left" : "right";
 
   .page-break__tab {
     position: absolute;
-    left: min(var(--x), calc(100% - 190px));
+    /* At X% of the row, shifted back by X% of its own width: the tab
+       always stays inside the row, however long the label is. */
+    left: var(--x);
+    translate: calc(var(--x) * -1) 0;
     top: 0;
     height: 32px;
     padding: 0 24px;

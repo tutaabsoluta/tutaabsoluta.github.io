@@ -206,9 +206,10 @@ const zigzag = (() => {
 
   .slip__link {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    gap: 12px;
+    gap: 2px 12px;
     min-height: 52px;
     padding: 0 4px;
     text-decoration: none;
@@ -226,6 +227,7 @@ const zigzag = (() => {
   }
 
   .slip__label {
+    margin-left: auto;
     overflow-wrap: anywhere;
     text-align: right;
   }
