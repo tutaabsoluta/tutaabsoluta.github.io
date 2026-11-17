@@ -49,3 +49,25 @@ test.describe("Project cards", () => {
     }
   });
 });
+
+test.describe("Project sheets", () => {
+  test("every project with a real repo links to it, and to its live report", async ({
+    portfolio,
+  }) => {
+    for (const project of content.projects) {
+      const sheet = portfolio.projects.section.locator("article", {
+        has: portfolio.page.locator(`#project-${project.n}`),
+      });
+      if (project.repository.startsWith("http")) {
+        await expect(
+          sheet.locator(`a[href="${project.repository}"]`),
+        ).toBeVisible();
+      }
+      if (project.report) {
+        await expect(sheet.locator(`a[href="${project.report}"]`)).toHaveText(
+          ui.build.reportLabel,
+        );
+      }
+    }
+  });
+});

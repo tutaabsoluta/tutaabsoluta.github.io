@@ -40,7 +40,7 @@ const sheets = [
         <p class="postit__title">{ui.build.todo.title}</p>
         <ul>
           {ui.build.todo.items.map((item) => (
-            <li>{item}</li>
+            <li class:list={{ done: item.done }}>{item.text}</li>
           ))}
         </ul>
       </div>
@@ -65,7 +65,7 @@ const sheets = [
             place={`${sheet?.tape};top:-10px;width:120px;height:30px`}
           />
           <Stamp
-            label={ui.build.stamp}
+            label={p.stamp}
             delay={i * 140 + 520}
             place="right:20px;top:26px"
           />
@@ -75,19 +75,29 @@ const sheets = [
           </h3>
           <p class="sheet__desc">{p.description}</p>
           <ul class="sheet__checklist">
-            <li>
-              <span class="sheet__box" aria-hidden="true">
-                [<span class="sheet__x">x</span>]
-              </span>{" "}
-              {ui.build.started}
-            </li>
-            <li>
-              <span class="sheet__box" aria-hidden="true">
-                [&nbsp;]
-              </span>{" "}
-              {ui.build.finished}{" "}
-              <span class="sheet__not-yet">{ui.build.notYet}</span>
-            </li>
+            {p.checklist.map((item) => (
+              <li>
+                <span class="sheet__box" aria-hidden="true">
+                  {item.done ? (
+                    <>
+                      [<span class="sheet__x">x</span>]
+                    </>
+                  ) : (
+                    "[\u00a0]"
+                  )}
+                </span>{" "}
+                <span class="visually-hidden">
+                  {item.done ? ui.build.done : ui.build.notDone}
+                </span>
+                {item.text}
+                {item.note && (
+                  <>
+                    {" "}
+                    <span class="sheet__not-yet">{item.note}</span>
+                  </>
+                )}
+              </li>
+            ))}
           </ul>
           <p class="sheet__stack">{p.stack.join(" + ")}</p>
 
@@ -116,12 +126,20 @@ const sheets = [
             {ui.build.repo}{" "}
             {isUrl(p.repository) ? (
               <a class="swipe" href={p.repository} {...linkAttrs(p.repository)}>
-                {p.repository}
+                {p.repository.replace(/^https?:\/\//, "")}
               </a>
             ) : (
               <span class="sheet__placeholder">{p.repository}</span>
             )}
           </p>
+          {p.report && (
+            <p class="sheet__repo">
+              {ui.build.report}{" "}
+              <a class="swipe" href={p.report} {...linkAttrs(p.report)}>
+                {ui.build.reportLabel}
+              </a>
+            </p>
+          )}
         </article>
       );
     })}
@@ -132,8 +150,8 @@ const sheets = [
 
 <style>
   /* A sticky note with the projects' honest TODO list (decorative: the
-     status is already said in "(both still unfinished)"). Its corner peels
-     up when you touch it. */
+     status is already said in the section note and each sheet's checklist).
+     Done items are struck out in pen. Its corner peels up when you touch it. */
   @property --peel {
     syntax: "<length>";
     inherits: true;
@@ -187,6 +205,16 @@ const sheets = [
     list-style: none;
     margin: 0;
     padding: 0;
+  }
+
+  .postit__paper li.done {
+    text-decoration: line-through;
+    text-decoration-color: var(--pen);
+    text-decoration-thickness: 2px;
+  }
+
+  .postit__paper li.done::before {
+    content: "\2611  ";
   }
 
   .postit__paper li::before {

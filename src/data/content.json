@@ -17,24 +17,36 @@
   "projects": [
     {
       "n": "01",
-      "title": "[AUTOMATION PROJECT 01]",
-      "status": "In progress",
-      "description": "[PROJECT DESCRIPTION]",
-      "stack": ["Playwright", "TypeScript", "GitHub Actions", "CI/CD"],
-      "repository": "[PROJECT REPOSITORY]",
+      "title": "Playwright UI framework",
+      "status": "Runs in CI every night",
+      "stamp": "Runs nightly",
+      "description": "End-to-end tests for a demo online shop (automationexercise.com): sign-up, login, products, cart and checkout, plus its public API. Every test brings its own throwaway user, so they all run in parallel.",
+      "checklist": [
+        { "text": "started", "done": true },
+        { "text": "runs in CI, every night", "done": true },
+        { "text": "finished", "done": false, "note": "— the roadmap's still open" }
+      ],
+      "stack": ["Playwright", "TypeScript", "GitHub Actions", "Allure"],
+      "repository": "https://github.com/tutaabsoluta/playwright-ts-ui-framework",
+      "report": "https://tutaabsoluta.github.io/playwright-ts-ui-framework/",
       "details": [
-        { "k": "The problem", "v": "[PROJECT DESCRIPTION]" },
-        { "k": "The approach", "v": "[AUTOMATION APPROACH]" },
-        { "k": "How it's built", "v": "[ARCHITECTURE]" },
-        { "k": "How it runs", "v": "[CI/CD DETAILS]" },
-        { "k": "So far", "v": "[PROJECT RESULT]" }
+        { "k": "The problem", "v": "The site under test is a shared public demo: slow, full of ads, and it answers \"queue full\" under load. Tests that share accounts or wait on ads turn flaky fast." },
+        { "k": "The approach", "v": "Page objects for the UI. Fixtures create a fresh user through the site's API before each test and delete it after, so no test depends on another. Ad requests are blocked at the network level." },
+        { "k": "How it's built", "v": "12 UI flows (auth, products, cart, checkout) on Chromium, Firefox and WebKit, plus 5 API specs in a browserless project. Specs only ask for the fixtures they need; assertions stay in the specs." },
+        { "k": "How it runs", "v": "GitHub Actions in the official Playwright container: a quality gate first (Prettier, ESLint, tsc), then one job per suite. @smoke on pull requests, @regression on every push and every night, at most 2 suites at once so the site keeps up." },
+        { "k": "So far", "v": "Running in CI, with an Allure dashboard on GitHub Pages: history, trends, flaky tests, and a screenshot and video for every failure. Next on the roadmap: a Dockerfile, more flows, a Playwright upgrade." }
       ]
     },
     {
       "n": "02",
       "title": "[AUTOMATION PROJECT 02]",
       "status": "In progress",
+      "stamp": "Work in progress",
       "description": "[PROJECT DESCRIPTION]",
+      "checklist": [
+        { "text": "started", "done": true },
+        { "text": "finished", "done": false, "note": "— not yet" }
+      ],
       "stack": ["Playwright", "TypeScript", "GitHub Actions", "CI/CD"],
       "repository": "[PROJECT REPOSITORY]",
       "details": [

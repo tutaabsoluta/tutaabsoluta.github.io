@@ -31,11 +31,23 @@ export interface DetailRow {
   v: string;
 }
 
+export interface ChecklistItem {
+  text: string;
+  done: boolean;
+  /** A pen note after an unticked item ("— not yet"). */
+  note?: string;
+}
+
 export interface Project {
   n: string;
   title: string;
   status: string;
+  /** The rubber stamp on the sheet (decorative; `status` and the checklist say it in text). */
+  stamp: string;
   description: string;
+  checklist: ChecklistItem[];
+  /** A live test report, when there is one. */
+  report?: string;
   stack: string[];
   repository: string;
   details: DetailRow[];
@@ -213,19 +225,23 @@ export const ui = {
   build: {
     kicker: "02 —",
     title: "What I build",
-    note: "(both still unfinished)",
+    note: "(one's live, one's still in the workshop)",
     todo: {
       title: "todo:",
-      items: ["give them names", "finish them", "show them off here"],
+      items: [
+        { text: "ship the first one", done: true },
+        { text: "finish the second one", done: false },
+        { text: "show them off here", done: false },
+      ],
     },
     erased: "both done ✓",
-    stamp: "Work in progress",
     project: (n: string) => `project ${n} / test automation`,
-    started: "started",
-    finished: "finished",
-    notYet: "— not yet",
     howItWorks: "how it works",
+    done: "Done:",
+    notDone: "Not done:",
     repo: "repo:",
+    report: "report:",
+    reportLabel: "live allure dashboard →",
   },
   experience: {
     kicker: "03 —",
